@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<axiome>
+	<workflow name="Default">
+	<!-- Default workflow -->
+	<!-- required="true" means a step from this category must be selected -->
+	<!-- multi="true" means more than one step from this category can be selected
+	     otherwise, only one choice from the step can be selected -->
+		<mapping required="true"/>
+		<source required="true" multi="true"/>
+		<merge_sources required="true"/>
+		<cluster required="true"/>
+		<rep_set required="true"/>
+		<!--chimera/>
+		<classification required="true"/-->
+		<!--otu_table required="true"/>
+		<otufilter multi="true"/>
+		<analysis multi="true"/-->
+	</workflow>
+</axiome>

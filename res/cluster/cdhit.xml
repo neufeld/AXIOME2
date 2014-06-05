@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="cdhit" type="cluster">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<float label="Sequence Identity" name="identity" required="true" default="0.97"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="seq.fasta"/>
+			<output name="cd-hit-out.clstr"/>
+			<output name="cd-hit-out"/>
+			<command label="cd-hit clustering" cmd="cdhit-est -i ${i} -o ${o} -c ${identity} -B 1 -M 0" input="seq.fasta" output="cd-hit-out" variable=""/>
+		</process>
+		<process>
+			<input name="cd-hit-out.clstr"/>
+			<output name="seq_otus.txt"/>
+			<command label="cd-hit cluster reformatting" cmd="awk '{ ORS=&quot;&quot; } { if (/&gt;Cluster/) { if ( NR != 1 ) { print &quot;\n&quot;; } print $$2; } else { print &quot;\t&quot;; gsub(/\.\.\./,&quot;&quot;); print substr($$3,2); }}' ${i} > ${o}" input="cd-hit-out.clstr" output="seq_otus.txt"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<version>
+			<command label="cdhit-est" cmd="cd-hit-est -h | head -n 1"/>
+		</version>
+	</plugin>
+</axiome>

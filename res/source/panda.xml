@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="panda" type="source">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+				<text label="Sample ID" name="sample_id" required="true"/>
+				<file label="Forward File" name="forward_file" required="true"/>
+				<file label="Reverse File" name="reverse_file" required="true"/>
+				<text label="Barcode" name="barcode" required="true"/>
+				<float label="Quality Threshold" name="quality_threshold" default="0.6" min="0" max="1"/>
+				<text label="Forward Primer" name="fprimer"/>
+				<text label="Reverse Primer" name="rprimer"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "sources" types: axiome_output_file, used so that AXIOME can control output file location and names -->
+		<process>
+				<!-- Every process needs at least one input file and one output file -->
+				<!-- Here, output file is determined dynamically by AXIOME -->
+				<input name="${forward_file}"/>
+				<input name="${reverse_file}"/>
+				<output name="${sample_id}.fasta"/>
+
+				<!-- "variable" refers to the item input by the user above -->
+				<command label="PANDASeq Assembly" cmd="pandaseq -f ${i} -r ${i} -t ${v} -w ${o} -C validtag:${v} ${v} ${v}" input="${forward_file},${reverse_file}" output="${sample_id}.fasta" variable="${quality_threshold},${barcode},-p ${fprimer},-q ${rprimer}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<version>
+				<command label="PANDASeq" cmd="pandaseq -v"/>
+		</version>
+	</plugin>
+</axiome>

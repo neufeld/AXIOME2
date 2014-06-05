@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="rdp" type="classification">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<float label="Confidence" name="confidence" required="true" default="0.8" min="0" max="1"/>
+			<file label="Training Sequences" name="training_seqs" required="true"/>
+			<file label="Training Taxonomy" name="training_tax" required="true"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="rep_set.fasta"/>
+			<output name="assigned_taxonomy.txt"/>
+			<command label="RDP Taxonomy Assignment via QIIME" cmd="assign_taxonomy.py -m rdp -i ${i} -o classification" input="rep_set.fasta"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<version>
+			<command label="QIIME Version" cmd="print_qiime_config.py | grep 'QIIME.*version'"/>
+			<command label="RDP Version" cmd="print_qiime_config.py | grep rdp"/>
+		</version>
+	</plugin>
+</axiome>

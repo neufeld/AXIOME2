@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="cat" type="merge_sources">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<!-- Can be left empty if no input is required from the user -->
+		<input>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "sources" types: axiome_output_file, used so that AXIOME can control output file location and names -->
+		<process>
+				<!-- Every process needs at least one input file and one output file -->
+				<!-- Here, output file is determined dynamically by AXIOME -->
+				<input name="${source:sample_id}.fasta"/>
+				<output name="seq.fasta"/>
+
+				<!-- "variable" refers to the item input by the user above -->
+				<command label="FASTA File Merge" cmd="cat ${i} >> ${o}" input="${source:sample_id}.fasta" output="seq.fasta" format="slist"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<version>
+				<command label="Cat (for sequence merging)" cmd="cat --version"/>
+		</version>
+	</plugin>
+</axiome>

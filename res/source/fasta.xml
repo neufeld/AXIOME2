@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="fasta" type="source">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+				<text label="Sample ID" name="sample_id" required="true"/>
+				<file label="File" name="seq_file" required="true"/>
+				<text label="Regex (Matching Pattern)" name="regex" default="." required="true"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "sources" types: axiome_output_file, used so that AXIOME can control output file location and names -->
+		<process>
+				<!-- Every process needs at least one input file and one output file -->
+				<input name="${seq_file}"/>
+				<output name="${sample_id}_orig_labels.fasta"/>
+
+				<!-- "variable" refers to the item input by the user above -->
+				<command label="FASTA File Loading" cmd="awk -v MATCHING=${v} 'BEGIN{ORS=&quot;&quot;; out=0;} {if (!/^>/ &amp;&amp; out) {print;} if (/^>/ &amp;&amp; ($$0~MATCHING)) {if (out==1) {print &quot;\n&quot;}; print; print &quot;\n&quot;; out=1;} if (/^>/ &amp;&amp; ($$0!~MATCHING)) {if (out==1) {print &quot;\n&quot;;} out=0;}}END{if (out==1) {print &quot;\n&quot;}}' ${i} > ${o}" input="${seq_file}" output="${sample_id}_orig_labels.fasta" variable="${regex}"/>
+		</process>
+		<process>
+				<input name="${sample_id}_orig_labels.fasta"/>
+				<output name="${sample_id}.fasta"/>
+				<command label="Relabelling FASTA Files" cmd="awk -v SAMPLEID=${v} 'BEGIN{count=0}{if (/^>/){print &quot;>&quot; SAMPLEID &quot;_&quot; count; count+=1}else{print}}' ${i} > ${o}" input="${sample_id}_orig_labels.fasta" output="${sample_id}.fasta" variable="${sample_id}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<version>
+				<command label="AWK (for FASTA sequence compiling)" cmd="awk -V | head -n 1"/>
+		</version>
+	</plugin>
+</axiome>

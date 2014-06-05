@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="copy" type="mapping">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+				<file label="Metadata Mapping" name="metadata_mapping" required="true"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "sources" types: axiome_output_file, used so that AXIOME can control output file location and names -->
+		<process>
+				<!-- Every process needs at least one input file and one output file -->
+				<input name="${metadata_mapping}"/>
+				<output name="metadata_mapping.txt"/>
+
+				<!-- "variable" refers to the item input by the user above -->
+				<command label="Creating copy of metadata mapping file" cmd="cp ${i} ${o}" input="${metadata_mapping}" output="metadata_mapping.txt"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<version>
+				<command label="cp" cmd="cp --version | head -n 1"/>
+		</version>
+	</plugin>
+</axiome>

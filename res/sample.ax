@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<axiome workflow="Default">
+	<!--Mapping files - metadata and source files are separate-->
+	<mapping method="copy" metadata_mapping="/home/michael/hmmb.axiome/mapping.txt"/>
+	<source method="fasta" sample_id="1" seq_file="/home/michael/Dropbox/Hall-Lynch/hmmb.fasta" regex="L1GCCTAA"/>
+	<source method="fasta" sample_id="2" seq_file="/home/michael/Dropbox/Hall-Lynch/hmmb.fasta" regex="L2GTAGCC"/>
+	<merge_sources method="cat"/>
+	<cluster method="cdhit" identity="0.97"/>
+	<rep_set method="aq_rep_set"/>
+	<!--chimera method="uchime"/-->
+	<!--classification method="rdp" confidence="0.8" training_seqs="/home/michael/Dropbox/Hall-Lynch/hmmb.fasta" training_tax="/home/michael/Dropbox/Hall-Lynch/hmmb.fasta"/-->
+	<!--otu_table method="qiime"/-->
+	<!--otufilter required="true" multi="true"/>
+	<analysis method="nmds"/-->
+</axiome>
