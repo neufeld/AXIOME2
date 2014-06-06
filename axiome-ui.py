@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 import npyscreen as nps
-from axiome_modules import AxiomeAnalysis, AxiomeModule, AxiomeSubmodule
+from axiome_modules import AxiomeAnalysis
 from os.path import dirname
 
 source_dir = dirname(__file__)
@@ -14,16 +14,19 @@ def makeForm(input_dict, *args, **keywords):
     return ModuleForm({},*args, **keywords)
 
 class AXIOMEUI(nps.NPSAppManaged):
+    def __init__(self, AxAnal, *args, **keywords):
+        self.AxAnal = AxAnal
+        super(AXIOMEUI, self).__init__(*args, **keywords)
+        
     def onStart(self):
         #Load modules and submodules:
         self.current_module = 0
-        self.AXAnal = AxiomeAnalysis(None, source_dir + "/res/master.xml", source_dir + "/res/test/Makefile")
         nps.FIX_MINIMUM_SIZE_WHEN_CREATED = False
         #Tell the user what is going on
-        for module in self.AXAnal.module_list:
-            fm = makeForm({},name=module.getModuleName())
-            self.registerForm(module.getModuleName(), fm)
-        self.STARTING_FORM = self.AXAnal.module_list[0].getModuleName()
+        for module in self.AxAnal._modules:
+            fm = makeForm({},name=module.name)
+            self.registerForm(module.name, fm)
+        self.STARTING_FORM = self.AxAnal._modules[0].name
         self.registerForm("MAIN", IntroForm())  
 
 #Custom Slider class that hits min and max properly
@@ -68,7 +71,7 @@ class IntroForm(nps.FormMultiPageAction):
         analysis = self.add_widget_intelligent(nps.TitleMultiSelect, name="Analyses", values=["MRPP","NMDS","PCoA","taxaplot","alpha_rarefaction","UniFrac PCoA","duleg_indicator_species","NMF","heatmap","venn"],max_height=12, scroll_exit=True)
 
     def afterEditing(self):
-        self.parentApp.setNextForm(self.parentApp.AXAnal.module_list[self.parentApp.current_module].getModuleName())
+        self.parentApp.setNextForm(self.parentApp.AxAnal._modules[self.parentApp.current_module].name)
        
     def on_cancel(self):
         nps.notify_wait(message="Exiting is not yet implemented. Press Ctrl+c to kill the program.", title=":(", form_color="STANDOUT", wide=True)
@@ -88,7 +91,7 @@ class ModuleForm(nps.FormMultiPageAction):
         self.exit_editing()
     
     def on_ok(self):
-        if self.parentApp.current_module < (len(self.parentApp.AXAnal.module_list) - 1):
+        if self.parentApp.current_module < (len(self.parentApp.AxAnal._modules) - 1):
             self.parentApp.current_module += 1
         self.exit_editing()
     
@@ -99,12 +102,13 @@ class ModuleForm(nps.FormMultiPageAction):
 
     def afterEditing(self):
         if self.parentApp.current_module >= 0:
-            self.parentApp.setNextForm(self.parentApp.AXAnal.module_list[self.parentApp.current_module].getModuleName())
+            self.parentApp.setNextForm(self.parentApp.AxAnal._modules[self.parentApp.current_module].name)
         else:
             self.parentApp.setNextForm("MAIN")
         
 
 
 if __name__ == "__main__":
-    App = AXIOMEUI()
+    AxAnal = AxiomeAnalysis(None, source_dir + "/res/master.xml", source_dir + "/res/test/Makefile")
+    App = AXIOMEUI(AxAnal)
     App.run()   

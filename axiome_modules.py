@@ -13,22 +13,25 @@ class AxiomeAnalysis(object):
         """AxiomeAnalysis: Class that controls loading and activating
         of modules, creation of resulting Makefile, or launching of UI
         """
-        try:
-            self.ax_file = xml.parse(ax_file)
-        except:
-            print "Error parsing XML file %s" % ax_file
+        if ax_file:
+			try:
+				self.ax_file = xml.parse(ax_file)
+			except:
+				print "Error parsing XML file %s" % ax_file
         try:
             self.master_file = xml.parse(master_file)
         except:
             print "Error parsing XML file %s" % master_file
         #**TODO** Replace with a better AxMakefile class
-        self.makefile = open(makefile,"w")
+        #self.makefile = open(makefile,"w")
         #File manifest
         self._manifest = {}
         #Load the modules, which also loads all submodules
         self._modules = self.loadModules(self.getWorkflow())
         #Now load the actual modules in the .ax file
-        self._activated_submodules = self.activateSubmodules()
+        #But only if the ax file was given
+        if ax_file:
+			self._activated_submodules = self.activateSubmodules()
 
     def __del__(self):
         self.ax_file.close()
@@ -60,8 +63,12 @@ class AxiomeAnalysis(object):
             #Load the correct workflow
                 module_list = []
                 for module in workflow.childNodes:
-                    if module.nodeType == xml.Node.ELEMENT_NODE: 
-                        module_list.append(AxModule(self, module.nodeName))
+                    if module.nodeType == xml.Node.ELEMENT_NODE:
+                        #Get the attributes
+                        args = {}
+                        for i in range(0,module.attributes.length):
+                            args[module.attributes.item(i).name] = module.attributes.item(i).value
+                        module_list.append(AxModule(self, module.nodeName, args))
         return module_list
         
     def activateSubmodules(self):
@@ -112,7 +119,7 @@ class AxModule(object):
         self.updateProperties(args)
         self._submodules = self.loadSubModules()
     
-    def updateProperties(args):
+    def updateProperties(self, args):
         for prop in args:
             if prop in ["required", "multi"]:
                 if args[prop].lower() in ["true","t"]:
