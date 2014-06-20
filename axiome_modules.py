@@ -176,10 +176,10 @@ class AxActiveSubmodule(object):
     def fillDefaults(self, args, submodule):
         #Go into the requirements for the submodule
         input_values = self._submodule._input._values
-        for item in input_values.keys():
-            if item not in args.keys():
+        for item in input_values:
+            if item["name"] not in args.keys():
                 #If a default exists for it, use it
-                if "default" in input_values[item]:
+                if "default" in input_values:
                     args[item]=input_values[item]["default"]
         return args
 
@@ -274,14 +274,15 @@ class AxInput(object):
                 
     def requirementsMet(self, args):
         #Get a list of all required arguments
-        required = [ k for k in self._values if self._values[k]["required"] ]
+        required = [ d["name"] for d in self._values if d["required"] ]
+        names = [ d["name"] for d in self._values ]
         #Complain if a required argument is missing
         for item in required:
             if item not in args:
                 print "Error: Required item %s not in definition" % item
                 return False
         for item in args:
-            if item not in self._values:
+            if item not in names:
                 print "Warning: Unused attribute %s" % item
                 return False
         return True
