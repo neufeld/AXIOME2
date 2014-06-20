@@ -3,10 +3,10 @@
 #Early draft of AXIOME re-write
 
 from axiome_modules import AxiomeAnalysis
-from os.path import dirname
+from os.path import dirname, abspath
 
 source_dir = dirname(__file__)
 
 if __name__ == "__main__":
     #**TODO** allow this script to invoke UI and AXIOME steps
-    axiome_analysis = AxiomeAnalysis(source_dir + "/res/sample.ax", source_dir + "/res/master.xml", source_dir + "/res/sample.axiome/Makefile")
+    axiome_analysis = AxiomeAnalysis(source_dir + "/res/SAMPLE/sample.ax")

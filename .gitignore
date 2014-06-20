@@ -1,2 +1,4 @@
 *.pyc
 axiome_modules_old.py
+res/SAMPLE/sample.axiome/
+res/SAMPLE/sample.axiome/*

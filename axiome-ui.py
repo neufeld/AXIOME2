@@ -7,12 +7,6 @@ from os.path import dirname
 
 source_dir = dirname(__file__)
 
-def addFloatWidget(form, name, label, minimum, maximum, default=0, step=0.01):
-    return form.add_widget_intelligent(TitleFloatSlider, out_of=maximum, lowest=minimum, name=label, value=default, step=0.01)
-    
-def makeForm(input_dict, *args, **keywords):
-    return ModuleForm({},*args, **keywords)
-
 class AXIOMEUI(nps.NPSAppManaged):
     def __init__(self, AxAnal, *args, **keywords):
         self.AxAnal = AxAnal
@@ -21,13 +15,17 @@ class AXIOMEUI(nps.NPSAppManaged):
     def onStart(self):
         #Load modules and submodules:
         self.current_module = 0
+        self._display_modules = []
         nps.FIX_MINIMUM_SIZE_WHEN_CREATED = False
         #Tell the user what is going on
         for module in self.AxAnal._modules:
-            fm = makeForm({},name=module.name)
-            self.registerForm(module.name, fm)
-        self.STARTING_FORM = self.AxAnal._modules[0].name
-        self.registerForm("MAIN", IntroForm())  
+			if module.name != "source":
+				self._display_modules.append(module.name)
+				self.registerForm(module.name, ModuleForm(module, parentApp=self))
+        self.registerForm("MAIN", IntroForm(parentApp=self))  
+
+def addFloatWidget(form, name, label, minimum, maximum, default=0, step=0.01):
+    return form.add_widget_intelligent(TitleFloatSlider, out_of=maximum, lowest=minimum, name=label, value=default, step=0.01)
 
 #Custom Slider class that hits min and max properly
 class FloatSlider(nps.Slider):
@@ -48,6 +46,8 @@ class TitleFloatSlider(nps.wgtitlefield.TitleText):
 
 class IntroForm(nps.FormMultiPageAction):
     def create(self):
+		#Keep it from crashing when terminal size changes
+        self.ALLOW_RESIZE = False
         self.OK_BUTTON_TEXT = "Next"
         self.CANCEL_BUTTON_TEXT = "Exit"
         message="""Welcome to AXIOME\nTo navigate through the UI, use arrow keys or TAB.
@@ -56,22 +56,30 @@ class IntroForm(nps.FormMultiPageAction):
             \n\t- Metadata mapping in tab-separated or comma-separated spreadsheet format (samples as rows, metadata titles as columns)
             \n\t- File mapping in tab-separated or comma-separated spreadsheet format"""
         nps.notify_confirm(message=message, title="Message", form_color='STANDOUT', wrap=True, wide=True, editw=1)
-        self.name= "Select Pipeline Steps"
+        self.name = "Select Pipeline Steps"
         #Fill with each module's submodule lists
-        mapping = self.add_widget_intelligent(nps.TitleSelectOne, name="Metadata Mapping:", values=["Copy"], value=[0,], max_height=3, scroll_exit=True)
-        source = self.add_widget_intelligent(nps.TitleFilenameCombo, name = "Source Data Mapping File:",max_height=3)
-        merge_sources = self.add_widget_intelligent(nps.TitleSelectOne, name="Source Data Merge Method:", values=["Cat"], value=[0,], max_height=3, scroll_exit=True)
-        cluster = self.add_widget_intelligent(nps.TitleSelectOne, name="Cluster Method:", values=["cd-hit","qiime-cdhit","qiime-uclust", "swarm", "uclust", "uparse"], value=[0,], max_height=8, scroll_exit=True)
-        rep_set = self.add_widget_intelligent(nps.TitleSelectOne, name="Rep Set Method:", values=["longest", "random", "most_frequent"], value=[0,], max_height=5, scroll_exit=True)
-        chimera = self.add_widget_intelligent(nps.TitleMultiSelect, name="Chimera Checking:", values=["uchime"],max_height=3,scroll_exit=True)
-        classification = self.add_widget_intelligent(nps.TitleSelectOne, name="Classification Method:", values=["rdp", "blast", "rtax"], value=[0,], max_height=5, scroll_exit=True)
-        otu_table = self.add_widget_intelligent(nps.TitleSelectOne, name="OTU Table Creation:", values=["qiime"], value=[0,], max_height=3, scroll_exit=True)
-        otu_filter = self.add_widget_intelligent(nps.TitleMultiSelect, name="OTU Table Filter:", values=["qiime", "taxonomy"],max_height=4,scroll_exit=True)
-        #May need a try catch on the add_widget_intelligent? What if it can't fit in the terminal screen?
-        analysis = self.add_widget_intelligent(nps.TitleMultiSelect, name="Analyses", values=["MRPP","NMDS","PCoA","taxaplot","alpha_rarefaction","UniFrac PCoA","duleg_indicator_species","NMF","heatmap","venn"],max_height=12, scroll_exit=True)
+        for module in self.parentApp.AxAnal._modules:
+			#Build the submodule choices
+			values = []
+			for submodule in module._submodules:
+				values.append(submodule.name)
+			#Two options: multi or not
+			if module._value["multi"]:
+				widget = nps.TitleMultiSelect
+				value = None
+			else:
+				widget = nps.TitleSelectOne
+				value = 0
+			#Special case: mapping file, we want to select a spreadsheet
+			if module.name == "source":
+				widget = nps.TitleFilenameCombo
+				self.add_widget_intelligent(widget, name="Source Data Mapping File", max_height=3)
+			else:
+				self.add_widget_intelligent(widget, name=module._value["label"]+":", values=values, value=value, max_height=len(values)+2, scroll_exit=True)
 
     def afterEditing(self):
-        self.parentApp.setNextForm(self.parentApp.AxAnal._modules[self.parentApp.current_module].name)
+		#Put the current module choices in here
+        self.parentApp.setNextForm(self.parentApp._display_modules[self.parentApp.current_module])
        
     def on_cancel(self):
         nps.notify_wait(message="Exiting is not yet implemented. Press Ctrl+c to kill the program.", title=":(", form_color="STANDOUT", wide=True)
@@ -79,8 +87,8 @@ class IntroForm(nps.FormMultiPageAction):
         self.editing = True
         
 class ModuleForm(nps.FormMultiPageAction):
-    def __init__(self, input_dict, *args, **keywords):
-        self.input_dict = input_dict
+    def __init__(self, module, *args, **keywords):
+        self.module = module
         super(ModuleForm, self).__init__(*args, **keywords)
     
     def on_cancel(self):
@@ -91,24 +99,39 @@ class ModuleForm(nps.FormMultiPageAction):
         self.exit_editing()
     
     def on_ok(self):
-        if self.parentApp.current_module < (len(self.parentApp.AxAnal._modules) - 1):
+        if self.parentApp.current_module < (len(self.parentApp._display_modules) - 1):
             self.parentApp.current_module += 1
         self.exit_editing()
     
     def create(self):
-        self.FIX_MINIMUM_SIZE_WHEN_CREATED = False
         self.CANCEL_BUTTON_TEXT = "Previous"
         self.OK_BUTTON_TEXT = "Next"
+        self.name = self.module._value["label"]
+        #Populate the widgets based on the submodule requirements
+        for submodule in self.module._submodules:
+			AxInput = submodule._input
+			self.add_widget_intelligent(nps.TitleFixedText, name="Submodule: " + submodule.name)
+			for name, requirement in AxInput._values.iteritems():
+				widget_type = requirement["type"]
+				if widget_type == "float":
+					float(requirement["default"])
+					self.add_widget_intelligent(TitleFloatSlider, out_of=float(requirement["max"]), lowest=float(requirement["min"]), name=requirement["label"]+":", value=float(requirement["default"]), step=0.01)
+				elif widget_type == "int":
+					self.add_widget_intelligent(TitleFloatSlider, out_of=int(requirement["max"]), lowest=int(requirement["min"]), name=requirement["label"]+":", value=int(requirement["default"]), step=1)
+				elif widget_type == "text":
+					self.add_widget_intelligent(nps.TitleText, name=requirement["label"]+":", value=requirement["default"], max_height=3)
+				elif widget_type == "file":
+					self.add_widget_intelligent(nps.TitleFilenameCombo, name=requirement["label"]+":", max_height=3)
 
     def afterEditing(self):
         if self.parentApp.current_module >= 0:
-            self.parentApp.setNextForm(self.parentApp.AxAnal._modules[self.parentApp.current_module].name)
+            self.parentApp.setNextForm(self.parentApp._display_modules[self.parentApp.current_module])
         else:
             self.parentApp.setNextForm("MAIN")
         
 
 
 if __name__ == "__main__":
-    AxAnal = AxiomeAnalysis(None, source_dir + "/res/master.xml", source_dir + "/res/test/Makefile")
+    AxAnal = AxiomeAnalysis(None)
     App = AXIOMEUI(AxAnal)
     App.run()   

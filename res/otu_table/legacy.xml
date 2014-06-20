@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="legacy" type="otu_table">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<!--file label="Exclude OTU List" name="exclude_list" command_prefix="-e"/-->
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="otu_table.txt"/>
+			<output name="otu_table.tab"/>
+			<command label="Convert OTU Table to Legacy Format" cmd="biom convert -b -i ${i} -o ${o} --header-key=taxonomy --output-metadata-id=Consensus\ Lineage" input="otu_table.txt" output="otu_table.tab"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<version>
+			<command label="BIOM Version" cmd="print_qiime_config.py | grep 'biom-format'"/>
+		</version>
+	</plugin>
+</axiome>

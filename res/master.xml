@@ -5,15 +5,14 @@
 	<!-- required="true" means a step from this category must be selected -->
 	<!-- multi="true" means more than one step from this category can be selected
 	     otherwise, only one choice from the step can be selected -->
-		<mapping required="true"/>
-		<source required="true" multi="true"/>
-		<merge_sources required="true"/>
-		<cluster required="true"/>
-		<rep_set required="true"/>
-		<!--chimera/>
-		<classification required="true"/-->
-		<!--otu_table required="true"/>
-		<otufilter multi="true"/>
-		<analysis multi="true"/-->
+		<mapping label="Mapping Method" required="true"/>
+		<source label="Source Data File" required="true" multi="true"/>
+		<merge_sources label="Merge Sources Method" required="true"/>
+		<cluster label="Cluster Method" required="true"/>
+		<rep_set label="Representative Set Method" required="true"/>
+		<chimera/>
+		<classification required="true"/>
+		<otu_table required="true" multi="true"/>
+		<analysis multi="true"/>
 	</workflow>
 </axiome>

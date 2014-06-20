@@ -4,7 +4,7 @@
 		<!-- Define what the plugin needs -->
 		<!-- This is used to create the UI -->
 		<input>
-			<float label="Sequence Identity" name="identity" required="true" default="0.97"/>
+			<float label="Sequence Identity" name="identity" required="true" default="0.97" min="0" max="1"/>
 		</input>
 		<!-- Define what the plugin is going to do -->
 		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
@@ -12,7 +12,7 @@
 			<input name="seq.fasta"/>
 			<output name="cd-hit-out.clstr"/>
 			<output name="cd-hit-out"/>
-			<command label="cd-hit clustering" cmd="cdhit-est -i ${i} -o ${o} -c ${identity} -B 1 -M 0" input="seq.fasta" output="cd-hit-out" variable=""/>
+			<command label="cd-hit clustering" cmd="cdhit-est -i ${i} -o ${o} -c ${v} -B 1 -M 0" input="seq.fasta" output="cd-hit-out" variable="${identity}"/>
 		</process>
 		<process>
 			<input name="cd-hit-out.clstr"/>

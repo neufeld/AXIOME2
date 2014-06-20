@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="create_qiime" type="otu_table">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<!--file label="Exclude OTU List" name="exclude_list" command_prefix="-e"/-->
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="seq_otus.txt"/>
+			<input name="rep_set_tax_assignments.txt"/>
+			<output name="otu_table.txt"/>
+			<command label="OTU Table Build via QIIME" cmd="make_otu_table.py -i ${i} -o ${o} -t ${i}" input="seq_otus.txt,rep_set_tax_assignments.txt" output="otu_table.txt"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<version>
+			<command label="QIIME Version" cmd="print_qiime_config.py | grep 'QIIME.*version'"/>
+		</version>
+	</plugin>
+</axiome>
