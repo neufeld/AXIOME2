@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="taxaplot" type="analysis">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<text label="Mapping Category" name="mapping_category"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="otu_table.txt"/>
+			<input name="metadata_mapping.txt"/>
+			<output name="taxa_summary_plots/bar_charts.html"/>
+			<output name="taxa_summary_plots/area_charts.html"/>
+			<command label="Summarize Taxonomy through Plots" cmd="summarize_taxa_through_plots.py -f -i ${i} -o ${v} -m ${i} ${v}" input="otu_table.txt,metadata_mapping.txt" variable="${PWD},-c ${mapping_category}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<version>
+			<command label="QIIME Version" cmd="print_qiime_config.py | grep 'QIIME.*version'"/>
+		</version>
+	</plugin>
+</axiome>
