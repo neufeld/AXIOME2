@@ -17,20 +17,20 @@ class AxiomeAnalysis(object):
             try:
                 self.ax_file = xml.parse(ax_file)
             except:
-                print "Error parsing XML file %s" % ax_file
+                raise StandardError, "Error parsing XML file %s" % ax_file
             self.working_directory = splitext(ax_file)[0] + ".axiome"
             try:
                 if not isdir(self.working_directory):
                     mkdir(self.working_directory)
             except OSError:
-                print "Error: Could not create axiome directory"
+                raise OSError, "Error: Could not create axiome directory"
             self.makefile = AxMakefile(self.working_directory+"/Makefile")
         else:
             self.working_directory = ""
         try:
             self.master_file = xml.parse(source_dir+"/res/master.xml")
         except:
-            print "Error parsing XML file %s" % master_file
+            raise StandardError, "Error parsing XML file %s" % master_file
         #**TODO** Replace with a better AxMakefile class
         #File manifest
         #Contains the filenames, and the module and active submodule that owns it
@@ -289,8 +289,11 @@ class AxInput(object):
         #**TODO** Check data type and make sure it follows requirements
         #ie, files exist, numbers in range
         
-    def getValues():
-        return self._values
+    def getValuesForInput(self, name):
+        for value_dict in self._values:
+            if value_dict["name"] == name:
+                return value_dict
+        raise ValueError, "Failed to find input name '%s' in submodule '%s'" % (name, self._submodule.name)
     
 class AxProcess(object):
     def __init__(self, submodule, xml_obj):
@@ -342,8 +345,9 @@ class AxProcess(object):
                 #Check for variables
                 resolved_output_file_list = self.resolve_variable(output_file, active_submodule)
                 for resolved_output_file in resolved_output_file_list:
-                    #Update ownership in manifest
-                    self._submodule._module._analysis._manifest[resolved_output_file] = active_submodule.name
+                    #Add files to manifest, but don't update:
+                    if resolved_output_file not in self._submodule._module._analysis._manifest:
+                        self._submodule._module._analysis._manifest[resolved_output_file] = active_submodule.name
                     output_file_list.append(active_submodule.name + "/" + resolved_output_file)
 
             #Now resolve the command
@@ -357,7 +361,7 @@ class AxProcess(object):
             #First, the input variables:
             for input_file in process["command"]["input"].split(","):
                 resolved_input_file_list = self.resolve_variable(input_file, active_submodule)
-                input_file_list = list()
+                cmd_input_file_list = list()
                 for resolved_input_file in resolved_input_file_list:
                     if not isfile(resolved_input_file):
                         #If it does not, see if it exists in the file manifest
@@ -365,17 +369,19 @@ class AxProcess(object):
                             #If it does not exist in the manifest or on system, complain
                             raise ValueError, "Required input file '%s' does not exist on system and not created by previously called module." % input_file
                         else:
-                            input_file_list.append(self._submodule._module._analysis._manifest[resolved_input_file] + "/" + resolved_input_file)
+                            cmd_input_file_list.append(self._submodule._module._analysis._manifest[resolved_input_file] + "/" + resolved_input_file)
                     else:
-                        input_file_list.append(resolved_input_file)
-                command_str = command_str.replace("${i}", sep.join(input_file_list),1)
+                        cmd_input_file_list.append(resolved_input_file)
+                command_str = command_str.replace("${i}", sep.join(cmd_input_file_list),1)
             #Then the output variables:
             for output_file in process["command"]["output"].split(","):
                 resolved_output_file_list = self.resolve_variable(output_file, active_submodule)
-                output_file_list = list()
+                cmd_output_file_list = list()
                 for resolved_output_file in resolved_output_file_list:
-                    output_file_list.append(active_submodule.name + "/" + resolved_output_file)
-                command_str = command_str.replace("${o}",sep.join(output_file_list),1)
+                    cmd_output_file_list.append(active_submodule.name + "/" + resolved_output_file)
+                    #Update ownership in manifest
+                    self._submodule._module._analysis._manifest[resolved_output_file] = active_submodule.name
+                command_str = command_str.replace("${o}",sep.join(cmd_output_file_list),1)
             #Finally, the variables
             for variable in process["command"]["variable"].split(","):
                 resolved_variable_list = self.resolve_variable(variable, active_submodule)
@@ -404,7 +410,9 @@ class AxProcess(object):
                 if variable in active_submodule._args:
                     replacement_dict[variable] = [active_submodule._args[variable]]
                 elif variable == "PWD":
-                    replacement_dict[variable] = [active_submodule.name + "/"]
+                    replacement_dict[variable] = [active_submodule.name]
+                elif not active_submodule._submodule._input.getValuesForInput(variable)["required"]:
+                    replacement_dict[variable] = ""
                 else:
                     raise ValueError, "Cannot resolve variable %s, not found in submodule %s, module %s" % (variable, self._submodule.name, self._submodule._module.name)   
             else:
