@@ -12,7 +12,7 @@
 			<input name="seq_otus.txt"/>
 			<input name="rep_set_tax_assignments.txt"/>
 			<output name="otu_table.txt"/>
-			<command label="OTU Table Build via QIIME" cmd="make_otu_table.py -i ${i} -o ${o} -t ${i}" input="seq_otus.txt,rep_set_tax_assignments.txt" output="otu_table.txt"/>
+			<command label="OTU Table Build via QIIME" cmd="rm -rf ${o} &amp;&amp; make_otu_table.py -i ${i} -o ${o} -t ${i}" input="seq_otus.txt,rep_set_tax_assignments.txt" output="otu_table.txt,otu_table.txt"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<version>

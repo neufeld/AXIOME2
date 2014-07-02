@@ -11,7 +11,7 @@
 		<process>
 			<input name="otu_table.txt"/>
 			<output name="otu_table.tab"/>
-			<command label="Convert OTU Table to Legacy Format" cmd="biom convert -b -i ${i} -o ${o} --header-key=taxonomy --output-metadata-id=Consensus\ Lineage" input="otu_table.txt" output="otu_table.tab"/>
+			<command label="Convert OTU Table to Legacy Format" cmd="rm -f ${o} &amp;&amp; biom convert -b -i ${i} -o ${o} --header-key=taxonomy --output-metadata-id=Consensus\ Lineage" input="otu_table.txt" output="otu_table.tab,otu_table.tab"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<version>
