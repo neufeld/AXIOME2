@@ -50,10 +50,12 @@
 	<merge_sources method="cat"/>
 	<cluster method="cdhit" identity="0.97"/>
 	<rep_set method="aq_rep_set"/>
-	<!--chimera method="uchime"/-->
+	<chimera method="uchime_denovo"/>
 	<classification method="rdp" confidence="0.8" training_seqs="/home/michael/Dropbox/Hall-Lynch/hmmb.fasta" training_tax="/home/michael/Dropbox/Hall-Lynch/hmmb.fasta"/>
 	<otu_table method="create_qiime"/>
 	<otu_table method="legacy"/>
 	<otu_table method="rarefy"/>
 	<!--analysis method="pcoa" distance="bray"/-->
+	<analysis method="taxaplot"/>
+	<analysis method="taxaplot" mapping_category="Subject"/>
 </axiome>

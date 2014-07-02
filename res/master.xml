@@ -10,9 +10,9 @@
 		<merge_sources label="Merge Sources Method" required="true"/>
 		<cluster label="Cluster Method" required="true"/>
 		<rep_set label="Representative Set Method" required="true"/>
-		<chimera/>
-		<classification required="true"/>
-		<otu_table required="true" multi="true"/>
-		<analysis multi="true"/>
+		<chimera label="Chimera Checking/Removal Method"/>
+		<classification label="Taxonomic Classification Method" required="true"/>
+		<otu_table label="Creation, conversion, and filtering of OTU tables" required="true" multi="true"/>
+		<analysis label="Various data analyses" multi="true"/>
 	</workflow>
 </axiome>
