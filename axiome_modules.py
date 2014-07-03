@@ -40,9 +40,11 @@ class AxiomeAnalysis(object):
         #Now load the actual modules in the .ax file
         #But only if the ax file was given
         if ax_file:
+            self.report = AxReport(self.working_directory+"/report.html")
             self._activated_submodules = self.activateSubmodules()
             for active_submodule in self._activated_submodules:
                 active_submodule._submodule._process.createMakefileString(active_submodule)
+            self.report.writeHTML()
             self.makefile.writeMakefile()
 
     def __del__(self):
@@ -149,7 +151,29 @@ class AxMakefile(object):
             self.allString += " " + output_file
         
     def writeMakefile(self):
-        self._file.write(self.headerString + self.allString + self.makefileString + "\n\n" + ".PHONY: all") 
+        self._file.write(self.headerString + self.allString + self.makefileString + "\n\n" + ".PHONY: all")
+        
+#Class which generates the output report file for AXIOME
+#For now, this is going to be a simple html file
+class AxReport(object):
+    def __init__(self, html_file):
+        #Store the page as an html string
+        self.html_editing = True
+        self.html_file = html_file
+        self.html_string = "<!DOCTYPE HTML>\n<html>\n<head>\n"
+        self.html_string += "<title>AXIOME2 Analysis Results Table of Contents</title>\n"
+        self.html_string += "</head>\n<body>\n<h1>Table of Contents</h1>\n"
+        self.html_string += "<h4>File links are not active until AXIOME run is complete</h4>\n<ul>\n"
+        
+    def addToReport(self, label, location):
+        self.html_string += "<li><a href=\"" + location + "\">" + label + "</a></li>\n"
+        
+    def writeHTML(self):
+        #Close the HTML document
+        self.html_string += "</ul>\n</body>\n</html>"
+        self.html_editing = False
+        with open(self.html_file, 'w') as html_out:
+            html_out.write(self.html_string)
 
 
 #An active submodule is one that is currently in use
@@ -305,11 +329,15 @@ class AxProcess(object):
         #There can be more than one of these
         #Populate the values from the XML object
         for process in xml_obj:
-            process_dict = {"input":[],"output":[], "command":{}}
+            process_dict = {"input":[],"output":{}, "command":{}}
             for node in process.childNodes:
                 if node.nodeType == xml.Node.ELEMENT_NODE:
-                    if node.nodeName in ["input","output"]:
-                        process_dict[node.nodeName].append(node.getAttribute("name"))
+                    if node.nodeName == "input":
+                        process_dict["input"].append(node.getAttribute("name"))
+                    elif node.nodeName == "output":
+                        process_dict["output"][node.getAttribute("name")] = {}
+                        process_dict["output"][node.getAttribute("name")]["report_label"] = node.getAttribute("report_label")
+                        process_dict["output"][node.getAttribute("name")]["report_variable"] = node.getAttribute("report_variable")
                     else:
                         process_dict["command"]["label"] = node.getAttribute("label")
                         process_dict["command"]["cmd"] = node.getAttribute("cmd")
@@ -341,7 +369,7 @@ class AxProcess(object):
                     else:
                         input_file_list.append(resolved_input_file)
             output_file_list = list()
-            for output_file in process["output"]:
+            for output_file, output_file_dict in process["output"].iteritems():
                 #Check for variables
                 resolved_output_file_list = self.resolve_variable(output_file, active_submodule)
                 for resolved_output_file in resolved_output_file_list:
@@ -349,6 +377,13 @@ class AxProcess(object):
                     if resolved_output_file not in self._submodule._module._analysis._manifest:
                         self._submodule._module._analysis._manifest[resolved_output_file] = active_submodule.name
                     output_file_list.append(active_submodule.name + "/" + resolved_output_file)
+                    if output_file_dict["report_label"]:
+                        label = output_file_dict["report_label"]
+                        variable = output_file_dict["report_variable"]
+                        sep = ", "
+                        resolved_variable_list = self.resolve_variable(variable, active_submodule)
+                        label = label.replace("${v}",sep.join(resolved_variable_list),1)
+                        self._submodule._module._analysis.report.addToReport(label, active_submodule.name + "/" + resolved_output_file)
 
             #Now resolve the command
             command_str = process["command"]["cmd"]
