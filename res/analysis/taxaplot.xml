@@ -11,8 +11,8 @@
 		<process>
 			<input name="otu_table.txt"/>
 			<input name="metadata_mapping.txt"/>
-			<output name="taxa_summary_plots/bar_charts.html"/>
-			<output name="taxa_summary_plots/area_charts.html"/>
+			<output name="taxa_summary_plots/bar_charts.html" report_label="Taxonomy Plot Bar Chart${v}" report_variable=" Grouped By ${mapping_category}"/>
+			<output name="taxa_summary_plots/area_charts.html" report_label="Taxonomy Plot Area Chart${v}" report_variable=" Grouped By ${mapping_category}"/>
 			<command label="Summarize Taxonomy through Plots" cmd="summarize_taxa_through_plots.py -f -i ${i} -o ${v} -m ${i} ${v}" input="otu_table.txt,metadata_mapping.txt" variable="${PWD},-c ${mapping_category}"/>
 		</process>
 		<!-- Version check command for involved programs -->

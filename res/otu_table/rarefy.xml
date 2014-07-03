@@ -11,12 +11,12 @@
 		<process>
 			<input name="otu_table.txt"/>
 			<input name="otu_table.tab"/>
-			<output name="otu_table_auto.txt"/>
+			<output name="otu_table_auto.txt" report_label="BIOM Format Rarefied (Subsampled) OTU Table"/>
 			<command label="Rarefy OTU Table to Even Depth" cmd="single_rarefaction.py -i ${i} -o ${o} -d $$(awk -F '\t' 'NR == 1 { } NR == 2 { for (i = 2; i &lt;= NF; i++) { if ($$i ~ /^[0-9]*$$/) { max = i; } } } NR &gt; 2 { for (i = 2; i &lt;= max; i++) { c[i] += $$i; } } END { smallest = c[2]; for (i = 3; i &lt;= max; i++) { if (c[i] &lt; smallest) { smallest = c[i]; }} print smallest; }' ${i})" input="otu_table.txt,otu_table.tab" output="otu_table_auto.txt"/>
 		</process>
 		<process>
 			<input name="otu_table_auto.txt"/>
-			<output name="otu_table_auto.tab"/>
+			<output name="otu_table_auto.tab" report_label="Tab Delimited Rarefied (Subsampled) OTU Table"/>
 			<command label="Convert OTU Table to Legacy Format" cmd="rm -f ${o} &amp;&amp; biom convert -b -i ${i} -o ${o} --header-key=taxonomy --output-metadata-id=Consensus\ Lineage" input="otu_table_auto.txt" output="otu_table_auto.tab,otu_table_auto.tab"/>
 		</process>
 		<!-- Version check command for involved programs -->
