@@ -11,8 +11,8 @@
 		<cluster label="Cluster Method" required="true"/>
 		<rep_set label="Representative Set Method" required="true"/>
 		<chimera label="Chimera Checking/Removal Method"/>
-		<classification label="Taxonomic Classification Method" required="true"/>
-		<otu_table label="Creation, conversion, and filtering of OTU tables" required="true" multi="true"/>
-		<analysis label="Various data analyses" multi="true"/>
+		<classification label="Taxonomic Classification Method" required="true" default="rdp"/>
+		<otu_table label="Creation, conversion, and filtering of OTU tables" required="true" multi="true" default="create_qiime,legacy,rarefy"/>
+		<analysis label="Various data analyses" multi="true" default="taxaplot"/>
 	</workflow>
 </axiome>

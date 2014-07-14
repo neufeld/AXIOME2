@@ -4,7 +4,7 @@
 		<!-- Define what the plugin needs -->
 		<!-- This is used to create the UI -->
 		<input>
-				<text label="Sample ID" name="sample_id" required="true"/>
+				<text label="Sample Alias" name="sample_alias" required="true"/>
 				<file label="File" name="seq_file" required="true"/>
 				<text label="Regex (Matching Pattern)" name="regex" default="." required="true"/>
 		</input>
@@ -13,15 +13,15 @@
 		<process>
 				<!-- Every process needs at least one input file and one output file -->
 				<input name="${seq_file}"/>
-				<output name="${sample_id}_orig_labels.fasta"/>
+				<output name="${sample_alias}_orig_labels.fasta"/>
 
 				<!-- "variable" refers to the item input by the user above -->
-				<command label="FASTA File Loading" cmd="awk -v MATCHING=${v} 'BEGIN{ORS=&quot;&quot;; out=0;} {if (!/^>/ &amp;&amp; out) {print;} if (/^>/ &amp;&amp; ($$0~MATCHING)) {if (out==1) {print &quot;\n&quot;}; print; print &quot;\n&quot;; out=1;} if (/^>/ &amp;&amp; ($$0!~MATCHING)) {if (out==1) {print &quot;\n&quot;;} out=0;}}END{if (out==1) {print &quot;\n&quot;}}' ${i} > ${o}" input="${seq_file}" output="${sample_id}_orig_labels.fasta" variable="${regex}"/>
+				<command label="FASTA File Loading" cmd="awk -v MATCHING=${v} 'BEGIN{ORS=&quot;&quot;; out=0;} {if (!/^>/ &amp;&amp; out) {print;} if (/^>/ &amp;&amp; ($$0~MATCHING)) {if (out==1) {print &quot;\n&quot;}; print; print &quot;\n&quot;; out=1;} if (/^>/ &amp;&amp; ($$0!~MATCHING)) {if (out==1) {print &quot;\n&quot;;} out=0;}}END{if (out==1) {print &quot;\n&quot;}}' ${i} > ${o}" input="${seq_file}" output="${sample_alias}_orig_labels.fasta" variable="${regex}"/>
 		</process>
 		<process>
-				<input name="${sample_id}_orig_labels.fasta"/>
-				<output name="${sample_id}.fasta"/>
-				<command label="Relabelling FASTA Files" cmd="awk -v SAMPLEID=${v} 'BEGIN{count=0}{if (/^>/){print &quot;>&quot; SAMPLEID &quot;_&quot; count; count+=1}else{print}}' ${i} > ${o}" input="${sample_id}_orig_labels.fasta" output="${sample_id}.fasta" variable="${sample_id}"/>
+				<input name="${sample_alias}_orig_labels.fasta"/>
+				<output name="${sample_alias}.fasta"/>
+				<command label="Relabelling FASTA Files" cmd="awk -v SAMPLEID=${v} 'BEGIN{count=0}{if (/^>/){print &quot;>&quot; SAMPLEID &quot;_&quot; count; count+=1}else{print}}' ${i} > ${o}" input="${sample_alias}_orig_labels.fasta" output="${sample_alias}.fasta" variable="${sample_alias}"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<version>

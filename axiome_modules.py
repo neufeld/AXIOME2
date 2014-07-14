@@ -216,7 +216,7 @@ class AxModule(object):
         print "Initiating module %s..." % self.name
         self._analysis = analysis
         #Default properties
-        self._value = {"required":False, "multi":False, "label":self.name}
+        self._value = {"required":False, "multi":False, "label":self.name, "default":list()}
         self.updateProperties(args)
         self._submodules = self.loadSubModules()
     
@@ -227,8 +227,10 @@ class AxModule(object):
                     self._value[prop] = True
                 else:
                     self._value[prop] = False
-            elif prop == "label":
+            elif prop in ["label"]:
                 self._value["label"] = args["label"]
+            elif prop in ["default"]:
+				self._value["default"] = args["default"].replace(" ","").split(",")
     
     def getSubmoduleByName(self, name):
         #Go through the submodules and get it by its name
@@ -306,7 +308,7 @@ class AxInput(object):
                 print "Error: Required item %s not in definition" % item
                 return False
         for item in args:
-            if item not in names:
+            if (item not in names) & (item != "axiome_submodule"):
                 print "Warning: Unused attribute %s" % item
                 return False
         return True

@@ -13,7 +13,7 @@
 		<process>
 			<input name="rep_set.fasta"/>
 			<output name="rep_set_tax_assignments.txt"/>
-			<command label="RDP Taxonomy Assignment via QIIME" cmd="assign_taxonomy.py -m rdp -i ${i} -o ${v}" input="rep_set.fasta" variable="${PWD}"/>
+			<command label="RDP Taxonomy Assignment via QIIME" cmd="assign_taxonomy.py -m rdp -i ${i} -o ${v} -c ${v}" input="rep_set.fasta" variable="${PWD},${confidence}"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<version>
