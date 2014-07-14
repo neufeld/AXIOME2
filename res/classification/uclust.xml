@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="uclust" type="classification">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<file label="Training Sequences" name="training_seqs" required="true"/>
+			<file label="Training Taxonomy" name="training_tax" required="true"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="rep_set.fasta"/>
+			<output name="rep_set_tax_assignments.txt"/>
+			<command label="UCLUST Taxonomy Assignment via QIIME" cmd="assign_taxonomy.py -m uclust -i ${i} -o ${v} -r ${v} -t ${v}" input="rep_set.fasta" variable="${PWD},${training_seqs},${training_tax}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<version>
+			<command label="QIIME Version" cmd="print_qiime_config.py | grep 'QIIME.*version'"/>
+			<command label="UCLUST Version" cmd="print_qiime_config.py | grep uclust"/>
+		</version>
+	</plugin>
+</axiome>
