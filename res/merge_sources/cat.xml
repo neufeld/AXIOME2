@@ -11,11 +11,11 @@
 		<process>
 				<!-- Every process needs at least one input file and one output file -->
 				<!-- Here, output file is determined dynamically by AXIOME -->
-				<input name="${source:sample_id}.fasta"/>
+				<input name="${source:sample_alias}.fasta"/>
 				<output name="seq.fasta"/>
 
 				<!-- "variable" refers to the item input by the user above -->
-				<command label="FASTA File Merge" cmd="cat ${i} >> ${o}" input="${source:sample_id}.fasta" output="seq.fasta" format="slist"/>
+				<command label="FASTA File Merge" cmd="cat ${i} >> ${o}" input="${source:sample_alias}.fasta" output="seq.fasta" format="slist"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<version>
