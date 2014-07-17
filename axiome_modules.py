@@ -7,9 +7,16 @@ import re
 
 #Finds the install directory, from which the res folder can be found
 source_dir = dirname(__file__)
-    
+
+def getWorkflowList():
+    master_file = xml.parse(source_dir+"/res/master.xml")
+    workflow_list = list()
+    for workflow in master_file.getElementsByTagName("workflow"): 
+        workflow_list.append(workflow.getAttribute("name"))
+    return workflow_list
+
 class AxiomeAnalysis(object):
-    def __init__(self, ax_file):
+    def __init__(self, ax_file, workflow = None):
         """AxiomeAnalysis: Class that controls loading and activating
         of modules, creation of resulting Makefile, or launching of UI
         """
@@ -36,7 +43,12 @@ class AxiomeAnalysis(object):
         #Contains the filenames, and the module and active submodule that owns it
         self._manifest = {}
         #Load the modules, which also loads all submodules
-        self._modules = self.loadModules(self.getWorkflow())
+        if workflow:
+            self.workflow = workflow
+            self._modules = self.loadModules(self.workflow)
+        else:
+            self.workflow = self.getWorkflow()
+            self._modules = self.loadModules(self.workflow)
         #Now load the actual modules in the .ax file
         #But only if the ax file was given
         if ax_file:
@@ -213,7 +225,6 @@ class AxModule(object):
         of the module and a list of its initiated submodules.
         """
         self.name = module_name
-        print "Initiating module %s..." % self.name
         self._analysis = analysis
         #Default properties
         self._value = {"required":False, "multi":False, "label":self.name, "default":list()}
@@ -230,7 +241,7 @@ class AxModule(object):
             elif prop in ["label"]:
                 self._value["label"] = args["label"]
             elif prop in ["default"]:
-				self._value["default"] = args["default"].replace(" ","").split(",")
+                self._value["default"] = args["default"].replace(" ","").split(",")
     
     def getSubmoduleByName(self, name):
         #Go through the submodules and get it by its name
@@ -255,7 +266,6 @@ class AxSubmodule(object):
     def __init__(self, module, xml_obj):
         self._module = module
         self.name = xml_obj.getElementsByTagName("plugin").item(0).getAttribute("name")
-        print "Intiating submodule %s..." % self.name
         #Go through the submodule, creating the AxInput AxProcess and AxVersion objects
         self._input = AxInput(self, xml_obj.getElementsByTagName("input"))
         self._process = AxProcess(self, xml_obj.getElementsByTagName("process"))

@@ -2,14 +2,13 @@
 # encoding: utf-8
 
 import npyscreen as nps
-from axiome_modules import AxiomeAnalysis
+from axiome_modules import AxiomeAnalysis, getWorkflowList
 from os.path import dirname
 
 source_dir = dirname(__file__)
 
 class AXIOMEUI(nps.NPSAppManaged):
-    def __init__(self, AxAnal, *args, **keywords):
-        self.AxAnal = AxAnal
+    def __init__(self, *args, **keywords):
         self.submodule_forms_data = list()
         self.source_definitions = list()
         super(AXIOMEUI, self).__init__(*args, **keywords)
@@ -83,9 +82,6 @@ class AXIOMEUI(nps.NPSAppManaged):
             form.add_widget_intelligent(RemoveFormButton, name="Remove Copy of Submodule", w_id="submodule_remove")
         return form
         
-    def createAxiomeFile(self, save_path):
-        pass
-        
 #Custom Slider class that hits min and max properly
 class FloatSlider(nps.Slider):
     def translate_value(self):
@@ -145,8 +141,8 @@ class RemoveFormButton(nps.ButtonPress):
                 copy_count += 1
         #If the last one is removed, we need to unselect the IntroForm widget
         if copy_count == 0:
-            IntroForm = form.parentApp.getForm("MAIN")
-            for widget_info in IntroForm._widget_list:
+            ModuleForm = form.parentApp.getForm("MODULE")
+            for widget_info in ModuleForm._widget_list:
                 if module_name == widget_info["module_name"]:
                     for choice in widget_info["widget"].value:
                         if widget_info["widget"].values[choice] == submodule_name:
@@ -168,6 +164,36 @@ class IntroForm(nps.FormMultiPageAction):
             \n\t- File mapping in tab-separated spreadsheet format (.tsv)
             \n\t- Metadata mapping in tab-separated spreadsheet format (.tsv)"""
         nps.notify_confirm(message=message, title="Message", form_color='STANDOUT', wrap=True, wide=True, editw=1)
+        self.name = "Select Workflow"
+        #Get the possible workflows from the master.xml file
+        workflow_list = getWorkflowList()
+        try:
+            value = workflow_list.index("Default")
+        except:
+            value = 0
+        self.add_widget_intelligent(nps.TitleSelectOne, name="Select Workflow", w_id="select_workflow", values=workflow_list, value=value, max_height=len(workflow_list)+2, scroll_exit=True)
+        
+    def on_ok(self):
+        #Create the ModuleForm
+        workflow = self.get_widget("select_workflow").values[self.get_widget("select_workflow").value[0]]
+        self.parentApp.AxAnal = AxiomeAnalysis(None, workflow)
+        module_form = ModuleForm(parentApp=self.parentApp)
+        self.parentApp.registerForm("MODULE",module_form)
+        self.parentApp.setNextForm("MODULE")
+        
+        
+    def on_cancel(self):
+        nps.notify_wait(message="Exiting is not yet implemented. Press Ctrl+c to kill the program.", title=":(", form_color="STANDOUT", wide=True)
+        #Override the auto-exit
+        self.editing = True
+
+class ModuleForm(nps.FormMultiPageAction):
+    def create(self):
+        #Keep it from crashing when terminal size changes
+        self.ALLOW_RESIZE = False
+        self.OK_BUTTON_TEXT = "Next"
+        self.CANCEL_BUTTON_TEXT = "Previous"
+        self._widget_list = []
         self.name = "Select Pipeline Steps"
         #Fill with each module's submodule lists
         for module in self.parentApp.AxAnal._modules:
@@ -198,9 +224,19 @@ class IntroForm(nps.FormMultiPageAction):
                     if defaults:
                         value = defaults
                     choice_widget = self.add_widget_intelligent(widget, name=module._value["label"]+":", w_id="module_"+module.name, values=values, value=value, max_height=len(values)+2, scroll_exit=True)
-                self._widget_list.append({"module_name":module.name,"widget":choice_widget})
-
-    def afterEditing(self):
+                self._widget_list.append({"module_name":module.name,"widget":choice_widget})    
+        
+    def on_ok(self):
+        source_file_widget = self.get_widget("module_source")
+        source_file_path = source_file_widget.value
+        if not source_file_path:
+            nps.notify_confirm(message="Source file mapping required")
+            self.editing = True
+            return
+        if not self.sourceFileCheck(source_file_path):
+            nps.notify_confirm(message="Error in source file mapping")
+            self.editing = True
+            return
         #Collect information on the selected widgets
         selected_submodules = list()
         for widget_info in self._widget_list:
@@ -212,30 +248,9 @@ class IntroForm(nps.FormMultiPageAction):
         nextForm = self.parentApp.buildSubmoduleForms(selected_submodules)
         self.parentApp.current_page = 0
         self.parentApp.setNextForm(self.parentApp._display_pages[0])
-        
-    def on_ok(self):
-        source_file_widget = None
-        for widget_info in self._widget_list:
-            if widget_info["module_name"] == "source":
-                source_file_widget = widget_info["widget"]
-                break
-        if source_file_widget:
-            source_file_path = source_file_widget.value
-            if not source_file_path:
-                nps.notify_confirm(message="Source file mapping required")
-                self.editing = True
-                return
-            if not self.sourceFileCheck(source_file_path):
-                nps.notify_confirm(message="Error in source file mapping")
-                self.editing = True
-                return
-        else:
-            raise ValueError, "No widget found for required module 'source'"
        
     def on_cancel(self):
-        nps.notify_wait(message="Exiting is not yet implemented. Press Ctrl+c to kill the program.", title=":(", form_color="STANDOUT", wide=True)
-        #Override the auto-exit
-        self.editing = True
+        self.parentApp.setNextForm("MAIN")
         
     def sourceFileCheck(self, source_file_path):
     #Go through each line of the sources file and verify the contents
@@ -313,9 +328,9 @@ class SaveForm(nps.FormMultiPageAction):
             #Start with the XML header
             #**TODO** Different workflows
             #We are manually writing XML, because that's how I roll
-            ax_file_string = '<?xml version="1.0"?>\n<axiome workflow="Default">\n'
+            ax_file_string = '<?xml version="1.0"?>\n<axiome workflow="%s">\n' % self.parentApp.AxAnal.workflow
             submodules = list()
-            for widget_info in self.parentApp.getForm("MAIN")._widget_list:
+            for widget_info in self.parentApp.getForm("MODULE")._widget_list:
                 module_name = widget_info["module_name"]
                 #Get the selection(s) from the selection widget
                 widget = widget_info["widget"]
@@ -331,7 +346,7 @@ class SaveForm(nps.FormMultiPageAction):
                 submodule_name = submodule[1]
                 #Special case: source
                 if module_name == "source":
-                    mapping_file = self.parentApp.getForm("MAIN").get_widget("module_source").value
+                    mapping_file = self.parentApp.getForm("MODULE").get_widget("module_source").value
                     ax_file_string += self.file_mapping_to_ax(mapping_file)
                 else:
                     found = False
@@ -346,11 +361,11 @@ class SaveForm(nps.FormMultiPageAction):
                                 widget_id = item["name"]
                                 widget_value = submodule_form["form"].get_widget(widget_id).value
                                 if widget_value:
-									def_string += ' %s="%s"' % (widget_id, widget_value)
+                                    def_string += ' %s="%s"' % (widget_id, widget_value)
                             ax_file_string += '\t<%s method="%s"%s/>\n' % (module_name, submodule_name, def_string)
                     if not found:
                         ax_file_string += '\t<%s method="%s"/>\n' % (module_name, submodule_name)
-            ax_file_string += "<axiome/>"
+            ax_file_string += "</axiome>"
             out_ax.write(ax_file_string)
         #**TODO** Make notify_confirm, allowing user to go back or exit
         nps.notify_wait("File saved successfully to %s/%s. Ctrl+C to exit." % (file_dir, file_name), title="Saved!", form_color='STANDOUT', wrap=True, wide=True)
@@ -400,23 +415,23 @@ class SubmoduleForm(nps.FormMultiPageAction):
             self.parentApp.current_page -= 1
         else:
             self.parentApp.current_page = -1
-        self.exit_editing()
+        #self.exit_editing()
     
     def on_ok(self):
-		#Validate the input variables
-		#Get the variables
-		args = {}
-		for input_item in self._value["input"]:
-			name = input_item["name"]
-			if self.get_widget(name).value:
-				args[name] = self.get_widget(name).value
-		if not(self.submodule._input.requirementsMet(args)):
-			nps.notify_wait("Not all required input items for this module have been entered. Please check all fields.", title="Error", form_color='STANDOUT', wrap=True, wide=True)
-			self.editing = True
-		else:
-			if self.parentApp.current_page <= (len(self.parentApp._display_pages) - 1):
-				self.parentApp.current_page += 1
-			self.exit_editing()
+        #Validate the input variables
+        #Get the variables
+        args = {}
+        for input_item in self._value["input"]:
+            name = input_item["name"]
+            if self.get_widget(name).value:
+                args[name] = self.get_widget(name).value
+        if not(self.submodule._input.requirementsMet(args)):
+            nps.notify_wait("Not all required input items for this module have been entered. Please check all fields.", title="Error", form_color='STANDOUT', wrap=True, wide=True)
+            self.editing = True
+        else:
+            if self.parentApp.current_page <= (len(self.parentApp._display_pages) - 1):
+                self.parentApp.current_page += 1
+            #self.exit_editing()
     
     def create(self):
         self.CANCEL_BUTTON_TEXT = "Previous"
@@ -433,6 +448,5 @@ class SubmoduleForm(nps.FormMultiPageAction):
             self.parentApp.setNextForm("SAVE")
 
 if __name__ == "__main__":
-    AxAnal = AxiomeAnalysis(None)
-    App = AXIOMEUI(AxAnal)
+    App = AXIOMEUI()
     App.run()   
