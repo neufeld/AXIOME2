@@ -5,6 +5,7 @@
 	<!-- required="true" means a step from this category must be selected -->
 	<!-- multi="true" means more than one step from this category can be selected
 	     otherwise, only one choice from the step can be selected -->
+	<!-- default lists the default selected submodules for the UI -->
 		<mapping label="Mapping Method" required="true"/>
 		<source label="Source Data File" required="true" multi="true"/>
 		<merge_sources label="Merge Sources Method" required="true"/>
@@ -14,5 +15,16 @@
 		<classification label="Taxonomic Classification Method" required="true" default="rdp"/>
 		<otu_table label="Creation, conversion, and filtering of OTU tables" required="true" multi="true" default="create_qiime,legacy,rarefy"/>
 		<analysis label="Various data analyses" multi="true" default="taxaplot"/>
+	</workflow>
+	<workflow name="Complete Run">
+		<mapping label="Mapping Method" required="true"/>
+		<source label="Source Data File" required="true" multi="true"/>
+		<merge_sources label="Merge Sources Method" required="true"/>
+		<cluster label="Cluster Method" required="true"/>
+		<rep_set label="Representative Set Method" required="true"/>
+		<chimera label="Chimera Checking/Removal Method"/>
+		<classification label="Taxonomic Classification Method" required="true" default="rdp"/>
+		<otu_table label="Creation, conversion, and filtering of OTU tables" required="true" multi="true" default="create_qiime,legacy,rarefy"/>
+		<analysis label="Various data analyses" multi="true" default="taxaplot,pcoa"/>
 	</workflow>
 </axiome>
