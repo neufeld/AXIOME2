@@ -3,9 +3,9 @@
 
 import npyscreen as nps
 from axiome_modules import AxiomeAnalysis, getWorkflowList
-from os.path import dirname
+from os.path import dirname, abspath
 
-source_dir = dirname(__file__)
+source_dir = dirname(abspath(__file__))
 
 class AXIOMEUI(nps.NPSAppManaged):
     def __init__(self, *args, **keywords):

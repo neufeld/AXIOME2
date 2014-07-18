@@ -2,11 +2,11 @@
 
 import xml.dom.minidom as xml
 from os import listdir, mkdir
-from os.path import dirname, isfile, splitext, isdir
+from os.path import dirname, isfile, splitext, isdir, abspath
 import re
 
 #Finds the install directory, from which the res folder can be found
-source_dir = dirname(__file__)
+source_dir = dirname(abspath(__file__))
 
 def getWorkflowList():
     master_file = xml.parse(source_dir+"/res/master.xml")
