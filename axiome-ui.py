@@ -81,75 +81,6 @@ class AXIOMEUI(nps.NPSAppManaged):
             form.add_widget_intelligent(AddFormButton, name="Add Copy of Submodule", w_id="submodule_add")
             form.add_widget_intelligent(RemoveFormButton, name="Remove Copy of Submodule", w_id="submodule_remove")
         return form
-        
-#Custom Slider class that hits min and max properly
-class FloatSlider(nps.Slider):
-    def translate_value(self):
-        stri = "%s" % self.value
-        return stri
-
-    def h_increase(self, ch):
-        if (self.value + self.step <= self.out_of): self.value += self.step
-        elif (self.value >= self.out_of - self.step) & (self.value <= self.out_of): self.value = self.out_of
-
-    def h_decrease(self, ch):
-        if (self.value - self.step >= self.lowest): self.value -= self.step
-        elif (self.value <= self.step - self.lowest) & (self.value >= self.lowest): self.value = self.lowest
-
-class TitleFloatSlider(nps.wgtitlefield.TitleText):
-    _entry_type = FloatSlider
-    
-class AddFormButton(nps.ButtonPress):
-    def whenPressed(self):
-        form = self.parent
-        module_name = self.parent.module.name
-        submodule_name = self.parent.submodule.name
-        #Go through list of forms, and add it after all current forms of the same submodule
-        found = False
-        for i in range(0, len(form.parentApp.submodule_forms_data)):
-            if (module_name == form.parentApp.submodule_forms_data[i]["module_name"]) & (submodule_name == form.parentApp.submodule_forms_data[i]["submodule_name"]):
-                found = True
-                copy_number = form.parentApp.submodule_forms_data[i]["copy_number"]+1
-                insert_location = i+1
-            elif found:
-                break   
-        #Create new form
-        new_form = form.parentApp.createSubmoduleForm(module_name, submodule_name, copy_number)
-        #Add to submodule forms list
-        form.parentApp.submodule_forms_data.insert(insert_location, {"form":new_form, "submodule_name":submodule_name, "module_name":module_name, "copy_number":copy_number, "registered":False})
-        #Register form and add to the list of formid's
-        formid = module_name+"_"+submodule_name+"_"+str(copy_number)
-        form.parentApp.registerForm(formid, new_form)
-        form.parentApp._display_pages.insert(insert_location, formid)
-        #Notify the user that it worked
-        nps.notify_wait("New copy of submodule %s added as next page." % submodule_name, title="Submodule Duplicated", form_color='STANDOUT', wrap=True, wide=True)
-
-class RemoveFormButton(nps.ButtonPress):
-    def whenPressed(self):
-        form = self.parent
-        module_name = self.parent.module.name
-        submodule_name = self.parent.submodule.name
-        copy_number = self.parent.copy_number
-        formid = module_name+"_"+submodule_name+"_"+str(copy_number)
-        #Need to remove from the submodule_forms_data list and _display_pages list
-        form.parentApp._display_pages.remove(formid)
-        copy_count = 0
-        for form_data in form.parentApp.submodule_forms_data:
-            if (module_name == form_data["module_name"]) & (submodule_name == form_data["submodule_name"]) & (copy_number == form_data["copy_number"]):
-                form.parentApp.submodule_forms_data.remove(form_data)
-            elif (module_name == form_data["module_name"]) & (submodule_name == form_data["submodule_name"]):
-                copy_count += 1
-        #If the last one is removed, we need to unselect the IntroForm widget
-        if copy_count == 0:
-            ModuleForm = form.parentApp.getForm("MODULE")
-            for widget_info in ModuleForm._widget_list:
-                if module_name == widget_info["module_name"]:
-                    for choice in widget_info["widget"].value:
-                        if widget_info["widget"].values[choice] == submodule_name:
-                            widget_info["widget"].value.remove(choice)
-        nps.notify_wait("Deleted copy of submodule %s." % submodule_name, title="Submodule Removed", form_color='STANDOUT', wrap=True, wide=True)
-        form.edit_return_value = True
-        form.editing = False
 
 class IntroForm(nps.FormMultiPageAction):
     def create(self):
@@ -446,6 +377,76 @@ class SubmoduleForm(nps.FormMultiPageAction):
             self.parentApp.setNextForm(self.parentApp._display_pages[self.parentApp.current_page])
         else:
             self.parentApp.setNextForm("SAVE")
+
+#Add/Remove Form button logic for submodule forms
+class AddFormButton(nps.ButtonPress):
+    def whenPressed(self):
+        form = self.parent
+        module_name = self.parent.module.name
+        submodule_name = self.parent.submodule.name
+        #Go through list of forms, and add it after all current forms of the same submodule
+        found = False
+        for i in range(0, len(form.parentApp.submodule_forms_data)):
+            if (module_name == form.parentApp.submodule_forms_data[i]["module_name"]) & (submodule_name == form.parentApp.submodule_forms_data[i]["submodule_name"]):
+                found = True
+                copy_number = form.parentApp.submodule_forms_data[i]["copy_number"]+1
+                insert_location = i+1
+            elif found:
+                break   
+        #Create new form
+        new_form = form.parentApp.createSubmoduleForm(module_name, submodule_name, copy_number)
+        #Add to submodule forms list
+        form.parentApp.submodule_forms_data.insert(insert_location, {"form":new_form, "submodule_name":submodule_name, "module_name":module_name, "copy_number":copy_number, "registered":False})
+        #Register form and add to the list of formid's
+        formid = module_name+"_"+submodule_name+"_"+str(copy_number)
+        form.parentApp.registerForm(formid, new_form)
+        form.parentApp._display_pages.insert(insert_location, formid)
+        #Notify the user that it worked
+        nps.notify_wait("New copy of submodule %s added as next page." % submodule_name, title="Submodule Duplicated", form_color='STANDOUT', wrap=True, wide=True)
+
+class RemoveFormButton(nps.ButtonPress):
+    def whenPressed(self):
+        form = self.parent
+        module_name = self.parent.module.name
+        submodule_name = self.parent.submodule.name
+        copy_number = self.parent.copy_number
+        formid = module_name+"_"+submodule_name+"_"+str(copy_number)
+        #Need to remove from the submodule_forms_data list and _display_pages list
+        form.parentApp._display_pages.remove(formid)
+        copy_count = 0
+        for form_data in form.parentApp.submodule_forms_data:
+            if (module_name == form_data["module_name"]) & (submodule_name == form_data["submodule_name"]) & (copy_number == form_data["copy_number"]):
+                form.parentApp.submodule_forms_data.remove(form_data)
+            elif (module_name == form_data["module_name"]) & (submodule_name == form_data["submodule_name"]):
+                copy_count += 1
+        #If the last one is removed, we need to unselect the IntroForm widget
+        if copy_count == 0:
+            ModuleForm = form.parentApp.getForm("MODULE")
+            for widget_info in ModuleForm._widget_list:
+                if module_name == widget_info["module_name"]:
+                    for choice in widget_info["widget"].value:
+                        if widget_info["widget"].values[choice] == submodule_name:
+                            widget_info["widget"].value.remove(choice)
+        nps.notify_wait("Deleted copy of submodule %s." % submodule_name, title="Submodule Removed", form_color='STANDOUT', wrap=True, wide=True)
+        form.edit_return_value = True
+        form.editing = False
+        
+#Custom Slider class that hits min and max properly
+class FloatSlider(nps.Slider):
+    def translate_value(self):
+        stri = "%s" % self.value
+        return stri
+
+    def h_increase(self, ch):
+        if (self.value + self.step <= self.out_of): self.value += self.step
+        elif (self.value >= self.out_of - self.step) & (self.value <= self.out_of): self.value = self.out_of
+
+    def h_decrease(self, ch):
+        if (self.value - self.step >= self.lowest): self.value -= self.step
+        elif (self.value <= self.step - self.lowest) & (self.value >= self.lowest): self.value = self.lowest
+
+class TitleFloatSlider(nps.wgtitlefield.TitleText):
+    _entry_type = FloatSlider
 
 if __name__ == "__main__":
     App = AXIOMEUI()
