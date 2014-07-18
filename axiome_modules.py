@@ -38,7 +38,6 @@ class AxiomeAnalysis(object):
             self.master_file = xml.parse(source_dir+"/res/master.xml")
         except:
             raise StandardError, "Error parsing XML file %s" % master_file
-        #**TODO** Replace with a better AxMakefile class
         #File manifest
         #Contains the filenames, and the module and active submodule that owns it
         self._manifest = {}

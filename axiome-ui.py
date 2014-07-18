@@ -157,7 +157,7 @@ class ModuleForm(nps.FormMultiPageAction):
                 #Special case: mapping file, we want to select a spreadsheet
                 if module.name == "source":
                     widget = nps.TitleFilenameCombo
-                    choice_widget = self.add_widget_intelligent(widget, w_id="module_source", name="Source Data Mapping File", max_height=3)
+                    choice_widget = self.add_widget_intelligent(widget, w_id="module_source", name="Source Data Mapping File:", max_height=3)
                     #For consistent spacing
                     self.nextrely += 1
                 else:
@@ -248,8 +248,7 @@ class SaveForm(nps.FormMultiPageAction):
         self.ALLOW_RESIZE = False
         self.OK_BUTTON_TEXT = "Save"
         self.CANCEL_BUTTON_TEXT = "Previous"
-        self.add_widget_intelligent(nps.TitleFilenameCombo, select_dir=True, w_id="save_directory", name="Save File Directory...", max_height=3)
-        self.add_widget_intelligent(nps.TitleText, w_id="save_filename", name="Save Filename", max_height=3)
+        self.add_widget_intelligent(nps.TitleFilenameCombo, w_id="save_filename", name="Save File Location...", max_height=3)
         
     def on_cancel(self):
         #Go back to the last page
@@ -258,14 +257,9 @@ class SaveForm(nps.FormMultiPageAction):
         
     def on_ok(self):
         #Get the save file path
-        file_dir = self.get_widget("save_directory").value
-        if not file_dir:
-            nps.notify_wait("Save File Directory must be specified.", title="Error", form_color='STANDOUT', wrap=True, wide=True)
-            self.editing = True
-            return
         file_name = self.get_widget("save_filename").value
         if not file_name:
-            nps.notify_wait("Save Filename must be specified.", title="Error", form_color='STANDOUT', wrap=True, wide=True)
+            nps.notify_wait("Save File Location must be specified.", title="Error", form_color='STANDOUT', wrap=True, wide=True)
             self.editing = True
             return
         #Options are OK. Now write the file:
@@ -360,7 +354,6 @@ class SubmoduleForm(nps.FormMultiPageAction):
             self.parentApp.current_page -= 1
         else:
             self.parentApp.current_page = -1
-        #self.exit_editing()
     
     def on_ok(self):
         #Validate the input variables
@@ -376,7 +369,6 @@ class SubmoduleForm(nps.FormMultiPageAction):
         else:
             if self.parentApp.current_page <= (len(self.parentApp._display_pages) - 1):
                 self.parentApp.current_page += 1
-            #self.exit_editing()
     
     def create(self):
         self.CANCEL_BUTTON_TEXT = "Previous"
