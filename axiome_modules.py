@@ -75,9 +75,11 @@ class AxiomeAnalysis(object):
                 return module
         raise ValueError, "Module %s not found" % name
     
-    #**TODO** Go into ax file and get Workflow name
     def getWorkflow(self):
-        return "Default"
+        if self.ax_file:
+            return self.ax_file.getElementsByTagName("axiome")[0].getAttribute("workflow")
+        else:
+            return "Default"
     
     def loadModules(self, workflow_name):
         """Iterates through workflow, loading all modules by the given

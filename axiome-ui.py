@@ -11,6 +11,7 @@ class AXIOMEUI(nps.NPSAppManaged):
     def __init__(self, *args, **keywords):
         self.submodule_forms_data = list()
         self.source_definitions = list()
+        self.AxAnal = None
         super(AXIOMEUI, self).__init__(*args, **keywords)
 
     def onStart(self):
@@ -107,9 +108,22 @@ class IntroForm(nps.FormMultiPageAction):
     def on_ok(self):
         #Create the ModuleForm
         workflow = self.get_widget("select_workflow").values[self.get_widget("select_workflow").value[0]]
-        self.parentApp.AxAnal = AxiomeAnalysis(None, workflow)
-        module_form = ModuleForm(parentApp=self.parentApp)
-        self.parentApp.registerForm("MODULE",module_form)
+        #If the workflow is different, recreate it
+        if self.parentApp.AxAnal:
+            if self.parentApp.AxAnal.workflow != workflow:
+				#Throw up a warning that all options will be overwritten
+				response = nps.notify_ok_cancel("Warning: Changing workflows will reset all previously entered values. Do you wish to continue?", title="Warning")
+				if response:
+					self.parentApp.AxAnal = AxiomeAnalysis(None, workflow)
+					module_form = ModuleForm(parentApp=self.parentApp)
+					self.parentApp.registerForm("MODULE",module_form)
+				else:
+					self.editing = True
+					return
+        else:
+            self.parentApp.AxAnal = AxiomeAnalysis(None, workflow)
+            module_form = ModuleForm(parentApp=self.parentApp)
+            self.parentApp.registerForm("MODULE",module_form)
         self.parentApp.setNextForm("MODULE")
         
         
