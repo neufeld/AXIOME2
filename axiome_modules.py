@@ -496,8 +496,6 @@ class AxProcess(object):
                     replacement_string = in_variable.replace("${"+to_replace[j]+"}", replacement_list[i][j])
             replaced_strings.append(replacement_string)
         return replaced_strings
-        
-        
     
 class AxVersion(object):
     def __init__(self, submodule, xml_obj):

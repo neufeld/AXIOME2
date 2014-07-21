@@ -3,7 +3,8 @@
 
 import npyscreen as nps
 from axiome_modules import AxiomeAnalysis, getWorkflowList
-from os.path import dirname, abspath
+from os.path import dirname, abspath, isfile
+from os import getcwd
 
 source_dir = dirname(abspath(__file__))
 
@@ -72,7 +73,7 @@ class AXIOMEUI(nps.NPSAppManaged):
             elif widget_type == "text":
                 form.add_widget_intelligent(nps.TitleText, w_id=requirement["name"], name=requirement["label"]+":", value=requirement["default"], max_height=3)
             elif widget_type == "file":
-                form.add_widget_intelligent(nps.TitleFilenameCombo, w_id=requirement["name"], name=requirement["label"]+":", max_height=3)
+                form.add_widget_intelligent(nps.TitleFilename, w_id=requirement["name"], name=requirement["label"]+":", max_height=3)
             required = requirement["required"]
             form._value["input"].append({"name":requirement["name"],"required":required, "type":requirement["type"]})
         #If you can have multiple submodules, then add an add/remove button
@@ -149,17 +150,21 @@ class ModuleForm(nps.FormMultiPageAction):
             if values:
                 #Two options: multi or not
                 if module._value["multi"]:
-                    widget = nps.TitleMultiSelect
+                    widget = nps.MultiSelect
                     value = None
                 else:
-                    widget = nps.TitleSelectOne
+                    widget = nps.SelectOne
                     value = 0
                 #Special case: mapping file, we want to select a spreadsheet
                 if module.name == "source":
-                    widget = HelpfulTitleFilenameCombo
-                    choice_widget = self.add_widget_intelligent(widget, w_id="module_source", name="Source Data Mapping File:", max_height=3)
+                    help_widget = self.add_widget_intelligent(HelpButton, help_msg="Select a tab separated (.tsv) file describing each file.\nMust include the columns 'sample_alias' and 'axiome_submodule'.", name="Source File Mapping:")
+                    self.nextrelx = 10
+                    widget = nps.Filename
+                    choice_widget = self.add_widget_intelligent(widget, w_id="module_source", value=None, max_height=4)
+                    choice_widget.value = getcwd()
                     #For consistent spacing
                     self.nextrely += 1
+                    self.nextrelx = 2
                 else:
                     #Sort out the values, given the defaults
                     defaults = list()
@@ -168,7 +173,10 @@ class ModuleForm(nps.FormMultiPageAction):
                             defaults.append(i)
                     if defaults:
                         value = defaults
-                    choice_widget = self.add_widget_intelligent(widget, name=module._value["label"]+":", w_id="module_"+module.name, values=values, value=value, max_height=len(values)+2, scroll_exit=True)
+                    help_widget = self.add_widget_intelligent(HelpButton, help_msg="Placeholder", name="%s:" % module._value["label"])
+                    self.nextrelx = 10
+                    choice_widget = self.add_widget_intelligent(widget, w_id="module_"+module.name, values=values, value=value, max_height=len(values)+1, scroll_exit=True)
+                    self.nextrelx = 2
                 self._widget_list.append({"module_name":module.name,"widget":choice_widget})    
         
     def on_ok(self):
@@ -176,6 +184,10 @@ class ModuleForm(nps.FormMultiPageAction):
         source_file_path = source_file_widget.value
         if not source_file_path:
             nps.notify_confirm(message="Source file mapping required")
+            self.editing = True
+            return
+        if not isfile(source_file_path):
+            nps.notify_confirm(message="Given source file mapping is not a file.")
             self.editing = True
             return
         if not self.sourceFileCheck(source_file_path):
@@ -248,7 +260,7 @@ class SaveForm(nps.FormMultiPageAction):
         self.ALLOW_RESIZE = False
         self.OK_BUTTON_TEXT = "Save"
         self.CANCEL_BUTTON_TEXT = "Previous"
-        self.add_widget_intelligent(nps.TitleFilenameCombo, w_id="save_filename", name="Save File Location...", max_height=3)
+        self.add_widget_intelligent(nps.TitleFilename, w_id="save_filename", name="Save File Location...", max_height=3)
         
     def on_cancel(self):
         #Go back to the last page
@@ -383,6 +395,14 @@ class SubmoduleForm(nps.FormMultiPageAction):
             self.parentApp.setNextForm(self.parentApp._display_pages[self.parentApp.current_page])
         else:
             self.parentApp.setNextForm("SAVE")
+            
+class HelpButton(nps.ButtonPress):
+    def __init__(self, screen, help_msg, *args, **keywords):
+        self.help_msg = help_msg
+        super(HelpButton, self).__init__(screen, *args, **keywords)
+        
+    def whenPressed(self):
+        nps.notify_confirm(self.help_msg, title="Module/Submodule Descriptions", editw=1)
 
 #A copy of the selectFile command that talks users through how
 #to use it
