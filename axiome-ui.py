@@ -3,8 +3,8 @@
 
 import npyscreen as nps
 from axiome_modules import AxiomeAnalysis, getWorkflowList
-from os.path import dirname, abspath, isfile
-from os import getcwd
+from os.path import dirname, abspath, isfile, isdir, exists
+from os import getcwd, makedirs
 
 source_dir = dirname(abspath(__file__))
 
@@ -177,7 +177,7 @@ class ModuleForm(nps.FormMultiPageAction):
                     self.nextrelx = 10
                     choice_widget = self.add_widget_intelligent(widget, w_id="module_"+module.name, values=values, value=value, max_height=len(values)+1, scroll_exit=True)
                     self.nextrelx = 2
-                self._widget_list.append({"module_name":module.name,"widget":choice_widget})    
+                self._widget_list.append({"module_name":module.name,"widget":choice_widget})
         
     def on_ok(self):
         source_file_widget = self.get_widget("module_source")
@@ -274,8 +274,15 @@ class SaveForm(nps.FormMultiPageAction):
             nps.notify_wait("Save File Location must be specified.", title="Error", form_color='STANDOUT', wrap=True, wide=True)
             self.editing = True
             return
+        if isdir(file_name):
+            nps.notify_wait("Save File Location must not be a directory.", title="Error", form_color='STANDOUT', wrap=True, wide=True)
+            self.editing = True
+            return
         #Options are OK. Now write the file:
-        with open(file_dir + "/" + file_name,'w') as out_ax:
+        directory = dirname(abspath(file_name))
+        if not exists(directory):
+            makedirs(directory)
+        with open(file_name,'w') as out_ax:
             #Start with the XML header
             #**TODO** Different workflows
             #We are manually writing XML, because that's how I roll
@@ -319,7 +326,7 @@ class SaveForm(nps.FormMultiPageAction):
             ax_file_string += "</axiome>"
             out_ax.write(ax_file_string)
         #**TODO** Make notify_confirm, allowing user to go back or exit
-        nps.notify_wait("File saved successfully to %s/%s. Ctrl+C to exit." % (file_dir, file_name), title="Saved!", form_color='STANDOUT', wrap=True, wide=True)
+        nps.notify_wait("File saved successfully to %s. Ctrl+C to exit." % (file_name), title="Saved!", form_color='STANDOUT', wrap=True, wide=True)
         
     def file_mapping_to_ax(self, mapping_file):
         with open(mapping_file) as mapping:
