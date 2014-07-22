@@ -472,7 +472,7 @@ class SubmoduleForm(nps.FormMultiPageAction):
 
     def afterEditing(self):
         if self.parentApp.current_page < 0:
-            self.parentApp.setNextForm("MAIN")
+            self.parentApp.setNextForm("MODULE")
             self.parentApp.current_page = 0
         elif self.parentApp.current_page <= (len(self.parentApp._display_pages) - 1): 
             self.parentApp.setNextForm(self.parentApp._display_pages[self.parentApp.current_page])
