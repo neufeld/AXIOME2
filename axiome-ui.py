@@ -411,31 +411,6 @@ class HelpButton(nps.ButtonPress):
     def whenPressed(self):
         nps.notify_confirm(self.help_msg, title="Module/Submodule Descriptions", editw=1)
 
-#A copy of the selectFile command that talks users through how
-#to use it
-class HelpfulFilenameCombo(nps.FilenameCombo):
-    def h_change_value(self, *args, **keywords):
-        nps.notify_confirm("""To navigate the file selector:
-        - Use arrow keys to navigate the file list
-        - The TAB key takes the cursor to a textbox
-        - In this textbox, hitting TAB will autocomplete a typed filepath (much like in a terminal)
-        - Hitting ENTER will submit the filepath and return to the previous page
-        - The "../" directory sends you up a directory""",title="Using the File Selector", editw=0)
-        self.value = nps.fmFileSelector.selectFile(
-            starting_value = self.value,
-            select_dir = self.select_dir,
-            must_exist = self.must_exist,
-            confirm_if_exists = self.confirm_if_exists,
-            sort_by_extension = self.sort_by_extension
-        )
-        self.value = ''
-        if self.value == '':
-            self.value = None
-        self.display()
-        
-class HelpfulTitleFilenameCombo(nps.wgcombobox.TitleCombo):
-    _entry_type = HelpfulFilenameCombo
-
 #Add/Remove Form button logic for submodule forms
 class AddFormButton(nps.ButtonPress):
     def whenPressed(self):
