@@ -14,8 +14,8 @@
 			<command label="Remove chimeras with UCHIME de novo algorithm" cmd="usearch -uchime_denovo ${i} -nonchimeras ${o} -notrunclabels" input="rep_set.fasta" output="rep_set.fasta"/>
 		</process>
 		<!-- Version check command for involved programs -->
-		<version>
+		<info>
 			<command label="USEARCH Version" cmd="usearch --version"/>
-		</version>
+		</info>
 	</plugin>
 </axiome>

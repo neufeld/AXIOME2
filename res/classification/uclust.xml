@@ -15,9 +15,9 @@
 			<command label="UCLUST Taxonomy Assignment via QIIME" cmd="assign_taxonomy.py -m uclust -i ${i} -o ${v} -r ${v} -t ${v}" input="rep_set.fasta" variable="${PWD},${training_seqs},${training_tax}"/>
 		</process>
 		<!-- Version check command for involved programs -->
-		<version>
+		<info>
 			<command label="QIIME Version" cmd="print_qiime_config.py | grep 'QIIME.*version'"/>
 			<command label="UCLUST Version" cmd="print_qiime_config.py | grep uclust"/>
-		</version>
+		</info>
 	</plugin>
 </axiome>

@@ -20,8 +20,8 @@
 			<command label="Convert OTU Table to Legacy Format" cmd="rm -f ${o} &amp;&amp; biom convert -b -i ${i} -o ${o} --header-key=taxonomy --output-metadata-id=Consensus\ Lineage" input="otu_table_auto.txt" output="otu_table_auto.tab,otu_table_auto.tab"/>
 		</process>
 		<!-- Version check command for involved programs -->
-		<version>
+		<info>
 			<command label="BIOM Version" cmd="print_qiime_config.py | grep 'biom-format'"/>
-		</version>
+		</info>
 	</plugin>
 </axiome>

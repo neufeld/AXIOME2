@@ -25,8 +25,8 @@
 				<command label="PANDASeq Assembly" cmd="pandaseq -f ${i} -r ${i} -t ${v} -w ${o} -C validtag:${v} ${v} ${v}" input="${forward_file_name},${reverse_file_name}" output="${sample_alias}.fasta" variable="${quality_threshold},${barcode},-p ${fprimer},-q ${rprimer}"/>
 		</process>
 		<!-- Version check command for involved programs -->
-		<version>
+		<info>
 				<command label="PANDASeq" cmd="pandaseq -v"/>
-		</version>
+		</info>
 	</plugin>
 </axiome>

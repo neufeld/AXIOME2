@@ -18,8 +18,8 @@
 				<command label="FASTA File Merge" cmd="cat ${i} >> ${o}" input="${source:sample_alias}.fasta" output="seq.fasta" format="slist"/>
 		</process>
 		<!-- Version check command for involved programs -->
-		<version>
+		<info>
 				<command label="Cat (for sequence merging)" cmd="cat --version"/>
-		</version>
+		</info>
 	</plugin>
 </axiome>

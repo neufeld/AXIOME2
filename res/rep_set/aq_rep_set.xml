@@ -12,8 +12,8 @@
 			<command label="AXIOME Rep Set Builder" cmd="aq-mkrepset ${i} ${i} > ${o}" input="seq.fasta,seq_otus.txt" output="rep_set.fasta"/>
 		</process>
 		<!-- Version check command for involved programs -->
-		<version>
+		<info>
 			<command label="AXIOME Rep Set Builder" cmd=""/>
-		</version>
+		</info>
 	</plugin>
 </axiome>

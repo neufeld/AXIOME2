@@ -267,10 +267,10 @@ class AxSubmodule(object):
     def __init__(self, module, xml_obj):
         self._module = module
         self.name = xml_obj.getElementsByTagName("plugin").item(0).getAttribute("name")
-        #Go through the submodule, creating the AxInput AxProcess and AxVersion objects
+        #Go through the submodule, creating the AxInput AxProcess and AxInfo objects
         self._input = AxInput(self, xml_obj.getElementsByTagName("input"))
         self._process = AxProcess(self, xml_obj.getElementsByTagName("process"))
-        self._version = AxVersion(self, xml_obj.getElementsByTagName("version"))
+        self._version = AxInfo(self, xml_obj.getElementsByTagName("info"))
         self.num_loaded = 0
 
 class AxInput(object):
@@ -497,7 +497,7 @@ class AxProcess(object):
             replaced_strings.append(replacement_string)
         return replaced_strings
     
-class AxVersion(object):
+class AxInfo(object):
     def __init__(self, submodule, xml_obj):
         #Give access to the submodule that originates this object
         self._submodule = submodule

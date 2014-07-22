@@ -17,8 +17,8 @@
 				<command label="Creating copy of metadata mapping file" cmd="cp ${i} ${o}" input="${metadata_mapping}" output="metadata_mapping.txt"/>
 		</process>
 		<!-- Version check command for involved programs -->
-		<version>
+		<info>
 				<command label="cp" cmd="cp --version | head -n 1"/>
-		</version>
+		</info>
 	</plugin>
 </axiome>

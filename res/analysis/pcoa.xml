@@ -15,8 +15,8 @@
 			<command label="PCoA Ordination" cmd="aq-pcoa -i ${i} -m ${i} -o ${o} -d ${v}" input="otu_table_auto.tab,metadata_mapping.txt" output="pcoa-${distance}-biplot.pdf" variable="${distance}"/>
 		</process>
 		<!-- Version check command for involved programs -->
-		<version>
+		<info>
 			<command label="PCoA Version" cmd="aq-pcoa -v"/>
-		</version>
+		</info>
 	</plugin>
 </axiome>

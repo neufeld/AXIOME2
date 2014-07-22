@@ -20,8 +20,8 @@
 			<command label="cd-hit cluster reformatting" cmd="awk '{ ORS=&quot;&quot; } { if (/&gt;Cluster/) { if ( NR != 1 ) { print &quot;\n&quot;; } print $$2; } else { print &quot;\t&quot;; gsub(/\.\.\./,&quot;&quot;); print substr($$3,2); }}' ${i} > ${o}" input="cd-hit-out.clstr" output="seq_otus.txt"/>
 		</process>
 		<!-- Version check command for involved programs -->
-		<version>
+		<info>
 			<command label="cdhit-est" cmd="cd-hit-est -h | head -n 1"/>
-		</version>
+		</info>
 	</plugin>
 </axiome>

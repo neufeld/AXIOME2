@@ -16,9 +16,9 @@
 			<command label="RDP Taxonomy Assignment via QIIME" cmd="assign_taxonomy.py -m rdp -i ${i} -o ${v} -c ${v}" input="rep_set.fasta" variable="${PWD},${confidence}"/>
 		</process>
 		<!-- Version check command for involved programs -->
-		<version>
+		<info>
 			<command label="QIIME Version" cmd="print_qiime_config.py | grep 'QIIME.*version'"/>
 			<command label="RDP Version" cmd="print_qiime_config.py | grep rdp"/>
-		</version>
+		</info>
 	</plugin>
 </axiome>

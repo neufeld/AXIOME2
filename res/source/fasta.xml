@@ -24,8 +24,8 @@
 				<command label="Relabelling FASTA Files" cmd="awk -v SAMPLEID=${v} 'BEGIN{count=0}{if (/^>/){print &quot;>&quot; SAMPLEID &quot;_&quot; count; count+=1}else{print}}' ${i} > ${o}" input="${sample_alias}_orig_labels.fasta" output="${sample_alias}.fasta" variable="${sample_alias}"/>
 		</process>
 		<!-- Version check command for involved programs -->
-		<version>
+		<info>
 				<command label="AWK (for FASTA sequence compiling)" cmd="awk -V | head -n 1"/>
-		</version>
+		</info>
 	</plugin>
 </axiome>
