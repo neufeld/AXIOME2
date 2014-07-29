@@ -10,7 +10,9 @@ from os import getcwd, makedirs
 source_dir = dirname(abspath(__file__))
 
 class AXIOMEUI(nps.NPSAppManaged):
-    def __init__(self, *args, **keywords):
+    def __init__(self, ax_file = None, *args, **keywords):
+        self.ax_file = ax_file
+        self.submodules_loaded = False
         self.submodule_forms_data = list()
         self.source_definitions = list()
         self.AxAnal = None
@@ -23,23 +25,31 @@ class AXIOMEUI(nps.NPSAppManaged):
         nps.FIX_MINIMUM_SIZE_WHEN_CREATED = False
         self.registerForm("MAIN", IntroForm(parentApp=self))
         self.registerForm("SAVE", SaveForm(parentApp=self))
-                    
+         
     def buildSubmoduleForms(self, selected_submodules):
         new_submodule_forms_data = list()
         for names in selected_submodules:
             module_name = names["module_name"]
             submodule_name = names["submodule_name"]
-            #For each selected module+submodule, check if it is in the list
-            inserted = False
-            for form in self.submodule_forms_data:
-                if (module_name == form["module_name"]) and (submodule_name == form["submodule_name"]):
-                    new_submodule_forms_data.append(form)
-                    inserted = True
-            #If not found, make a new dictionary to hold information
-            if not inserted:
-                form = self.createSubmoduleForm(module_name, submodule_name, 0)
-                if form:
-                    new_submodule_forms_data.append({"module_name":module_name, "submodule_name":submodule_name, "form":form, "copy_number":0, "registered":False})
+            if self.submodules_loaded | (not self.ax_file):
+                #For each selected module+submodule, check if it is in the list
+                inserted = False
+                for form in self.submodule_forms_data:
+                    if (module_name == form["module_name"]) and (submodule_name == form["submodule_name"]):
+                        new_submodule_forms_data.append(form)
+                        inserted = True
+                #If not found, make a new dictionary to hold information
+                if not inserted:
+                    form = self.createSubmoduleForm(module_name, submodule_name, 0)
+                    if form:
+                        new_submodule_forms_data.append({"module_name":module_name, "submodule_name":submodule_name, "form":form, "copy_number":0, "registered":False})
+            else:
+                #On first load, if a .ax file was specified, load the submodules from there
+                submodule_form_list = self.createSubmoduleFormFromAxFile(module_name, submodule_name)
+                copy = 0
+                for form in submodule_form_list:
+                    new_submodule_forms_data.append({"module_name":module_name, "submodule_name":submodule_name, "form":form, "copy_number":copy, "registered":False})
+                    copy += 1
         #Clear the page display list
         self._display_pages = list()
         for form_data in new_submodule_forms_data:
@@ -47,6 +57,7 @@ class AXIOMEUI(nps.NPSAppManaged):
             self.registerForm(formid,form_data["form"])
             self._display_pages.append(formid)
         self.submodule_forms_data = new_submodule_forms_data
+        self.submodules_loaded = True
             
     def createSubmoduleForm(self, module_name, submodule_name, copy_number):
         #Grab the AxInput for the submodule
@@ -84,14 +95,36 @@ class AXIOMEUI(nps.NPSAppManaged):
             form.add_widget_intelligent(AddFormButton, name="Add Copy of Submodule", w_id="submodule_add")
             form.add_widget_intelligent(RemoveFormButton, name="Remove Copy of Submodule", w_id="submodule_remove")
         return form
+        
+    def createSubmoduleFormFromAxFile(self, module_name, submodule_name):
+        #Get the activated submodules
+        active_submodule_list = self.AxAnal.getActiveSubmodulesBySubmoduleName(module_name, submodule_name)
+        submodule_form_list = list()
+        copy = 0
+        for active_submodule in active_submodule_list:
+            form = self.createSubmoduleForm(module_name, submodule_name, copy)
+            if form:
+                args = active_submodule._args
+                for variable, value in args.iteritems():
+                    widget = form.get_widget(variable)
+                    if widget.__class__.__name__ is "TitleFloatSlider":
+                        value = float(value)
+                    try:
+                        widget.value = value
+                    except:
+                        raise ValueError, widget.__class__.__name__
+                copy += 1
+                submodule_form_list.append(form)
+        return submodule_form_list
 
-class IntroForm(nps.FormMultiPageAction):
+class IntroForm(nps.FormMultiPageAction):   
     def create(self):
         #Keep it from crashing when terminal size changes
         self.ALLOW_RESIZE = False
         self.OK_BUTTON_TEXT = "Next"
         self.CANCEL_BUTTON_TEXT = "Exit"
         self._widget_list = []
+        #Intro message
         message="""Welcome to AXIOME\nTo navigate through the UI, use arrow keys or TAB.
             \nENTER will select an option, and SPACE will deselect an option.
             \nRequirements for the analysis:
@@ -101,10 +134,14 @@ class IntroForm(nps.FormMultiPageAction):
         self.name = "Select Workflow"
         #Get the possible workflows from the master.xml file
         workflow_list = getWorkflowList()
-        try:
-            value = workflow_list.index("Default")
-        except:
-            value = 0
+        if self.parentApp.ax_file:
+            self.parentApp.AxAnal = AxiomeAnalysis(self.parentApp.ax_file)
+            value = workflow_list.index(self.parentApp.AxAnal.getWorkflow())
+        else:
+            try:
+                value = workflow_list.index("Default")
+            except:
+                value = 0
         self.add_widget_intelligent(nps.TitleSelectOne, name="Select Workflow", w_id="select_workflow", values=workflow_list, value=value, max_height=len(workflow_list)+2, scroll_exit=True)
         
     def on_ok(self):
@@ -114,18 +151,23 @@ class IntroForm(nps.FormMultiPageAction):
         if self.parentApp.AxAnal:
             if self.parentApp.AxAnal.workflow != workflow:
                 #Throw up a warning that all options will be overwritten
-                response = nps.notify_ok_cancel("Warning: Changing workflows will reset all previously entered values. Do you wish to continue?", title="Warning")
+                response = nps.notify_ok_cancel("Warning: Changing workflows will reset all previously entered values (including from loaded .ax file). Do you wish to continue?", title="Warning")
                 if response:
-                    self.parentApp.AxAnal = AxiomeAnalysis(None, workflow)
+                    self.parentApp.AxAnal = AxiomeAnalysis(self.parentApp.ax_file, workflow)
                     module_form = ModuleForm(parentApp=self.parentApp)
                     self.parentApp.registerForm("MODULE",module_form)
                 else:
                     self.editing = True
                     return
         else:
-            self.parentApp.AxAnal = AxiomeAnalysis(None, workflow)
+            self.parentApp.AxAnal = AxiomeAnalysis(self.parentApp.ax_file, workflow)
             module_form = ModuleForm(parentApp=self.parentApp)
             self.parentApp.registerForm("MODULE",module_form)
+        #If the page doesn't exist (in case where AxAnal is loaded from
+        # .ax file), then make it
+        if "MODULE" not in self.parentApp.getHistory():
+            module_form = ModuleForm(parentApp=self.parentApp)
+            self.parentApp.registerForm("MODULE", module_form)
         self.parentApp.setNextForm("MODULE")
         
         
@@ -179,6 +221,32 @@ class ModuleForm(nps.FormMultiPageAction):
                     choice_widget = self.add_widget_intelligent(widget, w_id="module_"+module.name, values=values, value=value, max_height=len(values)+1, scroll_exit=True)
                     self.nextrelx = 2
                 self._widget_list.append({"module_name":module.name,"widget":choice_widget})
+        #If the ax_file was provided, change the default values to the
+        #values in the file/AxAnal
+        if self.parentApp.ax_file:
+            #The used submodules are in the getActiveSubmodulesByModuleName method
+            for widget in self._widget_list:
+                value = None
+                if widget["module_name"] == "source":
+                    #Look for the comment that tells us the source file location
+                    for comment in self.parentApp.AxAnal.getAxFileComments():
+                        if "source mapping_file=" in comment:
+                            #Parse out the path
+                            value = comment.split('"')[-2]
+                else:
+                    value = list()
+                    try:
+                        submodule_list = self.parentApp.AxAnal.getActiveSubmodulesByModuleName(widget["module_name"])
+                    except:
+                        submodule_list = None
+                    if submodule_list:
+                        for active_submodule in submodule_list:
+                            if active_submodule._submodule.name in widget["widget"].values:
+                                index = widget["widget"].values.index(active_submodule._submodule.name)
+                                if index not in value:
+                                    value.append(index)
+                if value:
+                    widget["widget"].value = value
         
     def on_ok(self):
         source_file_widget = self.get_widget("module_source")
@@ -306,6 +374,7 @@ class SaveForm(nps.FormMultiPageAction):
                 #Special case: source
                 if module_name == "source":
                     mapping_file = self.parentApp.getForm("MODULE").get_widget("module_source").value
+                    ax_file_string += '\t<!--source mapping_file="%s"-->\n' % mapping_file
                     ax_file_string += self.file_mapping_to_ax(mapping_file)
                 else:
                     found = False
@@ -403,7 +472,8 @@ class SubmoduleForm(nps.FormMultiPageAction):
             self.parentApp.setNextForm(self.parentApp._display_pages[self.parentApp.current_page])
         else:
             self.parentApp.setNextForm("SAVE")
-            
+
+#A button with the function of popping up a help message
 class HelpButton(nps.ButtonPress):
     def __init__(self, screen, help_msg, *args, **keywords):
         self.help_msg = help_msg
