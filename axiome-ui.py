@@ -170,11 +170,13 @@ class IntroForm(nps.FormMultiPageAction):
             self.parentApp.registerForm("MODULE", module_form)
         self.parentApp.setNextForm("MODULE")
         
-        
     def on_cancel(self):
-        nps.notify_wait(message="Exiting is not yet implemented. Press Ctrl+c to kill the program.", title=":(", form_color="STANDOUT", wide=True)
-        #Override the auto-exit
-        self.editing = True
+        response = nps.notify_ok_cancel("Are you sure you want to exit? All unsaved changes will be lost.", title="Exit?", form_color='STANDOUT', wrap=True, editw=0)
+        if response:
+            self.parentApp.setNextForm(None)
+            self.editing = False
+        else:
+            self.editing = True
 
 class ModuleForm(nps.FormMultiPageAction):
     def create(self):
@@ -353,7 +355,6 @@ class SaveForm(nps.FormMultiPageAction):
             makedirs(directory)
         with open(file_name,'w') as out_ax:
             #Start with the XML header
-            #**TODO** Different workflows
             #We are manually writing XML, because that's how I roll
             ax_file_string = '<?xml version="1.0"?>\n<axiome workflow="%s">\n' % self.parentApp.AxAnal.workflow
             submodules = list()
@@ -396,8 +397,13 @@ class SaveForm(nps.FormMultiPageAction):
             ax_file_string += "</axiome>"
             out_ax.write(ax_file_string)
         #**TODO** Make notify_confirm, allowing user to go back or exit
-        nps.notify_wait("File saved successfully to %s. Ctrl+C to exit." % (file_name), title="Saved!", form_color='STANDOUT', wrap=True, wide=True)
-        
+        response = nps.notify_ok_cancel("File saved successfully to %s. Do you want to exit?" % (file_name), title="Saved!", form_color='STANDOUT', wrap=True, editw=0)
+        if response:
+            self.parentApp.setNextForm(None)
+            self.editing = False
+        else:
+            self.editing = True
+ 
     def file_mapping_to_ax(self, mapping_file):
         with open(mapping_file) as mapping:
             #Clear the old definitions out
