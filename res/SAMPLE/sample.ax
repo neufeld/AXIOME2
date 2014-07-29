@@ -2,6 +2,7 @@
 <axiome workflow="Default">
 	<!--Mapping files - metadata and source files are separate-->
 	<mapping method="copy" metadata_mapping="/home/michael/Documents/Work/AXIOME2/res/SAMPLE/mapping.txt"/>
+	<!--source mapping_file="/home/michael/Documents/Work/AXIOME2/res/SAMPLE/sample_file_mapping.tsv"-->
 	<source method="fasta" sample_alias="0" seq_file="/home/michael/Documents/Work/AXIOME2/res/SAMPLE/hmmb.fasta" regex="L1GCCTAA" />
 	<source method="fasta" sample_alias="1" seq_file="/home/michael/Documents/Work/AXIOME2/res/SAMPLE/hmmb.fasta" regex="L2GTAGCC" />
 	<source method="fasta" sample_alias="2" seq_file="/home/michael/Documents/Work/AXIOME2/res/SAMPLE/hmmb.fasta" regex="L1ACATCG" />
