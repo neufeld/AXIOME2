@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import argparse
 import npyscreen as nps
 from axiome_modules import AxiomeAnalysis, getWorkflowList
 from os.path import dirname, abspath, isfile, isdir, exists
@@ -482,5 +483,9 @@ class TitleFloatSlider(nps.wgtitlefield.TitleText):
     _entry_type = FloatSlider
 
 if __name__ == "__main__":
-    App = AXIOMEUI()
+    parser = argparse.ArgumentParser(description='Launch the AXIOME UI')
+    parser.add_argument("input", metavar="i", type=str, nargs='?', help="Input .ax file (optional)")
+    args = parser.parse_args()
+    #Pass the input file into the UI
+    App = AXIOMEUI(args.input)
     App.run()   
