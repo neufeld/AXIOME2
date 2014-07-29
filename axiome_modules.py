@@ -75,7 +75,12 @@ class AxiomeAnalysis(object):
     
     def getWorkflow(self):
         if self.ax_file:
-            return self.ax_file.getElementsByTagName("axiome")[0].getAttribute("workflow")
+            workflow_list = getWorkflowList()
+            workflow = self.ax_file.getElementsByTagName("axiome")[0].getAttribute("workflow")
+            if workflow not in workflow_list:
+                raise ValueError, "Workflow in loaded .ax file not found in master.xml"
+            else:
+                return workflow
         else:
             return "Default"
     
