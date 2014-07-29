@@ -141,6 +141,13 @@ class AxiomeAnalysis(object):
             raise ValueError, "No activated submodules from submodule '%s' found." % name
         return active_submodule_list
 
+    def getAxFileComments(self):
+        comment_list = list()
+        for node in self.ax_file.getElementsByTagName("axiome").item(0).childNodes:
+            if node.nodeType == xml.Node.COMMENT_NODE:
+                comment_list.append(node.data)
+        return comment_list
+
 
 class AxMakefile(object):
     def __init__(self, makefile):
