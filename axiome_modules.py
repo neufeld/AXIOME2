@@ -132,10 +132,10 @@ class AxiomeAnalysis(object):
             raise ValueError, "No activated submodules from module '%s' found." % name
         return active_submodule_list
                 
-    def getActiveSubmodulesBySubmoduleName(self, name):
+    def getActiveSubmodulesBySubmoduleName(self, module_name, submodule_name):
         active_submodule_list = list()
         for submodule in self._activated_submodules:
-            if submodule._submodule.name == name:
+            if (submodule._submodule.name == submodule_name) & (submodule._submodule._module.name == module_name):
                 active_submodule_list.append(submodule)
         if not active_submodule_list:
             raise ValueError, "No activated submodules from submodule '%s' found." % name
