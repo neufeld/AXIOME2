@@ -18,13 +18,18 @@ def getWorkflowList():
 class AxiomeAnalysis(object):
     def __init__(self, ax_file, workflow = None):
         """AxiomeAnalysis: Class that controls loading and activating
-        of modules, creation of resulting Makefile, or launching of UI
+        of modules, creation of resulting Makefile and report
         """
+        #An AxAnalysis can be initiated with or without an AXIOME file
+        #Without an AXIOME file, we just load all of the plugins
+        #This is good for tests, and generating the UI
         if ax_file:
             try:
                 self.ax_file = xml.parse(ax_file)
             except:
                 raise StandardError, "Error parsing XML file %s" % ax_file
+            #Set the working directory to the .ax file location
+            #but add axiome as the extension
             self.working_directory = splitext(ax_file)[0] + ".axiome"
             try:
                 if not isdir(self.working_directory):
