@@ -63,12 +63,6 @@ class AxiomeAnalysis(object):
             self.report.writeHTML()
             self.makefile.writeMakefile()
 
-    def __del__(self):
-        if self.ax_file:
-            self.ax_file.close()
-        self.master_file.close()
-        self.makefile.close()
-    
     def getModuleByName(self, name):
         """Searches through initiated modules and returns module matching
         the given name
