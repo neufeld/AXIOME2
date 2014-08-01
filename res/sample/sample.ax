@@ -1,53 +1,53 @@
 <?xml version="1.0"?>
 <axiome workflow="Default">
 	<!--Mapping files - metadata and source files are separate-->
-	<mapping method="copy" metadata_mapping="/Winnebago/mwhall/AXIOME2/res/sample/mapping.txt"/>
-	<!--source mapping_file="/Winnebago/mwhall/AXIOME2/res/sample/sample_file_mapping.tsv"-->
-	<source method="fasta" sample_alias="0" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1GCCTAA" />
-	<source method="fasta" sample_alias="1" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2GTAGCC" />
-	<source method="fasta" sample_alias="2" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1ACATCG" />
-	<source method="fasta" sample_alias="3" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2AAGCTA" />
-	<source method="fasta" sample_alias="4" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1CGTGAT" />
-	<source method="fasta" sample_alias="5" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2ACGGTA" />
-	<source method="fasta" sample_alias="6" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1CTCTCT" />
-	<source method="fasta" sample_alias="7" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1CACTGT" />
-	<source method="fasta" sample_alias="8" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1TGGTCA" />
-	<source method="fasta" sample_alias="9" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1ATTGGC" />
-	<source method="fasta" sample_alias="10" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1GATCTG" />
-	<source method="fasta" sample_alias="11" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1AAGCTA" />
-	<source method="fasta" sample_alias="12" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2CGTACT" />
-	<source method="fasta" sample_alias="13" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1CTGATC" />
-	<source method="fasta" sample_alias="14" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2TACAAG" />
-	<source method="fasta" sample_alias="15" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1TCAAGT" />
-	<source method="fasta" sample_alias="16" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2AGTTGG" />
-	<source method="fasta" sample_alias="17" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2CTCTCT" />
-	<source method="fasta" sample_alias="18" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1TACAAG" />
-	<source method="fasta" sample_alias="19" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1GTAGCC" />
-	<source method="fasta" sample_alias="20" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1CGTACT" />
-	<source method="fasta" sample_alias="21" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1GACTGA" />
-	<source method="fasta" sample_alias="22" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1TGAGGA" />
-	<source method="fasta" sample_alias="23" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2ACAACC" />
-	<source method="fasta" sample_alias="24" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1TCGCTT" />
-	<source method="fasta" sample_alias="25" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2TGAGGA" />
-	<source method="fasta" sample_alias="26" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1GCTCAA" />
-	<source method="fasta" sample_alias="27" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2CAAGTG" />
-	<source method="fasta" sample_alias="28" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2CCTTGA" />
-	<source method="fasta" sample_alias="29" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1CCTTGA" />
-	<source method="fasta" sample_alias="30" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1ACCTCA" />
-	<source method="fasta" sample_alias="31" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1ACAACC" />
-	<source method="fasta" sample_alias="32" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1ACGGTA" />
-	<source method="fasta" sample_alias="33" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L1AGTTGG" />
-	<source method="fasta" sample_alias="34" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2GCCTAA" />
-	<source method="fasta" sample_alias="35" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2CACTGT" />
-	<source method="fasta" sample_alias="36" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2ACATCG" />
-	<source method="fasta" sample_alias="37" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2TGGTCA" />
-	<source method="fasta" sample_alias="38" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2CGTGAT" />
-	<source method="fasta" sample_alias="39" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2GACTGA" />
-	<source method="fasta" sample_alias="40" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2TCGCTT" />
-	<source method="fasta" sample_alias="41" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2GATCTG" />
-	<source method="fasta" sample_alias="42" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2ATTGGC" />
-	<source method="fasta" sample_alias="43" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2TCAAGT" />
-	<source method="fasta" sample_alias="44" seq_file="/Winnebago/mwhall/AXIOME2/res/sample/hmmb.fasta" regex="L2CTGATC" />
+	<mapping method="copy" metadata_mapping="@SOURCE_DIR@/res/sample/mapping.txt"/>
+	<!--source mapping_file="@SOURCE_DIR@/res/sample/sample_file_mapping.tsv"-->
+	<source method="fasta" sample_alias="0" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1GCCTAA" />
+	<source method="fasta" sample_alias="1" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2GTAGCC" />
+	<source method="fasta" sample_alias="2" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1ACATCG" />
+	<source method="fasta" sample_alias="3" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2AAGCTA" />
+	<source method="fasta" sample_alias="4" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1CGTGAT" />
+	<source method="fasta" sample_alias="5" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2ACGGTA" />
+	<source method="fasta" sample_alias="6" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1CTCTCT" />
+	<source method="fasta" sample_alias="7" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1CACTGT" />
+	<source method="fasta" sample_alias="8" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1TGGTCA" />
+	<source method="fasta" sample_alias="9" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1ATTGGC" />
+	<source method="fasta" sample_alias="10" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1GATCTG" />
+	<source method="fasta" sample_alias="11" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1AAGCTA" />
+	<source method="fasta" sample_alias="12" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2CGTACT" />
+	<source method="fasta" sample_alias="13" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1CTGATC" />
+	<source method="fasta" sample_alias="14" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2TACAAG" />
+	<source method="fasta" sample_alias="15" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1TCAAGT" />
+	<source method="fasta" sample_alias="16" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2AGTTGG" />
+	<source method="fasta" sample_alias="17" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2CTCTCT" />
+	<source method="fasta" sample_alias="18" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1TACAAG" />
+	<source method="fasta" sample_alias="19" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1GTAGCC" />
+	<source method="fasta" sample_alias="20" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1CGTACT" />
+	<source method="fasta" sample_alias="21" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1GACTGA" />
+	<source method="fasta" sample_alias="22" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1TGAGGA" />
+	<source method="fasta" sample_alias="23" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2ACAACC" />
+	<source method="fasta" sample_alias="24" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1TCGCTT" />
+	<source method="fasta" sample_alias="25" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2TGAGGA" />
+	<source method="fasta" sample_alias="26" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1GCTCAA" />
+	<source method="fasta" sample_alias="27" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2CAAGTG" />
+	<source method="fasta" sample_alias="28" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2CCTTGA" />
+	<source method="fasta" sample_alias="29" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1CCTTGA" />
+	<source method="fasta" sample_alias="30" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1ACCTCA" />
+	<source method="fasta" sample_alias="31" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1ACAACC" />
+	<source method="fasta" sample_alias="32" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1ACGGTA" />
+	<source method="fasta" sample_alias="33" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1AGTTGG" />
+	<source method="fasta" sample_alias="34" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2GCCTAA" />
+	<source method="fasta" sample_alias="35" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2CACTGT" />
+	<source method="fasta" sample_alias="36" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2ACATCG" />
+	<source method="fasta" sample_alias="37" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2TGGTCA" />
+	<source method="fasta" sample_alias="38" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2CGTGAT" />
+	<source method="fasta" sample_alias="39" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2GACTGA" />
+	<source method="fasta" sample_alias="40" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2TCGCTT" />
+	<source method="fasta" sample_alias="41" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2GATCTG" />
+	<source method="fasta" sample_alias="42" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2ATTGGC" />
+	<source method="fasta" sample_alias="43" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2TCAAGT" />
+	<source method="fasta" sample_alias="44" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2CTGATC" />
 	<merge_sources method="cat"/>
 	<cluster method="cdhit" identity="0.97"/>
 	<rep_set method="aq_rep_set"/>

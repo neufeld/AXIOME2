@@ -9,4 +9,4 @@ source_dir = dirname(abspath(__file__))
 
 if __name__ == "__main__":
     #**TODO** allow this script to invoke UI and AXIOME steps
-    axiome_analysis = AxiomeAnalysis(source_dir + "/res/sample/sample.ax")
+    axiome_analysis = AxiomeAnalysis("sample.ax")
