@@ -9,7 +9,7 @@ import re
 source_dir = dirname(abspath(__file__))
 
 def getWorkflowList():
-    master_file = xml.parse(source_dir+"/res/master.xml")
+    master_file = xml.parse(source_dir+"/res/modules/master.xml")
     workflow_list = list()
     for workflow in master_file.getElementsByTagName("workflow"): 
         workflow_list.append(workflow.getAttribute("name"))
@@ -40,7 +40,7 @@ class AxiomeAnalysis(object):
         else:
             self.working_directory = ""
         try:
-            self.master_file = xml.parse(source_dir+"/res/master.xml")
+            self.master_file = xml.parse(source_dir+"/res/modules/master.xml")
         except:
             raise StandardError, "Error parsing XML file %s" % master_file
         #File manifest
@@ -265,12 +265,12 @@ class AxModule(object):
     def loadSubModules(self):
         #Go into the module folder and load all of the submodules
         submodule_list = []
-        for submodule in listdir(source_dir + "/res/%s/" % self.name):
+        for submodule in listdir(source_dir + "/res/modules/%s/" % self.name):
             #**TODO** Need to check if it is a file and a .xml suffix
             try:
-                xml_obj = xml.parse(source_dir + "/res/%s/%s" % (self.name, submodule))
+                xml_obj = xml.parse(source_dir + "/res/modules/%s/%s" % (self.name, submodule))
             except:
-                raise StandardError, "Could not parse file '" + source_dir + "/res/%s/%s'" % (self.name, submodule)
+                raise StandardError, "Could not parse file '" + source_dir + "/res/modules/%s/%s'" % (self.name, submodule)
             submodule_list.append(AxSubmodule(self, xml_obj))
         return submodule_list
     
