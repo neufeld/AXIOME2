@@ -5,6 +5,7 @@
 		<!-- This is used to create the UI -->
 		<input>
 			<text label="Distance Method" name="distance" default="bray"/>
+			<float label="Ellipsoid Confidence" name="ellipsoid" default="0" min="0" max="1"/>
 		</input>
 		<!-- Define what the plugin is going to do -->
 		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
@@ -17,6 +18,7 @@
 		<!-- Version check command for involved programs -->
 		<info>
 			<command label="PCoA Version" cmd="aq-pcoa -v"/>
+			<help text="Principal Coordinates on rarefied OTU table. Ellipsoid confidence draws a percent confidence interval around each group of points. Set to 0 for no ellipsoid, 0.8 for 80% confidence, etc.. Valid distance measures: bray, euclidean, manhattan, canberra, jaccard, gower, altGower, morisita, horn, mountford, raup, binomial, chao."/>
 		</info>
 	</plugin>
 </axiome>

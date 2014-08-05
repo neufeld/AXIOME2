@@ -6,25 +6,25 @@
 	<!-- multi="true" means more than one step from this category can be selected
 	     otherwise, only one choice from the step can be selected -->
 	<!-- default lists the default selected submodules for the UI -->
-		<mapping label="Mapping Method" required="true"/>
-		<source label="Source Data File" required="true" multi="true"/>
-		<merge_sources label="Merge Sources Method" required="true"/>
-		<cluster label="Cluster Method" required="true"/>
-		<rep_set label="Representative Set Method" required="true"/>
-		<chimera label="Chimera Checking/Removal Method"/>
-		<classification label="Taxonomic Classification Method" required="true" default="rdp"/>
-		<otu_table label="Creation, conversion, and filtering of OTU tables" required="true" multi="true" default="create_qiime,legacy,rarefy"/>
-		<analysis label="Various data analyses" multi="true" default="taxaplot"/>
+		<mapping label="Mapping Method" required="true" help="Method for handling the metadata mapping file."/>
+		<source label="Source Data File" required="true" multi="true" help="Methods for processing input sequence files."/>
+		<merge_sources label="Merge Sources Method" required="true" help="Method for merging individual sample files into one file."/>
+		<cluster label="Cluster Method" required="true" help="Method for clustering sequence data into OTUs."/>
+		<rep_set label="Representative Set Method" required="true" help="Method for choosing representative sequences from OTUs."/>
+		<chimera label="Chimera Checking/Removal Method" help="Method for checking for (and removing) chimeras."/>
+		<classification label="Taxonomic Classification Method" required="true" default="rdp" help="Method for classifying taxonomy of OTUs."/>
+		<otu_table label="Creation, conversion, and filtering of OTU tables" required="true" multi="true" default="create_qiime,legacy,rarefy" help="Functions operating on OTU tables (transformations, filtering, etc.)"/>
+		<analysis label="Various data analyses" multi="true" default="taxaplot" help="All downstream analyses."/>
 	</workflow>
 	<workflow name="Complete Run">
-		<mapping label="Mapping Method" required="true"/>
-		<source label="Source Data File" required="true" multi="true"/>
-		<merge_sources label="Merge Sources Method" required="true"/>
-		<cluster label="Cluster Method" required="true"/>
-		<rep_set label="Representative Set Method" required="true"/>
-		<chimera label="Chimera Checking/Removal Method"/>
-		<classification label="Taxonomic Classification Method" required="true" default="rdp"/>
-		<otu_table label="Creation, conversion, and filtering of OTU tables" required="true" multi="true" default="create_qiime,legacy,rarefy"/>
-		<analysis label="Various data analyses" multi="true" default="taxaplot,pcoa"/>
+		<mapping label="Mapping Method" required="true" help="Method for handling the metadata mapping file."/>
+		<source label="Source Data File" required="true" multi="true" help="Methods for processing input sequence files."/>
+		<merge_sources label="Merge Sources Method" required="true" help="Method for merging individual sample files into one file."/>
+		<cluster label="Cluster Method" required="true" help="Method for clustering sequence data into OTUs."/>
+		<rep_set label="Representative Set Method" required="true" help="Method for choosing representative sequences from OTUs."/>
+		<chimera label="Chimera Checking/Removal Method" help="Method for checking for (and removing) chimeras."/>
+		<classification label="Taxonomic Classification Method" required="true" default="rdp" help="Method for classifying taxonomy of OTUs."/>
+		<otu_table label="Creation, conversion, and filtering of OTU tables" required="true" multi="true" default="create_qiime,legacy,rarefy" help="Functions operating on OTU tables (transformations, filtering, etc.)"/>
+		<analysis label="Various data analyses" multi="true" default="taxaplot,pcoa" help="All downstream analyses."/>
 	</workflow>
 </axiome>

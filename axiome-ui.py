@@ -396,7 +396,6 @@ class SaveForm(nps.FormMultiPageAction):
                         ax_file_string += '\t<%s method="%s"/>\n' % (module_name, submodule_name)
             ax_file_string += "</axiome>"
             out_ax.write(ax_file_string)
-        #**TODO** Make notify_confirm, allowing user to go back or exit
         response = nps.notify_ok_cancel("File saved successfully to %s. Do you want to exit?" % (file_name), title="Saved!", form_color='STANDOUT', wrap=True, editw=0)
         if response:
             self.parentApp.setNextForm(None)

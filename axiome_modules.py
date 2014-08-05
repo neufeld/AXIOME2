@@ -370,7 +370,7 @@ class AxProcess(object):
                         process_dict["command"]["output"] = node.getAttribute("output")
                         process_dict["command"]["variable"] = node.getAttribute("variable")
             self._values.append(process_dict)
-            
+
     def createMakefileString(self, active_submodule):
         #Steps:
         # For each process:
@@ -519,11 +519,14 @@ class AxInfo(object):
         #Populate the values from the XML object
         for node in xml_obj.item(0).childNodes:
             if node.nodeType == xml.Node.ELEMENT_NODE:
+                if node.nodeName == "command":
                 #Get all of the information
-                label = node.getAttribute("label")
-                cmd = node.getAttribute("cmd")
-                self._values[label] = cmd
-                
+                    label = node.getAttribute("label")
+                    cmd = node.getAttribute("cmd")
+                    self._values["command"] = {"label":label, "cmd":cmd}
+                elif node.nodeName == "help":
+					pass
+					
     def createMakefileString(self):
         makefile_string = ""
         for label, cmd in self._values:
