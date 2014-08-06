@@ -239,7 +239,7 @@ class AxModule(object):
         self.name = module_name
         self._analysis = analysis
         #Default properties
-        self._value = {"required":False, "multi":False, "label":self.name, "default":list()}
+        self._value = {"required":False, "multi":False, "label":self.name, "default":list(), "help":""}
         self.updateProperties(args)
         self._submodules = self.loadSubModules()
     
@@ -254,6 +254,8 @@ class AxModule(object):
                 self._value["label"] = args["label"]
             elif prop in ["default"]:
                 self._value["default"] = args["default"].replace(" ","").split(",")
+            elif prop in ["help"]:
+				self._value["help"] = args["help"]
     
     def getSubmoduleByName(self, name):
         #Go through the submodules and get it by its name
@@ -281,7 +283,7 @@ class AxSubmodule(object):
         #Go through the submodule, creating the AxInput AxProcess and AxInfo objects
         self._input = AxInput(self, xml_obj.getElementsByTagName("input"))
         self._process = AxProcess(self, xml_obj.getElementsByTagName("process"))
-        self._version = AxInfo(self, xml_obj.getElementsByTagName("info"))
+        self._info = AxInfo(self, xml_obj.getElementsByTagName("info"))
         self.num_loaded = 0
 
 class AxInput(object):
@@ -513,7 +515,7 @@ class AxInfo(object):
         #Give access to the submodule that originates this object
         self._submodule = submodule
         #Structure that stores all pertinent data
-        self._values = {}
+        self._values = {"input":{}}
         #xml_obj is the <input> sections (including <input> tags)
         #There should only be one of these
         #Populate the values from the XML object
@@ -525,8 +527,13 @@ class AxInfo(object):
                     cmd = node.getAttribute("cmd")
                     self._values["command"] = {"label":label, "cmd":cmd}
                 elif node.nodeName == "help":
-					pass
-					
+                    text = node.getAttribute("text")
+                    self._values["help"] = {"text":text}
+                elif node.nodeName == "input":
+                    name = node.getAttribute("name")
+                    text = node.getAttribute("text")
+                    self._values["input"][name] = text
+                    
     def createMakefileString(self):
         makefile_string = ""
         for label, cmd in self._values:

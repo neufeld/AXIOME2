@@ -94,6 +94,16 @@ class AXIOMEUI(nps.NPSAppManaged):
             form.nextrely+=1
             form.add_widget_intelligent(AddFormButton, name="Add Copy of Submodule", w_id="submodule_add")
             form.add_widget_intelligent(RemoveFormButton, name="Remove Copy of Submodule", w_id="submodule_remove")
+        #Add in description and help text in a box
+        form.nextrely+=1
+        AxInfo = submodule._info
+        description_box = form.add_widget_intelligent(TitleExitPager, name="Submodule Description:", slow_scroll = True, max_height = 4, scroll_exit = True, autowrap = True, values = [AxInfo._values["help"]["text"]])
+        help_text = list()
+        for name, text in AxInfo._values["input"].iteritems():
+            label = AxInput.getValuesForInput(name)["label"]
+            help_text.append("%s: %s" % (label, text))
+        if help_text:
+            help_box = form.add_widget_intelligent(TitleExitPager, name="Argument Descriptions:", max_height=6, slow_scroll = True, scroll_exit = True, autowrap = True, values = help_text)
         return form
         
     def createSubmoduleFormFromAxFile(self, module_name, submodule_name):
@@ -218,7 +228,10 @@ class ModuleForm(nps.FormMultiPageAction):
                             defaults.append(i)
                     if defaults:
                         value = defaults
-                    help_widget = self.add_widget_intelligent(HelpButton, help_msg="Placeholder", name="%s:" % module._value["label"])
+                    help_text = module._value["help"]
+                    if not help_text:
+                        help_text = "No description given in module definition."
+                    help_widget = self.add_widget_intelligent(HelpButton, help_msg=help_text, name="%s:" % module._value["label"])
                     self.nextrelx = 10
                     choice_widget = self.add_widget_intelligent(widget, w_id="module_"+module.name, values=values, value=value, max_height=len(values)+1, scroll_exit=True)
                     self.nextrelx = 2
@@ -556,6 +569,18 @@ class FloatSlider(nps.Slider):
 
 class TitleFloatSlider(nps.wgtitlefield.TitleText):
     _entry_type = FloatSlider
+
+#The npyscreen class has a bug when trying to exit the widget
+#Overriding the h_scroll_line_down method fixes that
+class ExitPager(nps.Pager):
+    def h_scroll_line_down(self, input):
+        self.start_display_at += 1
+        if self.scroll_exit and len(self._my_widgets)-self.cursor_line >= len(self.values)-1:
+            self.editing = False
+            self.how_exited = True
+            
+class TitleExitPager(nps.TitleMultiLine):
+    _entry_type = ExitPager
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Launch the AXIOME UI')
