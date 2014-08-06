@@ -14,7 +14,7 @@
 		<!-- Version check command for involved programs -->
 		<info>
 			<command label="AXIOME Rep Set Builder" cmd=""/>
-			<help text="Picks the most commonly occuring sequence from each OTU as the representative. Attempts to minimize RAM usage to a reasonable level, and may be preferable to QIIME methods on some systems."
+			<help text="Picks the most commonly occuring sequence from each OTU as the representative. Attempts to minimize RAM usage to a reasonable level, and may be preferable to QIIME methods on some systems."/>
 		</info>
 	</plugin>
 </axiome>
