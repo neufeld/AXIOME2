@@ -22,6 +22,7 @@
 		<!-- Version check command for involved programs -->
 		<info>
 			<command label="BIOM Version" cmd="print_qiime_config.py | grep 'biom-format'"/>
+			<help text="Uses QIIME's single_rarefaction.py to randomly subsample an OTU table to even sampling depth, and then makes legacy OTU table with the BIOM toolkit"/>
 		</info>
 	</plugin>
 </axiome>

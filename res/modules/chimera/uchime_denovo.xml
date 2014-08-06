@@ -4,7 +4,6 @@
 		<!-- Define what the plugin needs -->
 		<!-- This is used to create the UI -->
 		<input>
-			<!--file label="Exclude OTU List" name="exclude_list" command_prefix="-e"/-->
 		</input>
 		<!-- Define what the plugin is going to do -->
 		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
@@ -16,6 +15,7 @@
 		<!-- Version check command for involved programs -->
 		<info>
 			<command label="USEARCH Version" cmd="usearch --version"/>
+			<help text="Remove chimeras with usearch's uchime denovo algorithm"/>
 		</info>
 	</plugin>
 </axiome>

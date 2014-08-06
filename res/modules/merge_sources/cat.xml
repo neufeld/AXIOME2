@@ -20,6 +20,7 @@
 		<!-- Version check command for involved programs -->
 		<info>
 				<command label="Cat (for sequence merging)" cmd="cat --version"/>
+				<help text="Uses cat to concatenate the individual sequence files into one pooled sequence file"/>
 		</info>
 	</plugin>
 </axiome>

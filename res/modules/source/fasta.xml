@@ -26,6 +26,10 @@
 		<!-- Version check command for involved programs -->
 		<info>
 				<command label="AWK (for FASTA sequence compiling)" cmd="awk -V | head -n 1"/>
+				<help text="Uses awk to filter out only certain sequences from a FASTA file, and separate them into their own file."/>
+				<input name="sample_alias" text="Name given to sample"/>
+				<input name="seq_file" text="Full filepath to FASTA file"/>
+				<input name="regex" text="Regular expression to filter sequences by FASTA label"/>
 		</info>
 	</plugin>
 </axiome>

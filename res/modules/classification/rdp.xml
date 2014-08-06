@@ -19,6 +19,10 @@
 		<info>
 			<command label="QIIME Version" cmd="print_qiime_config.py | grep 'QIIME.*version'"/>
 			<command label="RDP Version" cmd="print_qiime_config.py | grep rdp"/>
+			<help text="Uses QIIME's assign_taxonomy.py to classify with RDP"/>
+			<input name="confidence" text="Confidence threshold for assigning a taxonomy to a rank. Corresponds to a posterior probability."/>
+			<input name="training_seqs" text="Full filepath to the training set sequence file"/>
+			<input name="training_tax" text="Full filepath to the training set taxonomy file"/>
 		</info>
 	</plugin>
 </axiome>

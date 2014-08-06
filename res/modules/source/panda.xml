@@ -27,6 +27,14 @@
 		<!-- Version check command for involved programs -->
 		<info>
 				<command label="PANDASeq" cmd="pandaseq -v"/>
+				<help text="Uses PANDASeq to assemble Illumina paired-end reads, and output to separate FASTA files"/>
+				<input name="sample_alias" text="Name given to sample"/>
+				<input name="forward_file_name" text="Full filepath to the forward FASTQ file"/>
+				<input name="reverse_file_name" text="Full filepath to the reverse FASTQ file"/>
+				<input name="barcode" text="Sample barcode used to parse FASTQ header"/>
+				<input name="quality_threshold" text="Quality threshold for including sequences"/>
+				<input name="fprimer" text="Forward primer sequence"/>
+				<input name="rprimer" text="Reverse primer sequence"/>
 		</info>
 	</plugin>
 </axiome>

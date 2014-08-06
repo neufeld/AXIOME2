@@ -17,6 +17,7 @@
 		<!-- Version check command for involved programs -->
 		<info>
 			<command label="QIIME Version" cmd="print_qiime_config.py | grep 'QIIME.*version'"/>
+			<help text="Uses QIIME to create a BIOM format OTU table"/>
 		</info>
 	</plugin>
 </axiome>

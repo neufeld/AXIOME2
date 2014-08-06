@@ -19,6 +19,7 @@
 		<!-- Version check command for involved programs -->
 		<info>
 				<command label="cp" cmd="cp --version | head -n 1"/>
+				<help text="Copies mapping file from source"/>
 		</info>
 	</plugin>
 </axiome>

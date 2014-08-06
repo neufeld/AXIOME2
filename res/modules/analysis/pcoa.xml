@@ -18,7 +18,9 @@
 		<!-- Version check command for involved programs -->
 		<info>
 			<command label="PCoA Version" cmd="aq-pcoa -v"/>
-			<help text="Principal Coordinates on rarefied OTU table. Ellipsoid confidence draws a percent confidence interval around each group of points. Set to 0 for no ellipsoid, 0.8 for 80% confidence, etc.. Valid distance measures: bray, euclidean, manhattan, canberra, jaccard, gower, altGower, morisita, horn, mountford, raup, binomial, chao."/>
+			<help text="Principal Coordinates on rarefied OTU table."/>
+			<input name="distance" text="Valid distance measures: bray, euclidean, manhattan, canberra, jaccard, gower, altGower, morisita, horn, mountford, raup, binomial, chao."/>
+			<input name="ellipsoid" text="Ellipsoid confidence draws a percent confidence interval around each group of points. Set to 0 for no ellipsoid, 0.8 for 80% confidence, etc."/>
 		</info>
 	</plugin>
 </axiome>

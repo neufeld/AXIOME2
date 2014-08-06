@@ -16,6 +16,7 @@
 		<!-- Version check command for involved programs -->
 		<info>
 			<command label="BIOM Version" cmd="print_qiime_config.py | grep 'biom-format'"/>
+			<help text="Uses the BIOM toolkit to convert a BIOM format OTU table to a tab-separated legacy format OTU table for downstream analyses"/>
 		</info>
 	</plugin>
 </axiome>
