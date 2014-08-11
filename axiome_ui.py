@@ -108,23 +108,33 @@ class AXIOMEUI(nps.NPSAppManaged):
         
     def createSubmoduleFormFromAxFile(self, module_name, submodule_name):
         #Get the activated submodules
-        active_submodule_list = self.AxAnal.getActiveSubmodulesBySubmoduleName(module_name, submodule_name)
+        #If there is a required step, but it isn't in the AxFile, it'll cause a crash
+        #If we can't find an active submodule, make a new one
+        try:
+            active_submodule_list = self.AxAnal.getActiveSubmodulesBySubmoduleName(module_name, submodule_name)
+        except:
+            active_submodule_list = None
         submodule_form_list = list()
         copy = 0
-        for active_submodule in active_submodule_list:
+        if active_submodule_list:
+            for active_submodule in active_submodule_list:
+                form = self.createSubmoduleForm(module_name, submodule_name, copy)
+                if form:
+                    args = active_submodule._args
+                    for variable, value in args.iteritems():
+                        widget = form.get_widget(variable)
+                        if widget.__class__.__name__ is "TitleFloatSlider":
+                            value = float(value)
+                        try:
+                            widget.value = value
+                        except:
+                            raise ValueError, widget.__class__.__name__
+                    copy += 1
+                    submodule_form_list.append(form)
+        else:
             form = self.createSubmoduleForm(module_name, submodule_name, copy)
             if form:
-                args = active_submodule._args
-                for variable, value in args.iteritems():
-                    widget = form.get_widget(variable)
-                    if widget.__class__.__name__ is "TitleFloatSlider":
-                        value = float(value)
-                    try:
-                        widget.value = value
-                    except:
-                        raise ValueError, widget.__class__.__name__
-                copy += 1
-                submodule_form_list.append(form)
+				submodule_form_list.append(form)
         return submodule_form_list
 
 class IntroForm(nps.FormMultiPageAction):   
