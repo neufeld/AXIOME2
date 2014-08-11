@@ -217,9 +217,7 @@ class AxActiveSubmodule(object):
             self._submodule.num_loaded += 1
         #Check if the requirements of the module are met
         if not self._submodule._input.requirementsMet(args):
-            #**TODO**
-            print args
-            print ":("
+            raise ValueError, "Requirements for submodule '%s', module '%s' not met. Exiting." % (self._submodule.name, self._submodule._module.name)
             
     def fillDefaults(self, args, submodule):
         #Go into the requirements for the submodule
