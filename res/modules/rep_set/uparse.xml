@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="UPARSE" type="rep_set">
+		<input>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "pick_rep_set" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="rep_set.fasta"/>
+			<output name="rep_set.fasta"/>
+			<command label="Linking UPARSE OTUs as representative set" cmd="ln ${i} ${o}" input="rep_set.fasta" output="rep_set.fasta"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="ln for linking" cmd=""/>
+			<help text="Links the representative set created by uparse for use downstream."/>
+		</info>
+	</plugin>
+</axiome>

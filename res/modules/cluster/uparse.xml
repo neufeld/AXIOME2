@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="UPARSE" type="cluster">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<float label="Sequence Identity" name="identity" required="true" default="0.97" min="0" max="1"/>
+			<text label="Minimum size for Clustering" name="minsize" required="true" default="2"/>
+			<text label="Number of Threads" name="num_threads" default="1"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="seq.fasta"/>
+			<output name="seq.unique.fasta"/>
+			<command label="Dereplication of sequences" cmd="usearch -derep_fulllength ${i} -output ${o} -sizeout -strand both" input="seq.fasta" output="seq.unique.fasta"/>
+		</process>
+		<process>
+			<input name="seq.unique.fasta"/>
+			<output name="seq.unique.sorted.fasta"/>
+			<command label="Sorting dereplicated sequences by abundance" cmd="usearch -sortbysize ${i} -output ${o} -minsize ${v}" input="seq.unique.fasta" output="seq.unique.sorted.fasta" variable="${minsize}"/>
+		</process>
+		<process>
+			<input name="seq.unique.sorted.fasta"/>
+			<output name="otus_original_label.fasta"/>
+			<command label="Clustering the OTUs" cmd="usearch -cluster_otus ${i} -otus ${o}" input="seq.unique.sorted.fasta" output="otus_original_label.fasta"/>
+		</process>
+		<process>
+			<input name="otus_original_label.fasta"/>
+			<output name="rep_set.fasta"/>
+			<command label="Using awk to relabel OTUs" cmd="awk 'BEGIN{count=0;}{if ($$0~/>/){print &quot;>&quot; count; count+=1;} else {print}}' ${i} > ${o}" input="otus_original_label.fasta" output="rep_set.fasta"/>
+		</process>
+		<process>
+			<input name="rep_set.fasta"/>
+			<input name="seq.fasta"/>
+			<output name="map.uc"/>
+			<command label="Mapping sequences back to OTUs" cmd="usearch -usearch_global ${i} -db ${i} -strand both -id ${v} -uc ${o} ${v}" input="seq.fasta,rep_set.fasta" output="map.uc" variable="${identity},-threads ${num_threads}"/>
+		</process>
+		<process>
+			<input name="map.uc"/>
+			<output name="seq_otus.txt"/>
+			<command label="Conversion of uclust file to seq_otus.txt" cmd="mesas-uc2clust ${v}${i} ${o}" input="map.uc" output="seq_otus.txt" variable="-t ${num_threads} "/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="usearch" cmd="usearch --version"/>
+			<help text="Uses the UPARSE pipeline to cluster sequences into OTUs. The UPARSE representative set selector must be selected to use UPARSE's OTUs"/>
+			<input name="identity" text="Percent identity for determining if a sequence should join a cluster"/>
+			<input name="minsize" text="Minimum size of dereplicated cluster to include in the clustering operation (default 2)"/>
+			<input name="num_threads" text="Number of threads for mapping sequences back to the OTUs and conversion of uclust file to seq_otus.txt"/>
+		</info>
+	</plugin>
+</axiome>
