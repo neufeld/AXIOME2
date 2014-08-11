@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="fasttree" type="phylogeny">
+		<input>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<process>
+			<input name="rep_set_aligned_filtered.fasta"/>
+			<output name="rep_set.tre"/>
+			<command label="Alignment with FastTree" cmd="FastTree -nt &lt; ${i} > ${o}" input="rep_set_aligned.fasta" output="rep_set.tre"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="FastTree" cmd="FastTree -expert -h 2>&amp;1 | head -n 1"/>
+		</info>
+	</plugin>
+</axiome>
