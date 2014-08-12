@@ -19,10 +19,15 @@
 				<!-- Here, output file is determined dynamically by AXIOME -->
 				<input name="${forward_file_name}"/>
 				<input name="${reverse_file_name}"/>
-				<output name="${sample_alias}.fasta"/>
+				<output name="${sample_alias}_orig_labels.fasta"/>
 
 				<!-- "variable" refers to the item input by the user above -->
-				<command label="PANDASeq Assembly" cmd="pandaseq -f ${i} -r ${i} -t ${v} -w ${o} -C validtag:${v} ${v} ${v}" input="${forward_file_name},${reverse_file_name}" output="${sample_alias}.fasta" variable="${quality_threshold},${barcode},-p ${fprimer},-q ${rprimer}"/>
+				<command label="PANDASeq Assembly" cmd="pandaseq -f ${i} -r ${i} -t ${v} -w ${o} -G ${v}/log.txt.bz2 -C validtag:${v} ${v} ${v}" input="${forward_file_name},${reverse_file_name}" output="${sample_alias}_orig_labels.fasta" variable="${quality_threshold},${PWD},${barcode},-p ${fprimer},-q ${rprimer}"/>
+		</process>
+		<process>
+				<input name="${sample_alias}_orig_labels.fasta"/>
+				<output name="${sample_alias}.fasta"/>
+				<command label="Relabelling FASTA Files" cmd="awk -v SAMPLEID=${v} 'BEGIN{count=0}{if (/^>/){print &quot;>&quot; SAMPLEID &quot;_&quot; count; count+=1}else{print}}' ${i} > ${o}" input="${sample_alias}_orig_labels.fasta" output="${sample_alias}.fasta" variable="${sample_alias}"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
