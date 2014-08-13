@@ -254,7 +254,7 @@ class AxModule(object):
             elif prop in ["default"]:
                 self._value["default"] = args["default"].replace(" ","").split(",")
             elif prop in ["help"]:
-				self._value["help"] = args["help"]
+                self._value["help"] = args["help"]
     
     def getSubmoduleByName(self, name):
         #Go through the submodules and get it by its name
@@ -514,7 +514,7 @@ class AxInfo(object):
         #Give access to the submodule that originates this object
         self._submodule = submodule
         #Structure that stores all pertinent data
-        self._values = {"input":{}}
+        self._values = {"input":{},"help":{"text":"No description given."}}
         #xml_obj is the <input> sections (including <input> tags)
         #There should only be one of these
         #Populate the values from the XML object

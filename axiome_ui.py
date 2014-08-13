@@ -238,9 +238,14 @@ class ModuleForm(nps.FormMultiPageAction):
                             defaults.append(i)
                     if defaults:
                         value = defaults
-                    help_text = module._value["help"]
+                    help_text = module._value["help"] + "\n"
                     if not help_text:
                         help_text = "No description given in module definition."
+                    for submodule in module._submodules:
+						try:
+							help_text += "\n%s: %s" % (submodule.name, submodule._info._values["help"]["text"])
+						except:
+							raise ValueError, submodule.name
                     help_widget = self.add_widget_intelligent(HelpButton, help_msg=help_text, name="%s:" % module._value["label"])
                     self.nextrelx = 10
                     choice_widget = self.add_widget_intelligent(widget, w_id="module_"+module.name, values=values, value=value, max_height=len(values)+1, scroll_exit=True)
@@ -508,7 +513,7 @@ class HelpButton(nps.ButtonPress):
         super(HelpButton, self).__init__(screen, *args, **keywords)
         
     def whenPressed(self):
-        nps.notify_confirm(self.help_msg, title="Module/Submodule Descriptions", editw=1)
+        nps.notify_confirm(message=self.help_msg, title="Module/Submodule Descriptions", form_color='STANDOUT', wrap=True, wide=True, editw=1)
 
 #Add/Remove Form button logic for submodule forms
 class AddFormButton(nps.ButtonPress):
