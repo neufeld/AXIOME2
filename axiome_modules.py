@@ -39,6 +39,7 @@ class AxiomeAnalysis(object):
             self.makefile = AxMakefile(self.working_directory+"/Makefile")
         else:
             self.working_directory = ""
+            self.ax_file = None
         try:
             self.master_file = xml.parse(source_dir+"/res/modules/master.xml")
         except:
