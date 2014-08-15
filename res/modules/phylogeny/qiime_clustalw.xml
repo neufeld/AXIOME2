@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="qiime_clustalw" type="phylogeny">
+		<input>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<process>
+			<input name="rep_set_aligned_pfiltered.fasta"/>
+			<output name="rep_set.tre"/>
+			<command label="Phylogeny generation with clustalw via QIIME" cmd="make_phylogeny.py -i ${i} -t clustalw -o ${v}/rep_set.tre -l ${v}/log.txt" input="rep_set_aligned_pfiltered.fasta" variable="${PWD},${PWD}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="clustalw" cmd="clustalw -h | grep CLUSTAL"/>
+		</info>
+	</plugin>
+</axiome>

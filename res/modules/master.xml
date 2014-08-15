@@ -5,30 +5,22 @@
 	<!-- required="true" means a step from this category must be selected -->
 	<!-- multi="true" means more than one step from this category can be selected
 	     otherwise, only one choice from the step can be selected -->
+	<!-- sidenote: if required = "False", you must set multi = "true" for now ... working on a fix -->
 	<!-- default lists the default selected submodules for the UI -->
+	<!-- help is the text that the UI presents to describe module-->
 		<mapping label="Mapping Method" required="true" help="Method for handling the metadata mapping file."/>
 		<source label="Source Data File" required="true" multi="true" help="Methods for processing input sequence files."/>
 		<merge_sources label="Merge Sources Method" required="true" help="Method for merging individual sample files into one file."/>
 		<cluster label="Cluster Method" required="true" help="Method for clustering sequence data into OTUs."/>
 		<rep_set label="Representative Set Method" required="true" help="Method for choosing representative sequences from OTUs."/>
-		<chimera label="Chimera Checking/Removal Method" help="Method for checking for (and removing) chimeras."/>
+		<chimera label="Chimera Checking/Removal Method" multi="true" help="Method for checking for (and removing) chimeras."/>
 		<classification label="Taxonomic Classification Method" required="true" default="rdp" help="Method for classifying taxonomy of OTUs."/>
 		<alignment label="Alignment of representative set" default="pynast" help="Method for aligning the representative set sequences."/>
 		<phylogeny label="Phylogeny building method" default="fasttree" help="Method for building a phylogenetic tree from aligned sequences."/>
-		<otu_table label="Creation, conversion, and filtering of OTU tables" required="true" multi="true" default="create_qiime,legacy,rarefy" help="Functions operating on OTU tables (transformations, filtering, etc.)"/>
-		<analysis label="Various data analyses" multi="true" default="taxaplot" help="All downstream analyses."/>
-	</workflow>
-	<workflow name="Complete Run">
-		<mapping label="Mapping Method" required="true" help="Method for handling the metadata mapping file."/>
-		<source label="Source Data File" required="true" multi="true" help="Methods for processing input sequence files."/>
-		<merge_sources label="Merge Sources Method" required="true" help="Method for merging individual sample files into one file."/>
-		<cluster label="Cluster Method" required="true" help="Method for clustering sequence data into OTUs."/>
-		<rep_set label="Representative Set Method" required="true" help="Method for choosing representative sequences from OTUs."/>
-		<chimera label="Chimera Checking/Removal Method" help="Method for checking for (and removing) chimeras."/>
-		<classification label="Taxonomic Classification Method" required="true" default="rdp" help="Method for classifying taxonomy of OTUs."/>
-		<alignment label="Alignment of representative set" default="pynast" help="Method for aligning the representative set sequences."/>
-		<phylogeny label="Phylogeny building method" default="fasttree" help="Method for building a phylogenetic tree from aligned sequences."/>
-		<otu_table label="Creation, conversion, and filtering of OTU tables" required="true" multi="true" default="create_qiime,legacy,rarefy" help="Functions operating on OTU tables (transformations, filtering, etc.)"/>
-		<analysis label="Various data analyses" multi="true" default="taxaplot,pcoa" help="All downstream analyses."/>
+		<create_otu_table label="OTU table Creation" required="true" multi="true" default="qiime" help="Method for creating the OTU table."/>
+		<convert_otu_table label="Conversion of OTU Table" multi="true" default="tab_format,rarefied_tab_format" help="Methods for converting OTU tables."/>
+		<rarefy_otu_table label="Rarefaction of OTU Table" multi="true" default="qiime" help="Methods for rarefying OTU table"/>
+		<misc_analysis label="Various data analyses" multi="true" default="taxaplot" help="Miscellaneous downstream analyses."/>
+		<rarefied_analysis label="Analyses based on a rarefied OTU table" multi="true" help="All analyses in this group are based on the rarefied OTU table, otu_table_auto"/>
 	</workflow>
 </axiome>

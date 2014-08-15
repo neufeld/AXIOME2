@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="rarefied_biom_to_tab" type="convert_otu_table">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<!--file label="Exclude OTU List" name="exclude_list" command_prefix="-e"/-->
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="otu_table_auto_rare.biom"/>
+			<output name="otu_table_auto.tab" report_label="Tab Delimited Rarefied (Subsampled) OTU Table"/>
+			<command label="Convert OTU Table to Legacy Format" cmd="rm -f ${o} &amp;&amp; biom convert -b -i ${i} -o ${o} --header-key=taxonomy --output-metadata-id=Consensus\ Lineage" input="otu_table_auto.biom" output="otu_table_auto.tab,otu_table_auto.tab"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="BIOM Version" cmd="print_qiime_config.py | grep 'biom-format'"/>
+			<help text="Uses the BIOM toolkit to convert a BIOM format OTU table to a tab-separated legacy format OTU table for downstream analyses"/>
+		</info>
+	</plugin>
+</axiome>

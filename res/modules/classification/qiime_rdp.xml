@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <axiome>
-	<plugin name="rdp" type="classification">
+	<plugin name="qiime_rdp" type="classification">
 		<!-- Define what the plugin needs -->
 		<!-- This is used to create the UI -->
 		<input>
 			<float label="Confidence" name="confidence" required="true" default="0.8" min="0" max="1"/>
-			<file label="Training Sequences" name="training_seqs" required="true"/>
-			<file label="Training Taxonomy" name="training_tax" required="true"/>
+			<file label="Training Sequences" name="training_seqs"/>
+			<file label="Training Taxonomy" name="training_tax" />
 		</input>
 		<!-- Define what the plugin is going to do -->
 		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
 		<process>
 			<input name="rep_set.fasta"/>
 			<output name="rep_set_tax_assignments.txt"/>
-			<command label="RDP Taxonomy Assignment via QIIME" cmd="assign_taxonomy.py -m rdp -i ${i} -o ${v} -c ${v}" input="rep_set.fasta" variable="${PWD},${confidence}"/>
+			<command label="RDP Taxonomy Assignment via QIIME" cmd="assign_taxonomy.py -m rdp -i ${i} -o ${v} -c ${v}${v}${v}" input="rep_set.fasta" variable="${PWD},${confidence}, -t ${training_tax}, -r ${training_seqs}"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
@@ -21,8 +21,8 @@
 			<command label="RDP Version" cmd="print_qiime_config.py | grep rdp"/>
 			<help text="Uses QIIME's assign_taxonomy.py to classify with RDP"/>
 			<input name="confidence" text="Confidence threshold for assigning a taxonomy to a rank. Corresponds to a posterior probability."/>
-			<input name="training_seqs" text="Full filepath to the training set sequence file"/>
-			<input name="training_tax" text="Full filepath to the training set taxonomy file"/>
+			<input name="training_seqs" text="Full filepath to the training set sequence file (Optional, will use QIIME default if not given)"/>
+			<input name="training_tax" text="Full filepath to the training set taxonomy file (Optional, will use QIIME default if not given)"/>
 		</info>
 	</plugin>
 </axiome>

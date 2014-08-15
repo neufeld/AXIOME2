@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="qiime_muscle" type="alignment">
+		<input>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<process>
+			<input name="rep_set.fasta"/>
+			<output name="rep_set_aligned.fasta"/>
+			<command label="MUSCLE alignment" cmd="align_seqs.py -m muscle -i ${i} -o ${v}" input="rep_set.fasta" variable="${PWD}"/>
+		</process>
+		<process>
+			<input name="rep_set_aligned.fasta"/>
+			<output name="rep_set_aligned_pfiltered.fasta"/>
+			<command label="QIIME alignment filtering" cmd="filter_alignment.py -i ${i} -o ${v} -s" input="rep_set_aligned.fasta" variable="${PWD}"/>
+		</process>
+		<info>
+			<command label="MUSCLE" cmd="muscle -version"/>
+			<help text="Uses MUSCLE via QIIME to align sequences"/>
+		</info>
+	</plugin>
+</axiome>

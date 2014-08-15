@@ -13,17 +13,11 @@
 		<process>
 				<!-- Every process needs at least one input file and one output file -->
 				<input name="${seq_file}"/>
-				<output name="${sample_alias}_orig_labels.fasta"/>
+				<output name="${sample_alias}.fasta"/>
 
 				<!-- "variable" refers to the item input by the user above -->
-				<command label="FASTA File Loading" cmd="awk -v MATCHING=${v} 'BEGIN{ORS=&quot;&quot;; out=0;} {if (!/^>/ &amp;&amp; out) {print;} if (/^>/ &amp;&amp; ($$0~MATCHING)) {if (out==1) {print &quot;\n&quot;}; print; print &quot;\n&quot;; out=1;} if (/^>/ &amp;&amp; ($$0!~MATCHING)) {if (out==1) {print &quot;\n&quot;;} out=0;}}END{if (out==1) {print &quot;\n&quot;}}' ${i} > ${o}" input="${seq_file}" output="${sample_alias}_orig_labels.fasta" variable="${regex}"/>
+				<command label="FASTA File Loading" cmd="awk -v MATCHING=${v} 'BEGIN{ORS=&quot;&quot;; out=0;} {if (!/^>/ &amp;&amp; out) {print;} if (/^>/ &amp;&amp; ($$0~MATCHING)) {if (out==1) {print &quot;\n&quot;}; print; print &quot;\n&quot;; out=1;} if (/^>/ &amp;&amp; ($$0!~MATCHING)) {if (out==1) {print &quot;\n&quot;;} out=0;}}END{if (out==1) {print &quot;\n&quot;}}' ${i} | awk -v SAMPLEID=${v} 'BEGIN{count=0}{if (/^>/){print &quot;>&quot; SAMPLEID &quot;_&quot; count; count+=1}else{print}}' > ${o}" input="${seq_file}" output="${sample_alias}.fasta" variable="${regex},${sample_alias}"/>
 		</process>
-		<process>
-				<input name="${sample_alias}_orig_labels.fasta"/>
-				<output name="${sample_alias}.fasta"/>
-				<command label="Relabelling FASTA Files" cmd="awk -v SAMPLEID=${v} 'BEGIN{count=0}{if (/^>/){print &quot;>&quot; SAMPLEID &quot;_&quot; count; count+=1}else{print}}' ${i} > ${o}" input="${sample_alias}_orig_labels.fasta" output="${sample_alias}.fasta" variable="${sample_alias}"/>
-		</process>
-		<!-- Version check command for involved programs -->
 		<info>
 				<command label="AWK (for FASTA sequence compiling)" cmd="awk -V | head -n 1"/>
 				<help text="Uses awk to filter out only certain sequences from a FASTA file, and separate them into their own file."/>

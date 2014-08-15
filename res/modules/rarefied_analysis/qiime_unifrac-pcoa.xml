@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="qiime_unifrac-pcoa" type="rarefied_analysis">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="otu_table_auto.biom"/>
+			<input name="metadata_mapping.txt"/>
+			<input name="rep_set.tre"/>
+			<output name="unweighted_unifrac_emperor_pcoa_plot/index.html" report_label="QIIME Unweighted UniFrac PCoA Ordination"/>
+			<output name="weighted_unifrac_emperor_pcoa_plot/index.html" report_label="QIIME Weighted UniFrac PCoA Ordination"/>
+			<command label="UniFrac PCoA Ordination via QIIME" cmd="beta_diversity_through_plots.py -f -i ${i} -m ${i} -t ${i} -o ${v}" input="otu_table_auto.biom,metadata_mapping.txt,rep_set.tre" variable="${PWD}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="QIIME Version" cmd=""/>
+			<help text="UniFrac Principal Coordinates using QIIME's beta_diversity_through_plots.py on rarefied OTU table."/>
+		</info>
+	</plugin>
+</axiome>

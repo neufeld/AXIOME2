@@ -1,18 +1,17 @@
 <?xml version="1.0"?>
 <axiome>
-	<plugin name="FastTree" type="phylogeny">
+	<plugin name="qiime_fasttree" type="phylogeny">
 		<input>
 		</input>
 		<!-- Define what the plugin is going to do -->
 		<process>
 			<input name="rep_set_aligned_pfiltered.fasta"/>
 			<output name="rep_set.tre"/>
-			<command label="Phylogeny generation with FastTree" cmd="FastTree -nt &lt; ${i} > ${o}" input="rep_set_aligned_pfiltered.fasta" output="rep_set.tre"/>
+			<command label="Phylogeny generation with FastTree via QIIME" cmd="make_phylogeny.py -i ${i} -t fasttree -o ${v}/rep_set.tre -l ${v}/log.txt" input="rep_set_aligned_pfiltered.fasta" variable="${PWD},${PWD}"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
 			<command label="FastTree" cmd="FastTree -expert -h 2>&amp;1 | head -n 1"/>
-			<help text="Uses the FastTree program to generate a phylogeny"/>
 		</info>
 	</plugin>
 </axiome>

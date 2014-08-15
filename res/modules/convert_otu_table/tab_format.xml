@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <axiome>
-	<plugin name="legacy" type="otu_table">
+	<plugin name="full_biom_to_tab" type="convert_otu_table">
 		<!-- Define what the plugin needs -->
 		<!-- This is used to create the UI -->
 		<input>
@@ -9,9 +9,9 @@
 		<!-- Define what the plugin is going to do -->
 		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
 		<process>
-			<input name="otu_table.txt"/>
+			<input name="otu_table.biom"/>
 			<output name="otu_table.tab" report_label="Tab Delimited Full OTU Table"/>
-			<command label="Convert OTU Table to Legacy Format" cmd="rm -f ${o} &amp;&amp; biom convert -b -i ${i} -o ${o} --header-key=taxonomy --output-metadata-id=Consensus\ Lineage" input="otu_table.txt" output="otu_table.tab,otu_table.tab"/>
+			<command label="Convert OTU Table to Legacy Format" cmd="rm -f ${o} &amp;&amp; biom convert -b -i ${i} -o ${o} --header-key=taxonomy --output-metadata-id=Consensus\ Lineage" input="otu_table.biom" output="otu_table.tab,otu_table.tab"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>

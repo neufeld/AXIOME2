@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="qiime_infernal" type="alignment">
+		<input>
+			<file label="Alignment Template" name="template" required="true"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<process>
+			<input name="rep_set.fasta"/>
+			<output name="rep_set_aligned.fasta"/>
+			<command label="PyNAST alignment" cmd="align_seqs.py -m infernal -i ${i} -o ${v} -t ${v}" input="rep_set.fasta" variable="${PWD},${template}"/>
+		</process>
+		<process>
+			<input name="rep_set_aligned.fasta"/>
+			<output name="rep_set_aligned_filtered.fasta"/>
+			<command label="QIIME alignment filtering" cmd="filter_alignment.py -i ${i} -o ${v} -s" input="rep_set_aligned.fasta" variable="${PWD}"/>
+		</process>
+		<info>
+			<command label="INFERNAL" cmd="print_qiime_config.py -t | grep INFERNAL"/>
+			<help text="Uses Infernal via QIIME to align sequences"/>
+			<input name="template" text="Template to align sequences against. For example, core_set_aligned.fasta.imputed from GreenGenes."/>
+		</info>
+	</plugin>
+</axiome>

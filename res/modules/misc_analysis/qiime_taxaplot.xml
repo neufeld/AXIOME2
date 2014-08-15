@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <axiome>
-	<plugin name="taxaplot" type="analysis">
+	<plugin name="qiime_taxaplot" type="misc_analysis">
 		<!-- Define what the plugin needs -->
 		<!-- This is used to create the UI -->
 		<input>
@@ -9,11 +9,11 @@
 		<!-- Define what the plugin is going to do -->
 		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
 		<process>
-			<input name="otu_table.txt"/>
+			<input name="otu_table.biom"/>
 			<input name="metadata_mapping.txt"/>
 			<output name="taxa_summary_plots/bar_charts.html" report_label="Taxonomy Plot Bar Chart${v}" report_variable=" Grouped By ${mapping_category}"/>
 			<output name="taxa_summary_plots/area_charts.html" report_label="Taxonomy Plot Area Chart${v}" report_variable=" Grouped By ${mapping_category}"/>
-			<command label="Summarize Taxonomy through Plots" cmd="summarize_taxa_through_plots.py -f -i ${i} -o ${v} -m ${i} ${v}" input="otu_table.txt,metadata_mapping.txt" variable="${PWD},-c ${mapping_category}"/>
+			<command label="Summarize Taxonomy through Plots" cmd="summarize_taxa_through_plots.py -f -i ${i} -o ${v} -m ${i} ${v}" input="otu_table.biom,metadata_mapping.txt" variable="${PWD},-c ${mapping_category}"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>

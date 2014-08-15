@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="qiime_blast" type="cluster">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<float label="Sequence Identity" name="identity" required="true" default="0.97" min="0" max="1"/>
+			<string label="Maximum e value" name="maxe" default="1e10"/>
+			<file label="Reference sequences" name="ref_seqs" required="true"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="seq.fasta"/>
+			<output name="seq_otus.txt"/>
+			<command label="Clustering with BLAST via QIIME" cmd="pick_otus.py -m blast -i ${i} -o ${v} -s ${v} -e ${v} -r ${v}" input="seq.fasta" variable="${PWD},${identity},${maxe},${ref_seqs}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="BLAST" cmd=""/>
+			<help text="Uses blast via QIIME to cluster sequences"/>
+			<input name="identity" text="Percent identity for determining if a sequence should join a cluster"/>
+			<input name="maxe" text="Maximum e-value to consider a match a positive hit"/>
+			<input name="ref_seqs" text="Reference sequence set from which to assign OTUs"/>
+		</info>
+	</plugin>
+</axiome>

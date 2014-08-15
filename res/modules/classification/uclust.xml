@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <axiome>
-	<plugin name="uclust" type="classification">
+	<plugin name="qiime_uclust" type="classification">
 		<!-- Define what the plugin needs -->
 		<!-- This is used to create the UI -->
 		<input>

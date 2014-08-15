@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <axiome>
-	<plugin name="cat" type="merge_sources">
+	<plugin name="concatenate" type="merge_sources">
 		<!-- Define what the plugin needs -->
 		<!-- This is used to create the UI -->
 		<!-- Can be left empty if no input is required from the user -->

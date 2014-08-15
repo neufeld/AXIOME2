@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <axiome workflow="Default">
 	<!--Mapping files - metadata and source files are separate-->
-	<mapping method="copy" metadata_mapping="@SOURCE_DIR@/res/sample/mapping.txt"/>
+	<mapping method="copy" metadata_mapping="@SOURCE_DIR@/res/sample/metadata_mapping.tsv"/>
 	<!--source mapping_file="@SOURCE_DIR@/res/sample/sample_file_mapping.tsv"-->
 	<source method="fasta" sample_alias="0" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1GCCTAA" />
 	<source method="fasta" sample_alias="1" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2GTAGCC" />
@@ -48,15 +48,19 @@
 	<source method="fasta" sample_alias="42" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2ATTGGC" />
 	<source method="fasta" sample_alias="43" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2TCAAGT" />
 	<source method="fasta" sample_alias="44" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2CTGATC" />
-	<merge_sources method="cat"/>
-	<cluster method="cdhit" identity="0.97"/>
+	<merge_sources method="concatenate"/>
+	<cluster method="cdhit" identity="0.97" num_cores="1"/>
 	<rep_set method="aq_rep_set"/>
 	<chimera method="uchime_denovo"/>
-	<classification method="rdp" confidence="0.8" training_seqs="/home/michael/Dropbox/Hall-Lynch/hmmb.fasta" training_tax="/home/michael/Dropbox/Hall-Lynch/hmmb.fasta"/>
-	<otu_table method="create_qiime"/>
-	<otu_table method="legacy"/>
-	<otu_table method="rarefy"/>
-	<!--analysis method="pcoa" distance="bray"/-->
-	<analysis method="taxaplot"/>
-	<analysis method="taxaplot" mapping_category="Subject"/>
+	<classification method="qiime_rdp" confidence="0.8"/>
+	<create_otu_table method="qiime"/>
+	<convert_otu_table method="full_biom_to_tab"/>
+	<rarefy_otu_table method="qiime_even"/>
+	<alignment method="qiime_pynast" template="/usr/local/lib/python2.7/dist-packages/qiime_test_data/align_seqs/core_set_aligned.fasta.imputed"/>
+	<phylogeny method="FastTree"/>
+	<!--Uncomment only if you have MESaS installed -->
+	<!--analysis method="mesas_pcoa" distance="bray"/-->
+	<rarefied_analysis method="qiime_unifrac-pcoa"/>
+	<misc_analysis method="qiime_taxaplot"/>
+	<misc_analysis method="qiime_taxaplot" mapping_category="Subject"/>
 </axiome>

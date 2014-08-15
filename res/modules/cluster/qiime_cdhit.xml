@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="qiime_cdhit" type="cluster">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<float label="Sequence Identity" name="identity" required="true" default="0.97" min="0" max="1"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="seq.fasta"/>
+			<output name="seq_otus.txt"/>
+			<command label="Clustering with cd-hit via QIIME" cmd="pick_otus.py -m cdhit -i ${i} -o ${v} -s ${v} -M 0" input="seq.fasta" variable="${PWD},${identity}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="cdhit-est" cmd="cd-hit-est -h | head -n 1"/>
+			<help text="Uses cd-hit via QIIME to cluster sequences"/>
+			<input name="identity" text="Percent identity for determining if a sequence should join a cluster"/>
+		</info>
+	</plugin>
+</axiome>

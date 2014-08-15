@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <axiome>
-	<plugin name="pynast" type="alignment">
+	<plugin name="qiime_pynast" type="alignment">
 		<input>
 			<file label="Alignment Template" name="template" required="true"/>
 		</input>
@@ -12,13 +12,13 @@
 		</process>
 		<process>
 			<input name="rep_set_aligned.fasta"/>
-			<output name="rep_set_aligned_filtered.fasta"/>
+			<output name="rep_set_aligned_pfiltered.fasta"/>
 			<command label="QIIME alignment filtering" cmd="filter_alignment.py -i ${i} -o ${v} -s" input="rep_set_aligned.fasta" variable="${PWD}"/>
 		</process>
 		<info>
 			<command label="PyNAST" cmd="pynast --version"/>
 			<help text="Uses PyNAST via QIIME to align sequences"/>
-			<input name="template" text="Template to align sequences against. For example, core_set_imputed.fasta from GreenGenes."/>
+			<input name="template" text="Template to align sequences against. For example, core_set_aligned.fasta.imputed from GreenGenes."/>
 		</info>
 	</plugin>
 </axiome>

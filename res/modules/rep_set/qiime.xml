@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="qiime" type="rep_set">
+		<input>
+			<str label="Representative Selection Method" name="method" default="most_abundant"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "pick_rep_set" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="seq_otus.txt"/>
+			<input name="seq.fasta"/>
+			<output name="rep_set.fasta"/>
+			<command label="QIIME pick_rep_set.py" cmd="pick_rep_set.py -i ${i} -f ${i} -m ${method} -o ${o}" input="seq_otus.txt,seq.fasta" output="rep_set.fasta"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="QIIME pick_rep_set.py" cmd=""/>
+			<help text="Selects a representative sequence from all sequences in an OTU cluster. Selection method options are: random, longest, most_abundant, first. Default is most_abundant."/>
+		</info>
+	</plugin>
+</axiome>

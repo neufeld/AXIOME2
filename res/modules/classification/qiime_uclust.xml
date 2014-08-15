@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="qiime_uclust" type="classification">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<float label="UCLUST Minimum Consensus Fraction" name="consensus" required="true" default="0.51" min="0" max="1"/>
+			<float label="Minimum Similarity" name="similarity" required="true" default="0.9" min="0" max="1"/>
+			<int label="Max Database Hits to Consider" name="maxdb" required="true" default="3" min="1" max="100"/>
+			<file label="Training Sequences" name="training_seqs"/>
+			<file label="Training Taxonomy" name="training_tax" />
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="rep_set.fasta"/>
+			<output name="rep_set_tax_assignments.txt"/>
+			<command label="UCLUST Taxonomy Assignment via QIIME" cmd="assign_taxonomy.py -m uclust -i ${i} -o ${v} -t ${v} -r ${v} --uclust_min_consensus_fraction ${v} --uclust_similarity ${v} --uclust_max_accepts ${v}" input="rep_set.fasta" variable="${PWD},${training_tax},${training_seqs},${consensus},${similarity},${maxdb}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="QIIME Version" cmd="print_qiime_config.py | grep 'QIIME.*version'"/>
+			<help text="Uses QIIME's assign_taxonomy.py to classify with RDP"/>
+			<input name="consensus" text="Minimum fraction of database hits that must have a specific taxonomic assignment to assign that taxonomy to a query"/>
+			<input name="similarity" text="Minimum percent similarity to consider a database match a hit"/>
+			<input name="maxdb" text="Number of database hits to consider when making an assignment"/>
+			<input name="training_seqs" text="Full filepath to the training set sequence file (Optional, will use QIIME default if not given)"/>
+			<input name="training_tax" text="Full filepath to the training set taxonomy file (Optional, will use QIIME default if not given)"/>
+		</info>
+	</plugin>
+</axiome>

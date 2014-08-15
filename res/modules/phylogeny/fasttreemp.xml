@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="FastTreeMP" type="phylogeny">
+		<input>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<process>
+			<input name="rep_set_aligned_pfiltered.fasta"/>
+			<output name="rep_set.tre"/>
+			<command label="Phylogeny generation with FastTreeMP" cmd="FastTreeMP -nt &lt; ${i} > ${o}" input="rep_set_aligned_pfiltered.fasta" output="rep_set.tre"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="FastTreeMP" cmd="FastTreeMP -expert -h 2>&amp;1 | head -n 1"/>
+			<help text="Uses the multi-threaded version of FastTree, FastTreeMP, to generate a phylogeny"/>
+		</info>
+	</plugin>
+</axiome>

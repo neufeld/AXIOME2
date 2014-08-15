@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="qiime_blast" type="classification">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<str label="Maximum e value" name="maxe" default="0.01"/>
+			<file label="Reference Sequences" name="ref_seqs" required="true"/>
+			<file label="Reference Taxonomy" name="ref_tax" required="true"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="rep_set.fasta"/>
+			<output name="rep_set_tax_assignments.txt"/>
+			<command label="BLAST Taxonomy Assignment via QIIME" cmd="assign_taxonomy.py -m blast -i ${i} -o ${v} -t ${v} -r ${v} -e ${v}" input="rep_set.fasta" variable="${PWD},${ref_tax},${ref_seqs},${maxe}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="QIIME Version" cmd="print_qiime_config.py | grep 'QIIME.*version'"/>
+			<help text="Uses QIIME's assign_taxonomy.py to classify with BLAST"/>
+			<input name="maxe" text="Maximum e-value cutoff for considering a representative sequence and its BLAST hit the same taxonomy"/>
+			<input name="ref_seqs" text="Full filepath to the reference set sequence file"/>
+			<input name="ref_tax" text="Full filepath to the reference set taxonomy file"/>
+		</info>
+	</plugin>
+</axiome>
