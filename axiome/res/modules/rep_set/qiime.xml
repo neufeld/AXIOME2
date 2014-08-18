@@ -2,7 +2,7 @@
 <axiome>
 	<plugin name="qiime" type="rep_set">
 		<input>
-			<str label="Representative Selection Method" name="method" default="most_abundant"/>
+			<text label="Representative Selection Method" name="selection_method" default="most_abundant"/>
 		</input>
 		<!-- Define what the plugin is going to do -->
 		<!-- Special variables available to "pick_rep_set" types: previous_output_file, current_output_file -->
@@ -10,7 +10,7 @@
 			<input name="seq_otus.txt"/>
 			<input name="seq.fasta"/>
 			<output name="rep_set.fasta"/>
-			<command label="QIIME pick_rep_set.py" cmd="pick_rep_set.py -i ${i} -f ${i} -m ${method} -o ${o}" input="seq_otus.txt,seq.fasta" output="rep_set.fasta"/>
+			<command label="QIIME pick_rep_set.py" cmd="pick_rep_set.py -i ${i} -f ${i} -m ${v} -o ${o}" input="seq_otus.txt,seq.fasta" output="rep_set.fasta" variable="${selection_method}"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>

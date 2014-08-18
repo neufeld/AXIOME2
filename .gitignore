@@ -1,5 +1,4 @@
 *.pyc
-sample.ax
 dist/
 /*.egg-info
 build/
