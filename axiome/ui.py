@@ -3,7 +3,7 @@
 
 import argparse
 import npyscreen as nps
-from axiome_modules import AxiomeAnalysis, getWorkflowList
+from .modules import AxiomeAnalysis, getWorkflowList
 from os.path import dirname, abspath, isfile, isdir, exists
 from os import getcwd, makedirs
 

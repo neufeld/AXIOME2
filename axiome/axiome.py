@@ -2,15 +2,15 @@
 
 #AXIOME2 main intro function
 
-from axiome_modules import AxiomeAnalysis
+from .modules import AxiomeAnalysis
 from os.path import dirname, abspath
 import argparse
-import axiome_ui as ui
-import axiome_utils as util
+import ui
+import utils as util
 
 source_dir = dirname(abspath(__file__))
 
-if __name__ == "__main__":
+def main():
     #Argument handling
     parser = argparse.ArgumentParser(prog='axiome')
     subparsers = parser.add_subparsers(title='subcommands',description='the following subcommands are possible: ui, process, utility', dest='subparser_name')
@@ -37,3 +37,5 @@ if __name__ == "__main__":
         elif args.action == "mapping_template":
             util.generateMappingTemplate(AxiomeAnalysis(None))
             
+if __name__ == "__main__":
+    main()
