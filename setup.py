@@ -58,7 +58,7 @@ files = find_data_files('axiome/', '*.*')
 from setuptools import setup
 
 setup(name='axiome',
-	version='2.0',
+	version='2.0.1',
 	description='AXIOME2: Automation Extension and Integration of Microbial Ecology',
 	url='https://github.com/neufeld/AXIOME2',
 	author='Michael Hall',
