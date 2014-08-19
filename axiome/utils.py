@@ -12,7 +12,12 @@ def copySampleAxData():
     with open(sample_file, "r") as sample_in:
         with open("sample.ax", "w") as sample_out:
             for line in sample_in:
-                sample_out.write(line.replace("@SOURCE_DIR@",source_dir))
+                sample_out.write(line.replace("@SOURCE_DIR@",source_dir).replace("@PWD@",getcwd()))
+    mapping_file = source_dir + "/res/sample/sample_file_mapping.tsv"
+    with open(mapping_file, "r") as mapping_in:
+        with open("sample_file_mapping.tsv", "w") as mapping_out:
+            for line in mapping_in:
+                mapping_out.write(line.replace("@SOURCE_DIR@",source_dir))
 
 def generateMappingTemplate(AxAnalysis):
     '''Generates a file mapping template based on loaded source submodules'''

@@ -12,7 +12,7 @@
 		</process>
 		<process>
 			<input name="rep_set_aligned.fasta"/>
-			<output name="rep_set_aligned_filtered.fasta"/>
+			<output name="rep_set_aligned_pfiltered.fasta"/>
 			<command label="QIIME alignment filtering" cmd="filter_alignment.py -i ${i} -o ${v} -s" input="rep_set_aligned.fasta" variable="${PWD}"/>
 		</process>
 		<info>

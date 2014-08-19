@@ -4,7 +4,7 @@
 		<!-- Define what the plugin needs -->
 		<!-- This is used to create the UI -->
 		<input>
-			<text label="Distance Metric:" name="distance" default="bray_curtis" required="true"/>
+			<text label="Distance Metric" name="distance" default="bray_curtis" required="true"/>
 		</input>
 		<!-- Define what the plugin is going to do -->
 		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
@@ -29,7 +29,7 @@
 		<info>
 			<command label="QIIME Version" cmd=""/>
 			<help text="Principal Coordinates using QIIME's beta_diversity.py and make_2d_plots.py on rarefied OTU table."/>
-			<input name="distance" help="A comma-separated list of distances. Possible distance measures: abund_jaccard, binary_chisq, binary_chord, binary_euclidean, binary_hamming, binary_jaccard, binary_lennon, binary_ochiai, binary_otu_gain, binary_pearson, binary_sorensen_dice, bray_curtis, bray_curtis_faith, bray_curtis_magurran, canberra, chisq, chord, euclidean, gower, hellinger, kulczynski, manhattan, morisita_horn, pearson, soergel, spearman_approx, specprof, unifrac, unifrac_g, unifrac_g_full_tree, unweighted_unifrac, unweighted_unifrac_full_tree, weighted_normalized_unifrac, weighted_unifrac"/>
+			<input name="distance" text="A comma-separated list of distances. Possible distance measures: abund_jaccard, binary_chisq, binary_chord, binary_euclidean, binary_hamming, binary_jaccard, binary_lennon, binary_ochiai, binary_otu_gain, binary_pearson, binary_sorensen_dice, bray_curtis, bray_curtis_faith, bray_curtis_magurran, canberra, chisq, chord, euclidean, gower, hellinger, kulczynski, manhattan, morisita_horn, pearson, soergel, spearman_approx, specprof, unifrac, unifrac_g, unifrac_g_full_tree, unweighted_unifrac, unweighted_unifrac_full_tree, weighted_normalized_unifrac, weighted_unifrac"/>
 		</info>
 	</plugin>
 </axiome>

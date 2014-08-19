@@ -2,7 +2,7 @@
 <axiome workflow="Default">
 	<!--Mapping files - metadata and source files are separate-->
 	<mapping method="copy" metadata_mapping="@SOURCE_DIR@/res/sample/metadata_mapping.tsv"/>
-	<!--source mapping_file="@SOURCE_DIR@/res/sample/sample_file_mapping.tsv"-->
+	<!--source mapping_file="@PWD@/sample_file_mapping.tsv"-->
 	<source method="fasta" sample_alias="0" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1GCCTAA" />
 	<source method="fasta" sample_alias="1" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2GTAGCC" />
 	<source method="fasta" sample_alias="2" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L1ACATCG" />

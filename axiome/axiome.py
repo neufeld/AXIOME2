@@ -33,7 +33,7 @@ def main():
     elif args.subparser_name == "utility":
         if args.action == "sample_data":
             util.copySampleAxData()
-            print "Successfully copied sample.ax to current directory\nRun `axiome process -i sample.ax` to process sample file"
+            print "Successfully copied sample.ax and sample_file_mapping.tsv to current directory\nRun `axiome process -i sample.ax` to process sample file"
         elif args.action == "mapping_template":
             util.generateMappingTemplate(AxiomeAnalysis(None))
             
