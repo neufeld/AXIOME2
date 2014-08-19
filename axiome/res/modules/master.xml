@@ -18,8 +18,8 @@
 		<alignment label="Alignment of representative set" default="pynast" help="Method for aligning the representative set sequences."/>
 		<phylogeny label="Phylogeny building method" default="fasttree" help="Method for building a phylogenetic tree from aligned sequences."/>
 		<create_otu_table label="OTU table Creation" required="true" multi="true" default="qiime" help="Method for creating the OTU table."/>
-		<convert_otu_table label="Conversion of OTU Table" multi="true" default="tab_format,rarefied_tab_format" help="Methods for converting OTU tables."/>
 		<rarefy_otu_table label="Rarefaction of OTU Table" multi="true" default="qiime" help="Methods for rarefying OTU table"/>
+		<convert_otu_table label="Conversion of OTU Table" multi="true" default="full_biom_to_tab,rarefied_biom_to_tab" help="Methods for converting OTU tables."/>
 		<misc_analysis label="Various data analyses" multi="true" default="taxaplot" help="Miscellaneous downstream analyses."/>
 		<rarefied_analysis label="Analyses based on a rarefied OTU table" multi="true" help="All analyses in this group are based on the rarefied OTU table, otu_table_auto"/>
 	</workflow>

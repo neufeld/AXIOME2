@@ -49,14 +49,15 @@
 	<source method="fasta" sample_alias="43" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2TCAAGT" />
 	<source method="fasta" sample_alias="44" seq_file="@SOURCE_DIR@/res/sample/hmmb.fasta" regex="L2CTGATC" />
 	<merge_sources method="concatenate"/>
-	<cluster method="cdhit" identity="0.97" num_cores="1"/>
+	<cluster method="qiime_uclust" identity="0.97"/>
 	<rep_set method="qiime" selection_method="most_abundant"/>
 	<!-- uchime disabled since pick_otus.py does not print sizes into the fasta labels, it breaks uchime -->
 	<!--chimera method="uchime_denovo"/-->
 	<classification method="qiime_rdp" confidence="0.8"/>
 	<create_otu_table method="qiime"/>
-	<convert_otu_table method="full_biom_to_tab"/>
 	<rarefy_otu_table method="qiime_even"/>
+	<convert_otu_table method="full_biom_to_tab"/>
+	<convert_otu_table method="rarefied_biom_to_tab"/>
 	<alignment method="qiime_pynast" template="/usr/local/lib/python2.7/dist-packages/qiime_test_data/align_seqs/core_set_aligned.fasta.imputed"/>
 	<phylogeny method="FastTree"/>
 	<!--Uncomment only if you have MESaS installed -->

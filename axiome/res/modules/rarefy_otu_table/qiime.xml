@@ -10,9 +10,14 @@
 		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
 		<process>
 			<input name="otu_table.biom"/>
-			<input name="otu_table.tab"/>
+			<output name="otu_table_summary.txt"/>
+			<command label="Getting OTU table summary" cmd="rm -f ${o} &amp;&amp; biom summarize_table -i ${i} -o ${o}" input="otu_table.biom" output="otu_table_summary.txt,otu_table_summary.txt"/>
+		</process>
+		<process>
+			<input name="otu_table.biom"/>
+			<input name="otu_table_summary.txt"/>
 			<output name="otu_table_auto.biom" report_label="BIOM Format Rarefied (Subsampled) OTU Table"/>
-			<command label="Rarefy OTU Table to Even Depth" cmd="single_rarefaction.py -i ${i} -o ${o} -d $$(awk -F '\t' 'NR == 1 { } NR == 2 { for (i = 2; i &lt;= NF; i++) { if ($$i ~ /^[0-9]*$$/) { max = i; } } } NR &gt; 2 { for (i = 2; i &lt;= max; i++) { c[i] += $$i; } } END { smallest = c[2]; for (i = 3; i &lt;= max; i++) { if (c[i] &lt; smallest) { smallest = c[i]; }} print smallest; }' ${i})" input="otu_table.biom,otu_table.tab" output="otu_table_auto.biom"/>
+			<command label="Rarefy OTU Table to Even Depth" cmd="single_rarefaction.py -i ${i} -o ${o} -d `grep 'Min:' ${i} | awk '{print int($$2)}'`" input="otu_table.biom,otu_table_summary.txt" output="otu_table_auto.biom"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>

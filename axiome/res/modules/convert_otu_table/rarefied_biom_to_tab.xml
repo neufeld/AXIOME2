@@ -9,7 +9,7 @@
 		<!-- Define what the plugin is going to do -->
 		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
 		<process>
-			<input name="otu_table_auto_rare.biom"/>
+			<input name="otu_table_auto.biom"/>
 			<output name="otu_table_auto.tab" report_label="Tab Delimited Rarefied (Subsampled) OTU Table"/>
 			<command label="Convert OTU Table to Legacy Format" cmd="rm -f ${o} &amp;&amp; biom convert -b -i ${i} -o ${o} --header-key=taxonomy --output-metadata-id=Consensus\ Lineage" input="otu_table_auto.biom" output="otu_table_auto.tab,otu_table_auto.tab"/>
 		</process>
