@@ -35,7 +35,7 @@ def generateMappingTemplate(AxAnalysis):
         source_module_string = "#Source module (module that requires this variable)\t"
         description_string = "#Description of variable\t"
         required_string = "#Required?\t"
-        column_headers = "sample_alias\taxiome_module"
+        column_headers = "sample_alias\taxiome_submodule"
         for variable_name, submodules in source_inputs.iteritems():
 			#We want sample_alias to be added in manually. It is mandatory.
 			if variable_name != "sample_alias":
