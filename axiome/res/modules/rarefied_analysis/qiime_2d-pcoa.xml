@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="qiime_2d-pcoa" type="rarefied_analysis">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<text label="Distance Metric:" name="distance" default="bray_curtis" required="true"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="otu_table_auto.biom"/>
+			<input name="rep_set.tre"/>
+			<output name="distance/${distance}_otu_table_auto.txt"/>
+			<command label="Distance Matrix Calculations via QIIME" cmd="beta_diversity.py -i ${i} -o ${v}/distance/ -m ${v} -t ${i}" input="otu_table_auto.biom,rep_set.tre" variable="${PWD},${distance}"/>
+		</process>
+		<process>
+			<input name="distance/${distance}_otu_table_auto.txt"/>
+			<output name="pcoa/pcoa_${distance}_otu_table_auto.txt"/>
+			<command label="PCoA Calculations via QIIME" cmd="principal_coordinates.py -i ${v}/distance/ -o ${v}/pcoa/" variable="${PWD},${PWD}"/>
+		</process>
+		<process>
+			<input name="pcoa/pcoa_${distance}_otu_table_auto.txt"/>
+			<input name="metadata_mapping.txt"/>
+			<output name="pcoa_plots/_2D_PCoA_plots.html" report_label="2D PCoA Plots (Distance: ${v})" report_variable="${distance}"/>
+			<command label="Plotting PCoA via QIIME" cmd="make_2d_plots.py -i ${v}/pcoa/ -m ${i} -o ${v}/pcoa_plots/" input="metadata_mapping.txt" variable="${PWD},${PWD}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="QIIME Version" cmd=""/>
+			<help text="Principal Coordinates using QIIME's beta_diversity.py and make_2d_plots.py on rarefied OTU table."/>
+			<input name="distance" help="A comma-separated list of distances. Possible distance measures: abund_jaccard, binary_chisq, binary_chord, binary_euclidean, binary_hamming, binary_jaccard, binary_lennon, binary_ochiai, binary_otu_gain, binary_pearson, binary_sorensen_dice, bray_curtis, bray_curtis_faith, bray_curtis_magurran, canberra, chisq, chord, euclidean, gower, hellinger, kulczynski, manhattan, morisita_horn, pearson, soergel, spearman_approx, specprof, unifrac, unifrac_g, unifrac_g_full_tree, unweighted_unifrac, unweighted_unifrac_full_tree, weighted_normalized_unifrac, weighted_unifrac"/>
+		</info>
+	</plugin>
+</axiome>
