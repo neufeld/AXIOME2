@@ -72,7 +72,7 @@ setup(name='axiome',
 	'Topic :: Scientific/Engineering :: Bio-Informatics'],
         license='MIT',
 	packages=['axiome'],
-	install_requires=['npyscreen','qiime'],
+	install_requires=['npyscreen'],
 	entry_points = {
         'console_scripts': ['axiome=axiome.axiome:main'],
     },
