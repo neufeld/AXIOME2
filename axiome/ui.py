@@ -359,7 +359,10 @@ class SaveForm(nps.FormMultiPageAction):
         self.ALLOW_RESIZE = False
         self.OK_BUTTON_TEXT = "Save"
         self.CANCEL_BUTTON_TEXT = "Previous"
-        self.add_widget_intelligent(nps.TitleFilename, w_id="save_filename", name="Save File Location...", max_height=3)
+        self.add_widget_intelligent(nps.FixedText,w_id="save_instructions1", value="Enter the full filepath of the save location (including extension) below.")
+        self.add_widget_intelligent(nps.FixedText,w_id="save_instructions2", value="Pressing TAB in the textbox will attempt to autocomplete (similar to BASH shell).")
+        self.nextrely += 1
+        self.add_widget_intelligent(nps.TitleFilename, w_id="save_filename", name="Save File Location:", max_height=3)
         
     def on_cancel(self):
         #Go back to the last page
