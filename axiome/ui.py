@@ -147,9 +147,11 @@ class IntroForm(nps.FormMultiPageAction):
         #Intro message
         message="""Welcome to AXIOME\nTo navigate through the UI, use arrow keys or TAB.
             \nENTER will select an option, and SPACE will deselect an option.
-            \nRequirements for the analysis:
+            \nIf you get stuck in the UI, TAB will move you to the next UI element.
+            \nBefore we begin, you require:
             \n\t- File mapping in tab-separated spreadsheet format (.tsv)
-            \n\t- Metadata mapping in tab-separated spreadsheet format (.tsv)"""
+            \n\t- Metadata mapping in tab-separated spreadsheet format (.tsv, same as required by QIIME)
+            \n\tTemplates of these files can be generated with `axiome utility mapping_template`"""
         nps.notify_confirm(message=message, title="Message", form_color='STANDOUT', wrap=True, wide=True, editw=1)
         self.name = "Select Workflow"
         #Get the possible workflows from the master.xml file
