@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="qiime_alpha_rarefaction" type="misc_analysis">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="otu_table.biom"/>
+			<input name="metadata_mapping.txt"/>
+			<input name="rep_set.tre"/>
+			<output name="alpha_rarefaction_plots/rarefaction_plots.html" report_label="Alpha Rarefaction Plots"/>
+			<command label="Perform Alpha Rarefaction Plots" cmd="alpha_rarefaction.py -f -i ${i} -o ${v} -m ${i} -t ${i}" input="otu_table.biom,metadata_mapping.txt,rep_set.tre" variable="${PWD}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="QIIME Version" cmd="print_qiime_config.py | grep 'QIIME.*version'"/>
+			<help text="Creates an alpha rarefaction plot using QIIME's alpha_rarefaction.py script"/>
+		</info>
+	</plugin>
+</axiome>
