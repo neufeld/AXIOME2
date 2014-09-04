@@ -388,7 +388,7 @@ class AxProcess(object):
                         #If it does not, see if it exists in the file manifest
                         if resolved_input_file not in self._submodule._module._analysis._manifest:
                             #If it does not exist in the manifest or on system, complain
-                            raise ValueError, "Required input file '%s' called by submodule '%s' does not exist on system and not created by previously called module." % (input_file, active_submodule.name)
+                            raise ValueError, "Required input file '%s' called by submodule '%s' does not exist on system and not created by previously called module." % (resolved_input_file, active_submodule.name)
                         else:
                             input_file_list.append(self._submodule._module._analysis._manifest[resolved_input_file] + "/" + resolved_input_file)
                     else:
