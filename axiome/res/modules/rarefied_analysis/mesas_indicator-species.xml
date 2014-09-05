@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="mesas_indicator-species" type="rarefied_analysis">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<float label="p-value cutoff" name="p_val" default="0.05" min="0" max="1"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="otu_table_auto.tab"/>
+			<input name="metadata_mapping.txt"/>
+			<output name="ind_species_raw.txt"/>
+			<command label="Dufrene-Legendre Indicator Species Analysis" cmd="mesas-indicator-species -i ${i} -m ${i} -o ${v} -p ${v}" input="otu_table_auto.tab,metadata_mapping.txt" variable="${PWD},${p_val}"/>
+		</process>
+    <process>
+        <input name="ind_species_raw.txt"/>
+        <input name="otu_table_auto.tab"/>
+        <output name="indicator_species_summary.tab" report="Indicator Species Analaysis Summary OTU Table"/>
+        <command label="Indicator Species Summary Creation" cmd="mesas-indicator-otu -t ${i} -i ${i} -o ${v}" input="otu_table_auto.tab,ind_species_raw.txt" variable="${PWD}"/>
+    </process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="Indicator Species Version" cmd="mesas-indicator-species -v"/>
+			<help text="Dufrene-Legendre indicator species analysis on rarefied OTU table."/>
+			<input name="p_val" text="p-value cutoff for reporting indicator species results. Any results above this cutoff will not be saved."/>
+		</info>
+	</plugin>
+</axiome>
