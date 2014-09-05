@@ -16,7 +16,7 @@
 				<output name="${sample_alias}.fasta.gz"/>
 
 				<!-- "variable" refers to the item input by the user above -->
-				<command label="FASTA File Loading" cmd="awk -v MATCHING=${v} 'BEGIN{ORS=&quot;&quot;; out=0;} {if (!/^>/ &amp;&amp; out) {print;} if (/^>/ &amp;&amp; ($$0~MATCHING)) {if (out==1) {print &quot;\n&quot;}; print; print &quot;\n&quot;; out=1;} if (/^>/ &amp;&amp; ($$0!~MATCHING)) {if (out==1) {print &quot;\n&quot;;} out=0;}}END{if (out==1) {print &quot;\n&quot;}}' ${i} | awk -v SAMPLEID=${v} 'BEGIN{count=0}{if (/^>/){print &quot;>&quot; SAMPLEID &quot;_&quot; count; count+=1}else{print}}' > ${o} &amp;&amp; gzip ${o}" input="${seq_file}" output="${sample_alias}.fasta,${sample_alias}.fasta" variable="${regex},${sample_alias}"/>
+				<command label="FASTA File Loading" cmd="awk -v MATCHING=${v} 'BEGIN{ORS=&quot;&quot;; out=0;} {if (!/^>/ &amp;&amp; out) {print;} if (/^>/ &amp;&amp; ($$0~MATCHING)) {if (out==1) {print &quot;\n&quot;}; print; print &quot;\n&quot;; out=1;} if (/^>/ &amp;&amp; ($$0!~MATCHING)) {if (out==1) {print &quot;\n&quot;;} out=0;}}END{if (out==1) {print &quot;\n&quot;}}' ${i} | awk -v SAMPLEID=${v} 'BEGIN{count=0}{if (/^>/){print &quot;>&quot; SAMPLEID &quot;_&quot; count; count+=1}else{print}}' > ${o} &amp;&amp; gzip -f ${o}" input="${seq_file}" output="${sample_alias}.fasta,${sample_alias}.fasta" variable="${regex},${sample_alias}"/>
 		</process>
 		<info>
 				<command label="AWK (for FASTA sequence compiling)" cmd="awk -V | head -n 1"/>

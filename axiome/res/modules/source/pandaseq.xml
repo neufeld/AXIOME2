@@ -21,7 +21,7 @@
 				<input name="${reverse_file_name}"/>
 				<output name="${sample_alias}.fasta.gz"/>
 				<!-- "variable" refers to the item input by the user above -->
-				<command label="PANDASeq Assembly" cmd="pandaseq -f ${i} -r ${i} -t ${v} -G ${v}/log.txt.bz2 -C validtag:${v}${v}${v} | awk -v SAMPLEID=${v} 'BEGIN{count=0}{if (/^>/){print &quot;>&quot; SAMPLEID &quot;_&quot; count; count+=1}else{print}}' > ${o} &amp;&amp; gzip ${o}" input="${forward_file_name},${reverse_file_name}" output="${sample_alias}.fasta,${sample_alias}.fasta" variable="${quality_threshold},${PWD},${barcode}, -p ${fprimer}, -q ${rprimer},${sample_alias}"/>
+				<command label="PANDASeq Assembly" cmd="pandaseq -f ${i} -r ${i} -t ${v} -G ${v}/log.txt.bz2 -C validtag:${v}${v}${v} | awk -v SAMPLEID=${v} 'BEGIN{count=0}{if (/^>/){print &quot;>&quot; SAMPLEID &quot;_&quot; count; count+=1}else{print}}' > ${o} &amp;&amp; gzip -f ${o}" input="${forward_file_name},${reverse_file_name}" output="${sample_alias}.fasta,${sample_alias}.fasta" variable="${quality_threshold},${PWD},${barcode}, -p ${fprimer}, -q ${rprimer},${sample_alias}"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
