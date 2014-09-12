@@ -17,7 +17,7 @@
     <process>
         <input name="ind_species_raw.txt"/>
         <input name="otu_table_auto.tab"/>
-        <output name="indicator_species_summary.tab" report="Indicator Species Analaysis Summary OTU Table"/>
+        <output name="indicator_species.html" report_label="Indicator Species Table List"/>
         <command label="Indicator Species Summary Creation" cmd="mesas-indicator-otu -t ${i} -i ${i} -o ${v}" input="otu_table_auto.tab,ind_species_raw.txt" variable="${PWD}"/>
     </process>
 		<!-- Version check command for involved programs -->
