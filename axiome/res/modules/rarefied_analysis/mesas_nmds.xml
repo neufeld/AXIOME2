@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="mesas_nmds" type="rarefied_analysis">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<text label="Distance Method" name="distance" default="bray" required="true"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="otu_table_auto.tab"/>
+			<input name="metadata_mapping.txt"/>
+			<output name="nmds.pdf" report_label="NMDS Ordination, Distance: ${v}" report_variable="${distance}"/>
+			<command label="MESaS NMDS Ordination" cmd="mesas-nmds -i ${i} -m ${i} -o ${v} -d ${v}" input="otu_table_auto.tab,metadata_mapping.txt" variable="${PWD},${distance}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="NMDS Version" cmd="mesas-pcoa -v"/>
+			<help text="Non-metric multidimensional scaling (NMDS) on rarefied OTU table."/>
+			<input name="distance" text="Valid distance measures: bray, euclidean, manhattan, canberra, jaccard, gower, altGower, morisita, horn, mountford, raup, binomial, chao."/>
+		</info>
+	</plugin>
+</axiome>
