@@ -20,7 +20,7 @@
 			<input name="metadata_mapping.txt"/>
 			<input name="distance/${distance}_otu_table_auto.txt"/>
       <output name="${comparison}_results.txt" report_label="Sample Group Comparison by ${v} for ${v}, distance method ${v}" report_variable="${comparison},${category},${distance}"/>
-			<command label="Compare Categories via QIIME" cmd="compare_category.py --method ${v} -i ${i} -c ${v} -o ${v} -m ${i}" input="distance/${distance}_otu_table_auto.txt,metadata_mapping.txt" variable="${comparison},${category},${PWD}"/>
+			<command label="Compare Categories via QIIME" cmd="compare_categories.py --method ${v} -i ${i} -c ${v} -o ${v} -m ${i}" input="distance/${distance}_otu_table_auto.txt,metadata_mapping.txt" variable="${comparison},${category},${PWD}"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
