@@ -8,7 +8,7 @@
 		<process>
 			<input name="rep_set.fasta"/>
 			<output name="rep_set.fasta"/>
-			<command label="Linking UPARSE OTUs as representative set" cmd="ln ${i} ${o}" input="rep_set.fasta" output="rep_set.fasta"/>
+			<command label="Linking UPARSE OTUs as representative set" cmd="ln -f ${i} ${o}" input="rep_set.fasta" output="rep_set.fasta"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
