@@ -15,7 +15,7 @@
 				<output name="seq.fasta"/>
 
 				<!-- "variable" refers to the item input by the user above -->
-				<command label="FASTA File Merge" cmd="zcat ${i} >> ${o}" input="${source:sample_alias}.fasta.gz" output="seq.fasta" format="slist"/>
+				<command label="FASTA File Merge" cmd="zcat ${i} > ${o}" input="${source:sample_alias}.fasta.gz" output="seq.fasta" format="slist"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
