@@ -332,8 +332,10 @@ class AxInput(object):
                 return False
         for item in args:
             if (item not in names) & (item != "axiome_submodule"):
-                print "Warning: Unused attribute %s" % item
-                return False
+                #Right now, do nothing if an unexpected column appears
+                #Should maybe pass an error code up so that the UI can
+                #respond in a more sophisticated manner
+                pass
         return True
         #**TODO** Check data type and make sure it follows requirements
         #ie, files exist, numbers in range
