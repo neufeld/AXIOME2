@@ -7,13 +7,19 @@
 		</input>
 		<!-- Define what the plugin is going to do -->
 		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+        <process>
+            <input name="otu_table_auto.biom"/>
+            <output name="otu_table_auto_L7.txt"/>
+            <command label="Summarize Taxa of Rarefied Table at Species Level" cmd="summarize_taxa.py -i ${i} -o ${v} -L 7" input="otu_table_auto.biom" variable="${PWD}"/>
+        </process>
 		<process>
 			<input name="otu_table_auto.biom"/>
 			<input name="metadata_mapping.txt"/>
+            <input name="otu_table_auto_L7.txt"/>
 			<input name="rep_set.tre"/>
 			<output name="unweighted_unifrac_emperor_pcoa_plot/index.html" report_label="QIIME Unweighted UniFrac PCoA Ordination"/>
 			<output name="weighted_unifrac_emperor_pcoa_plot/index.html" report_label="QIIME Weighted UniFrac PCoA Ordination"/>
-			<command label="UniFrac PCoA Ordination via QIIME" cmd="beta_diversity_through_plots.py -f -i ${i} -m ${i} -t ${i} -o ${v}" input="otu_table_auto.biom,metadata_mapping.txt,rep_set.tre" variable="${PWD}"/>
+			<command label="UniFrac PCoA Ordination via QIIME" cmd="echo 'make_emperor:taxa_fp ${i}' > ${v}/params.txt &amp;&amp; beta_diversity_through_plots.py -f -i ${i} -m ${i} -t ${i} -o ${v} -p ${v}/params.txt" input="otu_table_auto_L7.txt,otu_table_auto.biom,metadata_mapping.txt,rep_set.tre" variable="${PWD},${PWD},${PWD}"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
