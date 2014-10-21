@@ -11,12 +11,12 @@
 		<mapping label="Mapping Method" required="true" help="Method for handling the metadata mapping file."/>
 		<source label="Source Data File" required="true" multi="true" help="Methods for processing input sequence files."/>
 		<merge_sources label="Merge Sources Method" required="true" help="Method for merging individual sample files into one file."/>
-		<cluster label="Cluster Method" required="true" help="Method for clustering sequence data into OTUs."/>
-		<rep_set label="Representative Set Method" required="true" help="Method for choosing representative sequences from OTUs."/>
+		<cluster label="Cluster Method" required="true" default="qiime_uclust" help="Method for clustering sequence data into OTUs."/>
+		<rep_set label="Representative Set Method" default="qiime" required="true" help="Method for choosing representative sequences from OTUs."/>
 		<chimera label="Chimera Checking/Removal Method" multi="true" help="Method for checking for (and removing) chimeras."/>
-		<classification label="Taxonomic Classification Method" required="true" default="rdp" help="Method for classifying taxonomy of OTUs."/>
-		<alignment label="Alignment of representative set" default="pynast" help="Method for aligning the representative set sequences."/>
-		<phylogeny label="Phylogeny building method" default="fasttree" help="Method for building a phylogenetic tree from aligned sequences."/>
+		<classification label="Taxonomic Classification Method" required="true" default="qiime_rdp" help="Method for classifying taxonomy of OTUs."/>
+		<alignment label="Alignment of representative set" default="qiime_pynast" help="Method for aligning the representative set sequences."/>
+		<phylogeny label="Phylogeny building method" default="qiime_fasttree" help="Method for building a phylogenetic tree from aligned sequences."/>
 		<create_otu_table label="OTU table Creation" required="true" multi="true" default="qiime" help="Method for creating the OTU table."/>
 		<rarefy_otu_table label="Rarefaction of OTU Table" multi="true" default="qiime_even" help="Methods for rarefying OTU table"/>
 		<convert_otu_table label="Conversion of OTU Table" multi="true" default="full_biom_to_tab,rarefied_biom_to_tab" help="Methods for converting OTU tables."/>
