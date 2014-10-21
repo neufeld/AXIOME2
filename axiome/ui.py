@@ -134,7 +134,7 @@ class AXIOMEUI(nps.NPSAppManaged):
         else:
             form = self.createSubmoduleForm(module_name, submodule_name, copy)
             if form:
-				submodule_form_list.append(form)
+                submodule_form_list.append(form)
         return submodule_form_list
 
 class IntroForm(nps.FormMultiPageAction):   
@@ -244,10 +244,10 @@ class ModuleForm(nps.FormMultiPageAction):
                     if not help_text:
                         help_text = "No description given in module definition."
                     for submodule in module._submodules:
-						try:
-							help_text += "\n%s: %s" % (submodule.name, submodule._info._values["help"]["text"])
-						except:
-							raise ValueError, submodule.name
+                        try:
+                            help_text += "\n%s: %s" % (submodule.name, submodule._info._values["help"]["text"])
+                        except:
+                            raise ValueError, submodule.name
                     help_widget = self.add_widget_intelligent(HelpButton, help_msg=help_text, name="%s:" % module._value["label"])
                     self.nextrelx = 10
                     choice_widget = self.add_widget_intelligent(widget, w_id="module_"+module.name, values=values, value=value, max_height=len(values)+1, scroll_exit=True)
@@ -386,49 +386,54 @@ class SaveForm(nps.FormMultiPageAction):
         directory = dirname(abspath(file_name))
         if not exists(directory):
             makedirs(directory)
-        with open(file_name,'w') as out_ax:
-            #Start with the XML header
-            #We are manually writing XML, because that's how I roll
-            ax_file_string = '<?xml version="1.0"?>\n<axiome workflow="%s">\n' % self.parentApp.AxAnal.workflow
-            submodules = list()
-            for widget_info in self.parentApp.getForm("MODULE")._widget_list:
-                module_name = widget_info["module_name"]
-                #Get the selection(s) from the selection widget
-                widget = widget_info["widget"]
-                selections = widget.value
-                if module_name != "source":
-                    for choice in selections:
-                        submodules.append([module_name, widget.values[choice]])
-                else:
-                    submodules.append(["source",None])
-            #For each module, go through the submodule page list to find a match
-            for submodule in submodules:
-                module_name = submodule[0]
-                submodule_name = submodule[1]
-                #Special case: source
-                if module_name == "source":
-                    mapping_file = self.parentApp.getForm("MODULE").get_widget("module_source").value
-                    ax_file_string += '\t<!--source mapping_file="%s"-->\n' % mapping_file
-                    ax_file_string += self.file_mapping_to_ax(mapping_file)
-                else:
-                    found = False
-                    for submodule_form in self.parentApp.submodule_forms_data:
-                        if (submodule_form["module_name"] == module_name) & (submodule_form["submodule_name"] == submodule_name):
-                            found = True
-                            #If it matches, write a line for it
-                            def_string = ""
-                            requirements = submodule_form["form"]._value
-                            for item in requirements["input"]:
-                                #Get the widget and its value
-                                widget_id = item["name"]
-                                widget_value = submodule_form["form"].get_widget(widget_id).value
-                                if widget_value:
-                                    def_string += ' %s="%s"' % (widget_id, widget_value)
-                            ax_file_string += '\t<%s method="%s"%s/>\n' % (module_name, submodule_name, def_string)
-                    if not found:
-                        ax_file_string += '\t<%s method="%s"/>\n' % (module_name, submodule_name)
-            ax_file_string += "</axiome>"
-            out_ax.write(ax_file_string)
+        try:
+			with open(file_name,'w') as out_ax:
+				#Start with the XML header
+				#We are manually writing XML, because that's how I roll
+				ax_file_string = '<?xml version="1.0"?>\n<axiome workflow="%s">\n' % self.parentApp.AxAnal.workflow
+				submodules = list()
+				for widget_info in self.parentApp.getForm("MODULE")._widget_list:
+					module_name = widget_info["module_name"]
+					#Get the selection(s) from the selection widget
+					widget = widget_info["widget"]
+					selections = widget.value
+					if module_name != "source":
+						for choice in selections:
+							submodules.append([module_name, widget.values[choice]])
+					else:
+						submodules.append(["source",None])
+				#For each module, go through the submodule page list to find a match
+				for submodule in submodules:
+					module_name = submodule[0]
+					submodule_name = submodule[1]
+					#Special case: source
+					if module_name == "source":
+						mapping_file = self.parentApp.getForm("MODULE").get_widget("module_source").value
+						ax_file_string += '\t<!--source mapping_file="%s"-->\n' % mapping_file
+						ax_file_string += self.file_mapping_to_ax(mapping_file)
+					else:
+						found = False
+						for submodule_form in self.parentApp.submodule_forms_data:
+							if (submodule_form["module_name"] == module_name) & (submodule_form["submodule_name"] == submodule_name):
+								found = True
+								#If it matches, write a line for it
+								def_string = ""
+								requirements = submodule_form["form"]._value
+								for item in requirements["input"]:
+									#Get the widget and its value
+									widget_id = item["name"]
+									widget_value = submodule_form["form"].get_widget(widget_id).value
+									if widget_value:
+										def_string += ' %s="%s"' % (widget_id, widget_value)
+								ax_file_string += '\t<%s method="%s"%s/>\n' % (module_name, submodule_name, def_string)
+						if not found:
+							ax_file_string += '\t<%s method="%s"/>\n' % (module_name, submodule_name)
+				ax_file_string += "</axiome>"
+				out_ax.write(ax_file_string)
+        except:
+            nps.notify_wait("Error writing to given directory. Check if folder exists and its permissions.", title="Error", form_color='STANDOUT', wrap=True, wide=True)
+            self.editing = True
+            return
         response = nps.notify_ok_cancel("File saved successfully to %s. Do you want to exit?" % (file_name), title="Saved!", form_color='STANDOUT', wrap=True, editw=0)
         if response:
             self.parentApp.setNextForm(None)
