@@ -422,8 +422,12 @@ class SaveForm(nps.FormMultiPageAction):
 								for item in requirements["input"]:
 									#Get the widget and its value
 									widget_id = item["name"]
+									widget_type = item["type"]
 									widget_value = submodule_form["form"].get_widget(widget_id).value
 									if widget_value:
+										#Coerce the string to be an integer
+										if widget_type == "int":
+											widget_value = int(widget_value)
 										def_string += ' %s="%s"' % (widget_id, widget_value)
 								ax_file_string += '\t<%s method="%s"%s/>\n' % (module_name, submodule_name, def_string)
 						if not found:
