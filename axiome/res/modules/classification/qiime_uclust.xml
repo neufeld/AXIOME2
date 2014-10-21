@@ -7,8 +7,8 @@
 			<float label="UCLUST Minimum Consensus Fraction" name="consensus" required="true" default="0.51" min="0" max="1"/>
 			<float label="Minimum Similarity" name="similarity" required="true" default="0.9" min="0" max="1"/>
 			<int label="Max Database Hits to Consider" name="maxdb" required="true" default="3" min="1" max="100"/>
-			<file label="Training Sequences" name="training_seqs"/>
-			<file label="Training Taxonomy" name="training_tax" />
+			<file label="Training Sequences" name="training_seqs" required="true"/>
+			<file label="Training Taxonomy" name="training_tax" required="true"/>
 		</input>
 		<!-- Define what the plugin is going to do -->
 		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
