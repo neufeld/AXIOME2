@@ -23,7 +23,7 @@
 		<process>
 			<input name="seq.unique.sorted.fasta"/>
 			<output name="otus_original_label.fasta"/>
-			<command label="Clustering the OTUs" cmd="usearch -cluster_otus ${i} -otus ${o}" input="seq.unique.sorted.fasta" output="otus_original_label.fasta"/>
+			<command label="Clustering the OTUs" cmd="usearch -cluster_otus ${i} -otus ${o} -otu_radius_pct `echo &quot;(1.0-${v})*100&quot; | bc`" input="seq.unique.sorted.fasta" output="otus_original_label.fasta" variable="${identity}"/>
 		</process>
 		<process>
 			<input name="otus_original_label.fasta"/>
