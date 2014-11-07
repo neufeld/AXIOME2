@@ -261,7 +261,7 @@ class AxModule(object):
         for submodule in self._submodules:
             if submodule.name == name:
                 return submodule
-        raise ValueError, "Submodule %s not found in module" % (name, self.name)
+        raise ValueError, "Submodule %s not found in module %s" % (name, self.name)
     
     def loadSubModules(self):
         #Go into the module folder and load all of the submodules
