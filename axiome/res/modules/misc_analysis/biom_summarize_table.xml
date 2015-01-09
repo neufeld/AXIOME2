@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="biom_summarize_table" type="misc_analysis">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="otu_table.biom"/>
+			<output name="table_summary.txt"/>
+			<command label="Summarize OTU Table using biom summarize_table" cmd="biom summarize_table -i ${i} -o ${o}" input="otu_table.biom" output="table_summary.txt"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="BIOM Version" cmd="print_qiime_config.py | grep 'biom-format'"/>
+			<help text="Summarizes OTU tables using the BIOM toolkits summarize_table command"/>
+		</info>
+	</plugin>
+</axiome>
