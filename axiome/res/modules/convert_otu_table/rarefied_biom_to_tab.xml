@@ -12,7 +12,7 @@
 			<input name="otu_table_auto.biom"/>
 			<input name="rep_set.fasta"/>
 			<output name="otu_table_auto.tab" report_label="Tab Delimited Rarefied (Subsampled) OTU Table"/>
-			<output name="otu_table_auto_with_seq.tab" report_label="Tab Delimited Rarefied (Subsampled) OTU Table With Representative Sequences">
+			<output name="otu_table_auto_with_seq.tab" report_label="Tab Delimited Rarefied (Subsampled) OTU Table With Representative Sequences"/>
 			<command label="Convert OTU Table to Legacy Format" cmd="rm -f ${o} &amp;&amp; biom convert -b -i ${i} -o ${o} --header-key=taxonomy --output-metadata-id=Consensus\ Lineage &amp;&amp; aq-otuwithseqs ${i} ${o} > ${o}" input="otu_table_auto.biom,rep_set.fasta" output="otu_table_auto.tab,otu_table_auto.tab,otu_table_auto.tab,otu_table_auto_with_seq.tab"/>
 		</process>
 		<!-- Version check command for involved programs -->
