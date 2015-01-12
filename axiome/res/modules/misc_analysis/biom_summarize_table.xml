@@ -9,7 +9,7 @@
 		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
 		<process>
 			<input name="otu_table.biom"/>
-			<output name="table_summary.txt"/>
+			<output name="table_summary.txt" report_label="OTU Table Summary"/>
 			<command label="Summarize OTU Table using biom summarize_table" cmd="biom summarize_table -i ${i} -o ${o}" input="otu_table.biom" output="table_summary.txt"/>
 		</process>
 		<!-- Version check command for involved programs -->
