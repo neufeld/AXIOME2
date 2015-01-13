@@ -13,7 +13,7 @@
 		<process>
 			<input name="seq.fasta"/>
 			<output name="seq.unique.fasta"/>
-			<command label="Dereplication of sequences" cmd="mesas-dereplicate -i ${i} -o ${o}" input="seq.fasta" output="seq.unique.fasta"/>
+			<command label="Dereplication of sequences" cmd="mesas-dereplicate -i ${i} -o ${o} -n ${v}" input="seq.fasta" output="seq.unique.fasta" variable="${minsize}"/>
 		</process>
 		<process>
 			<input name="seq.unique.fasta"/>
