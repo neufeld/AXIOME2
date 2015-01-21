@@ -146,12 +146,13 @@ class IntroForm(nps.FormMultiPageAction):
         self._widget_list = []
 
         #Add a keybind to skip to the next form
-        self.add_handlers({"^S": self.skipForm})
+        self.add_handlers({"^F": self.skipForm})
 
         #Intro message
         message="""Welcome to AXIOME\nTo navigate through the UI, use arrow keys or TAB.
             \nENTER will select an option, and SPACE will deselect an option.
             \nIf you get stuck in the UI, TAB will move you to the next UI element.
+            \nCRTL-F will skip to the forward one page, and CTRL-D will skip back one page.
             \nBefore we begin, you require:
             \n\t- File mapping in tab-separated spreadsheet format (.tsv)
             \n\t- Metadata mapping in tab-separated spreadsheet format (.tsv, same as required by QIIME)
@@ -230,7 +231,7 @@ class ModuleForm(nps.FormMultiPageAction):
         self.name = "Select Pipeline Steps"
 
         #Add a keybind to skip to the next form
-        self.add_handlers({"^S": self.skipForm, "^B": self.prevForm})
+        self.add_handlers({"^F": self.skipForm, "^D": self.prevForm})
 
         #Fill with each module's submodule lists
         for module in self.parentApp.AxAnal._modules:
@@ -413,7 +414,7 @@ class SaveForm(nps.FormMultiPageAction):
         self.nextrely += 1
         self.add_widget_intelligent(nps.TitleFilename, w_id="save_filename", name="Save File Location:", max_height=3)
         #Add a keybind to skip to the next form
-        self.add_handlers({"^B": self.prevForm})
+        self.add_handlers({"^D": self.prevForm})
         
     def on_cancel(self):
         #Go back to the last page
@@ -560,7 +561,7 @@ class SubmoduleForm(nps.FormMultiPageAction):
         self.OK_BUTTON_TEXT = "Next"
         self.name = self.module._value["label"]
         #Add a keybindings to move between forms quickly
-        self.add_handlers({"^S": self.skipForm, "^B": self.prevForm})
+        self.add_handlers({"^F": self.skipForm, "^D": self.prevForm})
 
     #def afterEditing(self):
      #   self.parentApp.setNextForm(self.determineNextForm())
