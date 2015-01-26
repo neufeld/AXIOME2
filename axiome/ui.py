@@ -144,10 +144,15 @@ class IntroForm(nps.FormMultiPageAction):
         self.OK_BUTTON_TEXT = "Next"
         self.CANCEL_BUTTON_TEXT = "Exit"
         self._widget_list = []
+
+        #Add a keybind to skip to the next form
+        self.add_handlers({"^F": self.skipForm})
+
         #Intro message
         message="""Welcome to AXIOME\nTo navigate through the UI, use arrow keys or TAB.
             \nENTER will select an option, and SPACE will deselect an option.
             \nIf you get stuck in the UI, TAB will move you to the next UI element.
+            \nCRTL-F will skip to the forward one page, and CTRL-D will skip back one page.
             \nBefore we begin, you require:
             \n\t- File mapping in tab-separated spreadsheet format (.tsv)
             \n\t- Metadata mapping in tab-separated spreadsheet format (.tsv, same as required by QIIME)
@@ -165,8 +170,32 @@ class IntroForm(nps.FormMultiPageAction):
             except:
                 value = 0
         self.add_widget_intelligent(nps.TitleSelectOne, name="Select Workflow", w_id="select_workflow", values=workflow_list, value=value, max_height=len(workflow_list)+2, scroll_exit=True)
-        
+
     def on_ok(self):
+        if not self.createModuleForm():
+            self.editing = True
+            return
+        self.parentApp.setNextForm("MODULE")
+        
+    def on_cancel(self):
+        response = nps.notify_ok_cancel("Are you sure you want to exit? All unsaved changes will be lost.", title="Exit?", form_color='STANDOUT', wrap=True, editw=0)
+        if response:
+            self.parentApp.setNextForm(None)
+            self.editing = False
+        else:
+            self.editing = True
+
+    def skipForm(self, *args):
+        #args are just to stop errors since handlers pass some sort of arguments
+        #The rest is the same logic as on_ok
+        if not self.createModuleForm():
+            return
+        #Set return to true and switch form.
+        self.edit_return_value = True
+        #Switch form is used for better responsiveness, and since we aren't using normal exit logic
+        self.parentApp.switchForm("MODULE")
+
+    def createModuleForm(self):
         #Create the ModuleForm
         workflow = self.get_widget("select_workflow").values[self.get_widget("select_workflow").value[0]]
         #If the workflow is different, recreate it
@@ -179,8 +208,8 @@ class IntroForm(nps.FormMultiPageAction):
                     module_form = ModuleForm(parentApp=self.parentApp)
                     self.parentApp.registerForm("MODULE",module_form)
                 else:
-                    self.editing = True
-                    return
+                    #We didn't actual create the ModuleForm
+                    return False
         else:
             self.parentApp.AxAnal = AxiomeAnalysis(self.parentApp.ax_file, workflow)
             module_form = ModuleForm(parentApp=self.parentApp)
@@ -190,15 +219,7 @@ class IntroForm(nps.FormMultiPageAction):
         if "MODULE" not in self.parentApp.getHistory():
             module_form = ModuleForm(parentApp=self.parentApp)
             self.parentApp.registerForm("MODULE", module_form)
-        self.parentApp.setNextForm("MODULE")
-        
-    def on_cancel(self):
-        response = nps.notify_ok_cancel("Are you sure you want to exit? All unsaved changes will be lost.", title="Exit?", form_color='STANDOUT', wrap=True, editw=0)
-        if response:
-            self.parentApp.setNextForm(None)
-            self.editing = False
-        else:
-            self.editing = True
+        return True
 
 class ModuleForm(nps.FormMultiPageAction):
     def create(self):
@@ -208,6 +229,10 @@ class ModuleForm(nps.FormMultiPageAction):
         self.CANCEL_BUTTON_TEXT = "Previous"
         self._widget_list = []
         self.name = "Select Pipeline Steps"
+
+        #Add a keybind to skip to the next form
+        self.add_handlers({"^F": self.skipForm, "^D": self.prevForm})
+
         #Fill with each module's submodule lists
         for module in self.parentApp.AxAnal._modules:
             #Build the submodule choices
@@ -281,29 +306,11 @@ class ModuleForm(nps.FormMultiPageAction):
                     widget["widget"].value = value
         
     def on_ok(self):
-        source_file_widget = self.get_widget("module_source")
-        source_file_path = source_file_widget.value
-        if not source_file_path:
-            nps.notify_confirm(message="Source file mapping required")
+        if not self.validateInput():
+            #Don't skip to the next form if input isn't correct
             self.editing = True
             return
-        if not isfile(source_file_path):
-            nps.notify_confirm(message="Given source file mapping is not a file.")
-            self.editing = True
-            return
-        if not self.sourceFileCheck(source_file_path):
-            nps.notify_confirm(message="Error in source file mapping")
-            self.editing = True
-            return
-        #Collect information on the selected widgets
-        selected_submodules = list()
-        for widget_info in self._widget_list:
-            module_name = widget_info["module_name"]
-            widget = widget_info["widget"]
-            if type(widget.value) is list:
-                for choice in widget.value:
-                    selected_submodules.append({"module_name":module_name,"submodule_name":widget.values[choice]})
-        nextForm = self.parentApp.buildSubmoduleForms(selected_submodules)
+        nextForm = self.buildSubmoduleForms()
         self.parentApp.current_page = 0
         self.parentApp.setNextForm(self.parentApp._display_pages[0])
        
@@ -351,6 +358,47 @@ class ModuleForm(nps.FormMultiPageAction):
             if not self.parentApp.source_definitions:
                 return False
             return True
+
+    def skipForm(self, *args):
+        if not self.validateInput():
+            #Don't skip to the next form if input isn't correct
+            return
+        nextForm = self.buildSubmoduleForms()
+        self.parentApp.current_page = 0
+        #Set return to true and switch form.
+        self.edit_return_value = True
+        #Switch form is used for better responsiveness, and since we aren't using normal exit logic
+        self.parentApp.switchForm(self.parentApp._display_pages[0])
+
+    def prevForm(self, *args):
+        self.edit_return_value = True
+        self.parentApp.switchForm("MAIN")
+
+    def validateInput(self):
+        source_file_widget = self.get_widget("module_source")
+        source_file_path = source_file_widget.value
+        if not source_file_path:
+            nps.notify_confirm(message="Source file mapping required")
+            return False
+        if not isfile(source_file_path):
+            nps.notify_confirm(message="Given source file mapping is not a file.")
+            return False
+        if not self.sourceFileCheck(source_file_path):
+            nps.notify_confirm(message="Error in source file mapping")
+            return False
+        else:
+            return True
+
+    def buildSubmoduleForms(self):
+        #Collect information on the selected widgets
+        selected_submodules = list()
+        for widget_info in self._widget_list:
+            module_name = widget_info["module_name"]
+            widget = widget_info["widget"]
+            if type(widget.value) is list:
+                for choice in widget.value:
+                    selected_submodules.append({"module_name":module_name,"submodule_name":widget.values[choice]})
+        return self.parentApp.buildSubmoduleForms(selected_submodules)
             
 class SaveForm(nps.FormMultiPageAction):
     def __init__(self, *args, **keywords):
@@ -365,6 +413,8 @@ class SaveForm(nps.FormMultiPageAction):
         self.add_widget_intelligent(nps.FixedText,w_id="save_instructions2", value="Pressing TAB in the textbox will attempt to autocomplete (similar to BASH shell).")
         self.nextrely += 1
         self.add_widget_intelligent(nps.TitleFilename, w_id="save_filename", name="Save File Location:", max_height=3)
+        #Add a keybind to skip to the next form
+        self.add_handlers({"^D": self.prevForm})
         
     def on_cancel(self):
         #Go back to the last page
@@ -473,7 +523,12 @@ class SaveForm(nps.FormMultiPageAction):
                         source_defs += source_line
         return source_defs
                         
-        
+    def prevForm(self, *args):
+        #Go back to the last page
+        self.parentApp.current_page -= 1
+        self.edit_return_value = True
+        self.parentApp.switchForm(self.parentApp._display_pages[self.parentApp.current_page])
+
 class SubmoduleForm(nps.FormMultiPageAction):
     def __init__(self, module, submodule, copy_number, *args, **keywords):
         #Keep it from crashing when terminal size changes
@@ -490,8 +545,48 @@ class SubmoduleForm(nps.FormMultiPageAction):
             self.parentApp.current_page -= 1
         else:
             self.parentApp.current_page = -1
+        self.parentApp.setNextForm(self.determineNextForm())
     
     def on_ok(self):
+        if not self.validateInput():
+            nps.notify_wait("Not all required input items for this module have been entered. Please check all fields.", title="Error", form_color='STANDOUT', wrap=True, wide=True)
+            self.editing = True
+        else:
+            if self.parentApp.current_page <= (len(self.parentApp._display_pages) - 1):
+                self.parentApp.current_page += 1
+        self.parentApp.setNextForm(self.determineNextForm())
+    
+    def create(self):
+        self.CANCEL_BUTTON_TEXT = "Previous"
+        self.OK_BUTTON_TEXT = "Next"
+        self.name = self.module._value["label"]
+        #Add a keybindings to move between forms quickly
+        self.add_handlers({"^F": self.skipForm, "^D": self.prevForm})
+
+    #def afterEditing(self):
+     #   self.parentApp.setNextForm(self.determineNextForm())
+
+    def skipForm(self, *args):
+        #Validate the input variables
+        #Get the variables
+        if not self.validateInput():
+            self.editing = True
+            return
+        else:
+            if self.parentApp.current_page <= (len(self.parentApp._display_pages) - 1):
+                self.parentApp.current_page += 1
+        self.edit_return_value = True
+        self.parentApp.switchForm(self.determineNextForm())
+
+    def prevForm(self, *args):
+        if self.parentApp.current_page > 0:
+            self.parentApp.current_page -= 1
+        else:
+            self.parentApp.current_page = -1
+        self.edit_return_value = True
+        self.parentApp.switchForm(self.determineNextForm())
+
+    def validateInput(self):
         #Validate the input variables
         #Get the variables
         args = {}
@@ -501,24 +596,18 @@ class SubmoduleForm(nps.FormMultiPageAction):
                 args[name] = self.get_widget(name).value
         if not(self.submodule._input.requirementsMet(args)):
             nps.notify_wait("Not all required input items for this module have been entered. Please check all fields.", title="Error", form_color='STANDOUT', wrap=True, wide=True)
-            self.editing = True
+            return False
         else:
-            if self.parentApp.current_page <= (len(self.parentApp._display_pages) - 1):
-                self.parentApp.current_page += 1
-    
-    def create(self):
-        self.CANCEL_BUTTON_TEXT = "Previous"
-        self.OK_BUTTON_TEXT = "Next"
-        self.name = self.module._value["label"]
+            return True
 
-    def afterEditing(self):
+    def determineNextForm(self):
         if self.parentApp.current_page < 0:
-            self.parentApp.setNextForm("MODULE")
             self.parentApp.current_page = 0
+            return "MODULE"
         elif self.parentApp.current_page <= (len(self.parentApp._display_pages) - 1): 
-            self.parentApp.setNextForm(self.parentApp._display_pages[self.parentApp.current_page])
+            return self.parentApp._display_pages[self.parentApp.current_page]
         else:
-            self.parentApp.setNextForm("SAVE")
+            return "SAVE"
 
 #A button with the function of popping up a help message
 class HelpButton(nps.ButtonPress):
