@@ -20,7 +20,7 @@
 		<create_otu_table label="OTU table Creation" required="true" multi="true" default="qiime" help="Method for creating the OTU table."/>
 		<rarefy_otu_table label="Rarefaction of OTU Table" multi="true" default="qiime_even" help="Methods for rarefying OTU table"/>
 		<convert_otu_table label="Conversion of OTU Table" multi="true" default="full_biom_to_tab,rarefied_biom_to_tab" help="Methods for converting OTU tables."/>
-		<misc_analysis label="Various data analyses" multi="true" default="taxaplot,biom_summarize_table" help="Miscellaneous downstream analyses."/>
+		<misc_analysis label="Various data analyses" multi="true" default="taxaplot,biom_summarize-table" help="Miscellaneous downstream analyses."/>
 		<rarefied_analysis label="Analyses based on a rarefied OTU table" multi="true" help="All analyses in this group are based on the rarefied OTU table, otu_table_auto"/>
 	</workflow>
 </axiome>

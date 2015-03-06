@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <axiome>
-	<plugin name="biom_summarize_table" type="misc_analysis">
+	<plugin name="biom_summarize-table" type="misc_analysis">
 		<!-- Define what the plugin needs -->
 		<!-- This is used to create the UI -->
 		<input>
@@ -10,12 +10,12 @@
 		<process>
 			<input name="otu_table.biom"/>
 			<output name="table_summary.txt" report_label="OTU Table Summary"/>
-			<command label="Summarize OTU Table using biom summarize_table" cmd="biom summarize_table -i ${i} -o ${o}" input="otu_table.biom" output="table_summary.txt"/>
+			<command label="Summarize OTU Table using biom summarize-table" cmd="rm -f ${o} &amp;&amp; biom summarize-table -i ${i} -o ${o}" input="otu_table.biom" output="table_summary.txt,table_summary.txt"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
 			<command label="BIOM Version" cmd="print_qiime_config.py | grep 'biom-format'"/>
-			<help text="Summarizes OTU tables using the BIOM toolkits summarize_table command"/>
+			<help text="Summarizes OTU tables using the BIOM toolkits summarize-table command"/>
 		</info>
 	</plugin>
 </axiome>
