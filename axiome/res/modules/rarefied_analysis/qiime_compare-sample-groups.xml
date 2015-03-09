@@ -28,7 +28,7 @@
 			<help text="Compares sample groupings for significant differences using a distance matrix generated from the rarefied OTU table."/>
 			<input name="distance" text="A comma-separated list of distances. Possible distance measures: abund_jaccard, binary_chisq, binary_chord, binary_euclidean, binary_hamming, binary_jaccard, binary_lennon, binary_ochiai, binary_otu_gain, binary_pearson, binary_sorensen_dice, bray_curtis, bray_curtis_faith, bray_curtis_magurran, canberra, chisq, chord, euclidean, gower, hellinger, kulczynski, manhattan, morisita_horn, pearson, soergel, spearman_approx, specprof, unifrac, unifrac_g, unifrac_g_full_tree, unweighted_unifrac, unweighted_unifrac_full_tree, weighted_normalized_unifrac, weighted_unifrac"/>
 			<input name="category" text="A metadata category that you would like the samples to be grouped by for the comparison"/>
-			<input name="comparison" text="Method for assessing the difference between sample groups. Available options: adonis, anosim, best, morans_i, mrpp, permanova, permdisp, dbrda."/>
+			<input name="comparison" text="Method for assessing the difference between sample groups. Available options: adonis, anosim, bioenv, morans_i, mrpp, permanova, permdisp, dbrda."/>
 		</info>
 	</plugin>
 </axiome>

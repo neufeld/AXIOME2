@@ -15,7 +15,7 @@
 		<process>
 			<input name="rep_set.fasta"/>
 			<output name="rep_set_tax_assignments.txt"/>
-			<command label="UCLUST Taxonomy Assignment via QIIME" cmd="assign_taxonomy.py -m uclust -i ${i} -o ${v} -t ${v} -r ${v} --uclust_min_consensus_fraction ${v} --uclust_similarity ${v} --uclust_max_accepts ${v}" input="rep_set.fasta" variable="${PWD},${training_tax},${training_seqs},${consensus},${similarity},${maxdb}"/>
+			<command label="UCLUST Taxonomy Assignment via QIIME" cmd="assign_taxonomy.py -m uclust -i ${i} -o ${v} -t ${v} -r ${v} --min_consensus_fraction ${v} --similarity ${v} --uclust_max_accepts ${v}" input="rep_set.fasta" variable="${PWD},${training_tax},${training_seqs},${consensus},${similarity},${maxdb}"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
