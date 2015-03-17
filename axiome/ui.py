@@ -341,9 +341,12 @@ class ModuleForm(nps.FormMultiPageAction):
         if not isfile(source_file_path):
             nps.notify_confirm(message="Given source file mapping is not a file.")
             return False
-        if not self.sourceFileCheck(source_file_path):
-            nps.notify_confirm(message="Error in source file mapping")
-            return False
+        #if not self.sourceFileCheck(source_file_path):
+         #   nps.notify_confirm(message="Error in source file mapping")
+          #  return False
+        sourceFileOkay, errorMessage = self.sourceFileCheck(source_file_path)
+        if not sourceFileOkay:
+            nps.notify_confirm(message="Error in source file mapping: " + errorMessage)
         else:
             return True
 
@@ -364,14 +367,19 @@ class ModuleForm(nps.FormMultiPageAction):
                         column_headers = definition
                     else:
                         if not column_headers:
-                            return False
+                            if "\t" not in definition:
+                                message = "Mapping file is not tab delimited"
+                            else:
+                                message = "Required column header 'sample_alias' not found"
+                            return False, message
                         #Special column headers:
                         #axiome_submodule: name of source submodule that controls the sample
                         sample_dict = dict(zip(column_headers.strip().split("\t"), definition.strip().split("\t")))
                         try:
                             submodule_name = sample_dict["axiome_submodule"]
                         except KeyError:
-                            raise KeyError, "Required column header 'axiome_submodule' not found"
+                            #raise KeyError, "Required column header 'axiome_submodule' not found"
+                            return False, "Required column header 'axiome_submodule' not found"
                         #Get the submodule
                         submodule = self.parentApp.AxAnal.getModuleByName("source").getSubmoduleByName(submodule_name)
                         #Get the AxInput object
@@ -381,13 +389,11 @@ class ModuleForm(nps.FormMultiPageAction):
                             #Store the dict
                             self.parentApp.source_definitions.append(sample_dict)
                         else:
-                            raise ValueError, str(sample_dict)
-                            #**TODO** Make this a persistent popup warning when trying to exit
-                            #the intro form, not a raised error
-                            #return False
+                            #raise ValueError, str(sample_dict)
+                            return False, str(sample_dict)
             if not self.parentApp.source_definitions:
-                return False
-            return True
+                return False, "Not all required module input items have been entered"
+            return True, ""
 
     def buildSubmoduleForms(self):
         #Collect information on the selected widgets
