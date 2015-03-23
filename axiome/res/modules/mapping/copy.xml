@@ -14,7 +14,7 @@
 				<output name="metadata_mapping.txt"/>
 
 				<!-- "variable" refers to the item input by the user above -->
-				<command label="Creating copy of metadata mapping file" cmd="mesas-metadata-file-check ${i} &amp;&amp; cp ${i} ${o}" input="${metadata_mapping},${metadata_mapping}" output="metadata_mapping.txt"/>
+				<command label="Creating copy of metadata mapping file" cmd="axiome utility metadata_file_check -m ${i} &amp;&amp; cp ${i} ${o}" input="${metadata_mapping},${metadata_mapping}" output="metadata_mapping.txt"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>

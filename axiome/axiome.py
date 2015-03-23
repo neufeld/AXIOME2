@@ -19,7 +19,8 @@ def main():
     process_parser = subparsers.add_parser("process")
     process_parser.add_argument("-i", metavar="input", help=".ax file to process", required=True, type=str)
     utility_parser = subparsers.add_parser("utility")
-    utility_parser.add_argument("action", choices=["mapping_template", "sample_data"], help="mapping_template: generates a file mapping template in the current directory, which can be opened in a spreadsheet program; sample_data: copies AXIOME sample data into the current directory")
+    utility_parser.add_argument("action", choices=["mapping_template", "sample_data", "metadata_file_check"], help="mapping_template: generates a file mapping template in the current directory, which can be opened in a spreadsheet program; sample_data: copies AXIOME sample data into the current directory; metadata_file_check: Checks the provided metadata mapping file for common errors")
+    utility_parser.add_argument("-m", metavar="metadata_mapping", help="The QIIME metadata mapping file, required if performing metadata_file_check", required=False, type=str)
     args = parser.parse_args()
 
     #Argparse ensures that we meet the requirements
@@ -36,6 +37,11 @@ def main():
             print "Successfully copied sample.ax and sample_file_mapping.tsv to current directory\nRun `axiome process -i sample.ax` to process sample file"
         elif args.action == "mapping_template":
             util.generateMappingTemplate(AxiomeAnalysis(None))
+        elif args.action == "metadata_file_check":
+            if not args.m:
+                print "-m must be specified when using metadata_file_check"
+            else:
+                util.metadataMappingCheck(args.m)
             
 if __name__ == "__main__":
     main()

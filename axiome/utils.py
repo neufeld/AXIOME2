@@ -1,7 +1,9 @@
+from __future__ import print_function
 from os import getcwd
-from os.path import dirname, abspath
+from os.path import dirname, abspath, isfile
 from shutil import copyfile
 from collections import OrderedDict
+import sys
 
 def copySampleAxData():
     '''Copies the sample AXIOME data, updating the filepaths in the process'''
@@ -60,5 +62,38 @@ def generateMappingTemplate(AxAnalysis):
         template.write("%s\n" % description_string)
         template.write("%s\n" % required_string)
         template.write("%s\n" % column_headers)
-        print "Successfully written file 'axiome_file_mapping_template.tsv'"
-        print "This file can be opened and edited in a spreadsheet application (eg. Excel)"
+        print("Successfully written file 'axiome_file_mapping_template.tsv'", file=sys.stdout)
+        print("This file can be opened and edited in a spreadsheet application (eg. Excel)", file=sys.stdout)
+
+def metadataMappingCheck(metadata_mapping):
+
+    print("Checking the metadata mapping file...", file=sys.stdout)
+    
+    if not isfile(metadata_mapping):
+        print("ERROR: The provided metadata mapping '" + metadata_mapping + "' is not a file", file=sys.stderr)
+        sys.exit(1)
+
+    with open(metadata_mapping) as metaMap:
+        
+        header = metaMap.readline()
+        categories = header.split("\t")
+        numColumns = len(categories)
+        if numColumns <= 1:
+            print("ERROR: The mapping file '" + metadata_mapping + "' is not tab delimited", file=sys.stderr)
+            sys.exit(1)
+
+        if categories[0] != "#SampleID":
+            print("ERROR: The first column must be #SampleID, was given: " + str(categories[0]), file=sys.stderr)
+            sys.exit(1)
+
+        lineNum = 1
+        for line in metaMap:
+            lineNum += 1
+            newNumColumns = len(line.split("\t"))
+            if newNumColumns != numColumns:
+                print("ERROR: Line " + str(lineNum) + " has the incorrect number of columns", file=sys.stderr)
+                print("Expected " + str(numColumns) + " columns, but found " + str(newNumColumns), file=sys.stderr)
+                print(line, file=sys.stderr)
+                sys.exit(1)
+
+    print("Metadata mapping file is okay!", file=sys.stdout)
