@@ -17,8 +17,9 @@
     <process>
         <input name="ind_species_raw.txt"/>
         <input name="otu_table_auto.tab"/>
+        <input name="metadata_mapping.txt"/>
         <output name="indicator_species.html" report_label="Indicator Species Table List"/>
-        <command label="Indicator Species Summary Creation" cmd="mesas-indicator-otu -t ${i} -i ${i} -o ${v}" input="otu_table_auto.tab,ind_species_raw.txt" variable="${PWD}"/>
+        <command label="Indicator Species Summary Creation" cmd="mesas-indicator-otu -t ${i} -i ${i} -m ${i} -o ${v}" input="otu_table_auto.tab,ind_species_raw.txt,metadata_mapping.txt" variable="${PWD}"/>
     </process>
 		<!-- Version check command for involved programs -->
 		<info>
