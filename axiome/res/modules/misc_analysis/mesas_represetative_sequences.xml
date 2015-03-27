@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="otu_representative_sequences" type="misc_analysis">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<!--file label="Exclude OTU List" name="exclude_list" command_prefix="-e"/-->
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="otu_table.tab"/>
+			<input name="otu_table_auto.tab"/>
+			<input name="rep_set.fasta"/>
+			<output name="otu_table_with_seq.tab" report_label="Tab Delimited Full OTU Table With Representative Sequences"/>
+			<output name="otu_table_auto_with_seq.tab" report_label="Tab Delimited Rarefied (Subsampled) OTU Table With Representative Sequences"/>
+			<command label="Add Representative Sequences to OTU Tables" cmd="mesas-otuwithseqs ${i} ${i} > ${o} &amp;&amp; mesas-otuwithseqs ${i} ${i} > ${o}" input="rep_set.fasta,otu_table.tab,rep_set.fasta,otu_table_auto.tab" output="otu_table_with_seq.tab,otu_table_auto_with_seq.tab"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="BIOM Version" cmd="print_qiime_config.py | grep 'biom-format'"/>
+			<help text="Uses the BIOM toolkit to convert a BIOM format OTU table to a tab-separated legacy format OTU table for downstream analyses"/>
+		</info>
+	</plugin>
+</axiome>
