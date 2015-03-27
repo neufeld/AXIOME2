@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <axiome>
-	<plugin name="otu_representative_sequences" type="misc_analysis">
+	<plugin name="mesas_representative_sequences" type="misc_analysis">
 		<!-- Define what the plugin needs -->
 		<!-- This is used to create the UI -->
 		<input>
