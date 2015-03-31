@@ -11,20 +11,17 @@
 			<input name="metadata_mapping.txt"/>
 			<output name="otu_table_with_metadata.biom"/>
 			<output name="otu_table_with_metadata_auto.biom"/>
-			<command label="Add Metadata to OTU Tables" cmd="biom add-metadata -i ${i} -o ${o} -m ${i} &amp;&amp; biom add-metadata -i ${i} -o ${o} -m ${i}" input="otu_table.biom,metadata_mapping.txt,otu_table_auto.biom,metadata_mapping.txt" output="otu_table_with_metadata.biom,otu_table_with_metadata_auto.biom"/>
+			<command label="Add Metadata to OTU Tables" cmd="rm -f ${o} &amp;&amp; biom add-metadata -i ${i} -o ${o} -m ${i} &amp;&amp; rm -f ${o} &amp;&amp; biom add-metadata -i ${i} -o ${o} -m ${i}" input="otu_table.biom,metadata_mapping.txt,otu_table_auto.biom,metadata_mapping.txt" output="otu_table_with_metadata.biom,otu_table_with_metadata.biom,otu_table_with_metadata_auto.biom,otu_table_with_metadata_auto.biom"/>
 		</process>
     <process>
         <input name="otu_table_with_metadata.biom"/>
         <input name="otu_table_with_metadata_auto.biom"/>
         <output name="phinch_otu_table.biom"/>
         <output name="phinch_otu_table_auto.biom"/>
-        <command label="Convert OTU table to PHINCH Compatible Format" cmd="biom convert -i ${i} -o ${o} --table-type='OTU table' --to-json &amp;&amp; biom convert -i ${i} -o ${o} --table-type='OTU table' --to-json" input="otu_table_with_metadata.biom,otu_table_with_metadata_auto.biom" output="phinch_otu_table.biom,phinch_otu_table_auto.biom"/>
+        <command label="Convert OTU table to PHINCH Compatible Format" cmd="rm -f ${o} &amp;&amp; biom convert -i ${i} -o ${o} --table-type='OTU table' --to-json &amp;&amp; rm -f ${o} &amp;&amp; biom convert -i ${i} -o ${o} --table-type='OTU table' --to-json" input="otu_table_with_metadata.biom,otu_table_with_metadata_auto.biom" output="phinch_otu_table.biom,phinch_otu_table.biom,phinch_otu_table_auto.biom,phinch_otu_table_auto.biom"/>
     </process>
 		<!-- Version check command for involved programs -->
 		<info>
-			<command label="Indicator Species Version" cmd="mesas-indicator-species -v"/>
-			<help text="Dufrene-Legendre indicator species analysis on rarefied OTU table."/>
-			<input name="p_val" text="p-value cutoff for reporting indicator species results. Any results above this cutoff will not be saved."/>
 		</info>
 	</plugin>
 </axiome>
