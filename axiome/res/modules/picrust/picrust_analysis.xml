@@ -46,7 +46,7 @@
 		<process>
 			<input name="normalized_otus.biom"/>
 			<output name="ko_metagenome_contributions.tab"/>
-			<command label="" cmd="metagenome_contributions.py -i ${i} ${v} -o ${o} &amp;&amp; pip install biom-format==2.1.3 --user" input="normalized_otus.biom" variable="-l ${functions}" output="ko_metagenome_contributions.tab"/>
+			<command label="" cmd="metagenome_contributions.py -i ${i} ${v} -o ${o} &amp;&amp; pip install biom-format==2.1.1 --user" input="normalized_otus.biom" variable="-l ${functions}" output="ko_metagenome_contributions.tab"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
