@@ -20,7 +20,7 @@
 		<process>
 			<input name="seq_otus.txt"/>
 			<output name="closed_reference_otu_table.biom"/>
-			<command label="" cmd="make_otu_table.py -i ${i} -o ${o}" input="seq_otus.txt" output="closed_reference_otu_table.biom"/>
+			<command label="" cmd="make_otu_table.py -i ${v} -o ${o}" variable="${PWD}/seq_otus.txt" output="closed_reference_otu_table.biom"/>
 		</process>
 		<process>
 			<input name="closed_reference_otu_table.biom"/>
