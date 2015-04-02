@@ -14,13 +14,13 @@
 		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
 		<process>
 			<input name="seq.fasta"/>
-			<output name="seq_otus.txt"/>
-			<command label="Clustering with usearch" cmd="pick_otus.py -m usearch61_ref -i ${i} -r ${v} -C -o ${v}" input="seq.fasta" variable="${ref_seqs},${PWD}"/>
+			<output name="seq_otus_closed.txt"/>
+			<command label="Clustering with usearch" cmd="pick_otus.py -m usearch61_ref -i ${i} -r ${v} -C -o ${v} &amp;&amp; mv ${v}/seq_otus.txt ${v}/seq_otus_closed.txt" input="seq.fasta" variable="${ref_seqs},${PWD},${PWD},${PWD}"/>
 		</process>
 		<process>
-			<input name="seq_otus.txt"/>
+			<input name="seq_otus_closed.txt"/>
 			<output name="closed_reference_otu_table.biom"/>
-			<command label="" cmd="make_otu_table.py -i ${v} -o ${o}" variable="${PWD}/seq_otus.txt" output="closed_reference_otu_table.biom"/>
+			<command label="" cmd="make_otu_table.py -i ${i} -o ${o}" input="seq_otus_closed.txt" output="closed_reference_otu_table.biom"/>
 		</process>
 		<process>
 			<input name="closed_reference_otu_table.biom"/>
