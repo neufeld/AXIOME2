@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="picrust_analysis" type="picrust">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<text label="GreenGenes Version" name="ggversion" required="true" default="13_5"/>
+			<file label="GreenGenes Refrence Sequences" name="ref_seqs" required="true"/>
+			<text label="Metadata Category" name="category" required="true"/>
+			<int label="Level" name="level" required="true" default="1" min="1" max="10"/>
+			<text label="Functions" name="functions" required="false"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="seq.fasta"/>
+			<output name="seq_otus.txt"/>
+			<command label="Clustering with usearch" cmd="pick_otus.py -m usearch61_ref -i ${i} -r ${v} -C -o ${v}" input="seq.fasta" variable="${ref_seqs},${PWD}"/>
+		</process>
+		<process>
+			<input name="seq_otus.txt"/>
+			<output name="closed_reference_otu_table.biom"/>
+			<command label="" cmd="make_otu_table.py -i ${i} -o ${o}" input="seq_otus.txt" output="closed_reference_otu_table.biom"/>
+		</process>
+		<process>
+			<input name="closed_reference_otu_table.biom"/>
+			<output name="closed_reference_otu_table_json.biom"/>
+			<command label="" cmd="rm -f ${o} &amp;&amp; biom convert -i ${i} -o ${o} --table-type='OTU table' --to-json &amp;&amp; pip install biom-format==1.3.1 --user" input="closed_reference_otu_table.biom" output="closed_reference_otu_table_json.biom,closed_reference_otu_table_json.biom"/>
+		</process>
+		<process>
+			<input name="closed_reference_otu_table_json.biom"/>
+			<output name="normalized_otus.biom"/>
+			<command label="" cmd="normalize_by_copy_number.py -i ${i} -o ${o} --gg_version ${v}" input="closed_reference_otu_table_json.biom" output="normalized_otus.biom" variable="${ggversion}"/>
+		</process>
+		<process>
+			<input name="normalized_otus.biom"/>
+			<output name="metagenome_predictions.biom"/>
+			<output name="nsti_per_sample.tab"/>
+			<command label="" cmd="predict_metagenomes.py -i ${i} -o ${o} -a ${o}" input="normalized_otus.biom" output="metagenome_predictions.biom,nsti_per_sample.tab"/>
+		</process>
+		<process>
+			<input name="metagenome_predictions.biom"/>
+			<output name="predicted_metagenomes_categorized_by_functions.biom"/>
+			<command label="" cmd="categorize_by_function.py -i ${i} -c ${v} -l ${v} -o ${o}" input="metagenome_predictions.biom" output="predicted_metagenomes_categorized_by_functions.biom" variable="${category},${level}"/>
+		</process>
+		<process>
+			<input name="normalized_otus.biom"/>
+			<output name="ko_metagenome_contributions.tab"/>
+			<command label="" cmd="metagenome_contributions.py -i ${i} ${v} -o ${o} &amp;&amp; pip install biom-format==2.1.3 --user" input="normalized_otus.biom" variable="-l ${functions}" output="ko_metagenome_contributions.tab"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<help text="Performs PICRUSt Analysis"/>
+			<input name="ggversion" text="The version of GreenGenes used for refrence sequences. Valid choices are: 13_5 or 18may2012"/>
+			<input name="ref_seqs" text="Full filepath to the GreenGenes reference sequence file"/>
+			<input name="category" text="The metadata category that describes the hierarchy"/>
+			<input name="level" text="The level in the metadata category hierarchy to collapse to"/>
+			<input name="functions" text="Limit output predictions for only specified function ids. Function ids should be provided in a comma delimited list. (Optional, will predict for all functions if not provided)"/>
+		</info>
+	</plugin>
+</axiome>
