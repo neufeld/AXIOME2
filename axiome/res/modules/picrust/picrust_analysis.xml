@@ -5,9 +5,9 @@
 		<!-- This is used to create the UI -->
 		<input>
 			<text label="GreenGenes Version" name="ggversion" required="true" default="13_5"/>
-			<file label="GreenGenes Refrence Sequences" name="ref_seqs" required="true"/>
+			<file label="GreenGenes Reference Sequences" name="ref_seqs" required="true"/>
 			<text label="Metadata Category" name="category" required="true"/>
-			<int label="Level" name="level" required="true" default="1" min="1" max="10"/>
+			<int label="Level" name="level" required="true" default="1" min="1" max="5"/>
 			<text label="Functions" name="functions" required="false"/>
 		</input>
 		<!-- Define what the plugin is going to do -->
@@ -46,7 +46,7 @@
 		<process>
 			<input name="normalized_otus.biom"/>
 			<output name="ko_metagenome_contributions.tab"/>
-			<command label="" cmd="metagenome_contributions.py -i ${i} ${v} -o ${o} &amp;&amp; pip install biom-format==2.1.1 --user" input="normalized_otus.biom" variable="-l ${functions}" output="ko_metagenome_contributions.tab"/>
+			<command label="" cmd="echo 'No functions choosen for analysis' > ${o} ${v}&amp;&amp; pip install biom-format==2.1.1 --user" variable="&amp;&amp; rm -f picrust/picrust_analysis/ko_metagenome_contributions.tab &amp;&amp; metagenome_contributions.py -i picrust/picrust_analysis/normalized_otus.biom -l ${functions} -o picrust/picrust_analysis/ko_metagenome_contributions.tab " output="ko_metagenome_contributions.tab"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
@@ -55,7 +55,7 @@
 			<input name="ref_seqs" text="Full filepath to the GreenGenes reference sequence file"/>
 			<input name="category" text="The metadata category that describes the hierarchy"/>
 			<input name="level" text="The level in the metadata category hierarchy to collapse to"/>
-			<input name="functions" text="Limit output predictions for only specified function ids. Function ids should be provided in a comma delimited list. (Optional, will predict for all functions if not provided)"/>
+			<input name="functions" text="The KEGG funciton ids to output contributing OTUs for. Function ids should be provided in a comma delimited list. (Optional, will skip this step if not provided)"/>
 		</info>
 	</plugin>
 </axiome>
