@@ -13,9 +13,9 @@
 				<!-- Here, output file is determined dynamically by AXIOME -->
 				<input name="${source:sample_alias}.fasta.gz"/>
 				<output name="seq.fasta"/>
-
+				<output name="chimeric_otus.fasta"/>
 				<!-- "variable" refers to the item input by the user above -->
-				<command label="FASTA File Merge" cmd="zcat ${i} > ${o}" input="${source:sample_alias}.fasta.gz" output="seq.fasta" format="slist"/>
+				<command label="FASTA File Merge" cmd="zcat ${i} > ${o} &amp;&amp; echo '' > ${o}" input="${source:sample_alias}.fasta.gz" output="seq.fasta,chimeric_otus.fasta" format="slist"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>

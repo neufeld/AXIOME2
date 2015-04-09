@@ -11,8 +11,9 @@
 		<process>
 			<input name="seq_otus.txt"/>
 			<input name="rep_set_tax_assignments.txt"/>
+			<input name="chimeric_otus.fasta"/>
 			<output name="otu_table.biom" report_label="BIOM Format Full OTU Table"/>
-			<command label="OTU Table Build via QIIME" cmd="rm -rf ${o} &amp;&amp; make_otu_table.py -i ${i} -o ${o} -t ${i}" input="seq_otus.txt,rep_set_tax_assignments.txt" output="otu_table.biom,otu_table.biom"/>
+			<command label="OTU Table Build via QIIME" cmd="rm -rf ${o} &amp;&amp; make_otu_table.py -i ${i} -o ${o} -t ${i} -e ${i}" input="seq_otus.txt,rep_set_tax_assignments.txt,chimeric_otus.fasta" output="otu_table.biom,otu_table.biom"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
