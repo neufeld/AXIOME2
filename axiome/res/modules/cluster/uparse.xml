@@ -44,7 +44,7 @@
 		<!-- Version check command for involved programs -->
 		<info>
 			<command label="usearch" cmd="usearch --version"/>
-			<help text="Uses the UPARSE pipeline to cluster sequences into OTUs. The UPARSE representative set selector must be selected to use UPARSE's OTUs"/>
+			<help text="Uses the UPARSE pipeline to cluster sequences into OTUs. Chimera removal is included. The UPARSE representative set selector must be selected to use UPARSE's OTUs"/>
 			<input name="identity" text="Percent identity for determining if a sequence should join a cluster"/>
 			<input name="minsize" text="Minimum size of dereplicated cluster to include in the clustering operation (default 2)"/>
 			<input name="num_threads" text="Number of threads for mapping sequences back to the OTUs and conversion of uclust file to seq_otus.txt"/>

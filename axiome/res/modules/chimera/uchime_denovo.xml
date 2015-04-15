@@ -16,7 +16,7 @@
 		<!-- Version check command for involved programs -->
 		<info>
 			<command label="USEARCH Version" cmd="usearch --version"/>
-			<help text="Remove chimeras with usearch's uchime denovo algorithm"/>
+			<help text="Remove chimeras with usearch's uchime denovo algorithm. Cluster method cannot be qiime based"/>
 		</info>
 	</plugin>
 </axiome>

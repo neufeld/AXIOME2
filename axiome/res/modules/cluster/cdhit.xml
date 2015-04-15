@@ -23,7 +23,7 @@
 		<!-- Version check command for involved programs -->
 		<info>
 			<command label="cdhit-est" cmd="cd-hit-est -h | head -n 1"/>
-			<help text="Uses cd-hit-est to cluster sequences into OTUs"/>
+			<help text="Uses cd-hit-est to cluster sequences into OTUs. To perform chimera removal use uchime_denovo"/>
 			<input name="identity" text="Percent identity for determining if a sequence should join a cluster"/>
 		</info>
 	</plugin>

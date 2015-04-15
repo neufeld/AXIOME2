@@ -18,7 +18,7 @@
 		<!-- Version check command for involved programs -->
 		<info>
 			<command label="BLAST" cmd=""/>
-			<help text="Uses blast via QIIME to cluster sequences"/>
+			<help text="Uses blast via QIIME to cluster sequences. No chimera removal"/>
 			<input name="identity" text="Percent identity for determining if a sequence should join a cluster"/>
 			<input name="maxe" text="Maximum e-value to consider a match a positive hit"/>
 			<input name="ref_seqs" text="Reference sequence set from which to assign OTUs"/>
