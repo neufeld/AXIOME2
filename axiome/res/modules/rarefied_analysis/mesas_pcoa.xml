@@ -12,7 +12,7 @@
 		<process>
 			<input name="otu_table_auto.tab"/>
 			<input name="metadata_mapping.txt"/>
-			<output name="pcoa-${distance}.pdf" report_label="PCoA Ordination"/>
+			<output name="pcoa-${distance}.pdf" report_label="PCoA Ordination, Distance: ${v}" report_variable="${distance}"/>
 			<command label="PCoA Ordination" cmd="mesas-pcoa -i ${i} -m ${i} -o ${v}/pcoa-${v}.pdf -d ${v}" input="otu_table_auto.tab,metadata_mapping.txt" variable="${PWD},${distance},${distance}"/>
 		</process>
 		<!-- Version check command for involved programs -->
