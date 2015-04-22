@@ -16,8 +16,8 @@
     <process>
         <input name="otu_table_with_metadata.biom"/>
         <input name="otu_table_with_metadata_auto.biom"/>
-        <output name="phinch_otu_table.biom"/>
-        <output name="phinch_otu_table_auto.biom"/>
+        <output name="phinch_otu_table.biom" report_label="PHINCH Compatible Full OTU Table"/>
+        <output name="phinch_otu_table_auto.biom" report_label="PHINCH Compatible Rarefied (Subsampled) OTU Table"/>
         <command label="Convert OTU table to PHINCH Compatible Format" cmd="rm -f ${o} &amp;&amp; biom convert -i ${i} -o ${o} --table-type='OTU table' --to-json &amp;&amp; rm -f ${o} &amp;&amp; biom convert -i ${i} -o ${o} --table-type='OTU table' --to-json" input="otu_table_with_metadata.biom,otu_table_with_metadata_auto.biom" output="phinch_otu_table.biom,phinch_otu_table.biom,phinch_otu_table_auto.biom,phinch_otu_table_auto.biom"/>
     </process>
 		<!-- Version check command for involved programs -->

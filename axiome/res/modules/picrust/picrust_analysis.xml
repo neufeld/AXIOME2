@@ -40,12 +40,12 @@
 		</process>
 		<process>
 			<input name="metagenome_predictions.biom"/>
-			<output name="predicted_metagenomes_categorized_by_functions.biom"/>
+			<output name="predicted_metagenomes_categorized_by_functions.biom" report_label="PICRUSt Predictions Categorized By Function"/>
 			<command label="" cmd="categorize_by_function.py -i ${i} -c ${v} -l ${v} -o ${o}" input="metagenome_predictions.biom" output="predicted_metagenomes_categorized_by_functions.biom" variable="${category},${level}"/>
 		</process>
 		<process>
 			<input name="normalized_otus.biom"/>
-			<output name="ko_metagenome_contributions.tab"/>
+			<output name="ko_metagenome_contributions.tab" report_label="PICRUSt Function Contributions"/>
 			<command label="" cmd="echo 'No functions choosen for analysis' > ${o} ${v}&amp;&amp; pip install biom-format==2.1.1 --user" variable="&amp;&amp; rm -f picrust/picrust_analysis/ko_metagenome_contributions.tab &amp;&amp; metagenome_contributions.py -i picrust/picrust_analysis/normalized_otus.biom -l ${functions} -o picrust/picrust_analysis/ko_metagenome_contributions.tab " output="ko_metagenome_contributions.tab"/>
 		</process>
 		<!-- Version check command for involved programs -->
