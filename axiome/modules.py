@@ -422,7 +422,7 @@ class AxProcess(object):
                         resolved_variable_list = self.resolve_variable(variable, active_submodule)
                         label = label.replace("${v}",sep.join(resolved_variable_list),1)
                         self._submodule._module._analysis.report.addToReport(label, active_submodule.name + "/" + resolved_output_file)
-                        self._submodule._module._analysis.makefile.addToZip(active_submodule.name + "/" + resolved_output_file)
+                        self._submodule._module._analysis.makefile.addToZip(active_submodule.name)
 
             #Now resolve the command
             command_str = process["command"]["cmd"]
