@@ -162,6 +162,11 @@ class AxMakefile(object):
         #"all" string is a phony file that will allow us to simply run "make"
         #to create everything
         self.allString = "all:"
+
+        self.zipName = makefile.split("/")[-2]
+        self.zipName = self.zipName.split(".")[0] + ".zip"
+        self.zipHeader = self.zipName + ": "
+        self.zipCommand = "\tzip -r " + self.zipName + " report.html "
         
     def __del__(self):
         self._file.close()
@@ -174,9 +179,15 @@ class AxMakefile(object):
         #Add to the phony all string
         for output_file in output_file_list:
             self.allString += " " + output_file
+
+    def addToZip(self, file_name):
+        self.zipHeader += file_name + " "
+        self.zipCommand += file_name + " "
         
     def writeMakefile(self):
-        self._file.write(self.headerString + self.allString + self.makefileString + "\n\n" + ".PHONY: all")
+        self.allString += " " + self.zipName
+        self._file.write(self.headerString + self.allString + self.makefileString + "\n\n" + 
+            self.zipHeader + "\n" + self.zipCommand + "\n\n" + ".PHONY: all")
         
 #Class which generates the output report file for AXIOME
 #For now, this is going to be a simple html file
@@ -411,6 +422,7 @@ class AxProcess(object):
                         resolved_variable_list = self.resolve_variable(variable, active_submodule)
                         label = label.replace("${v}",sep.join(resolved_variable_list),1)
                         self._submodule._module._analysis.report.addToReport(label, active_submodule.name + "/" + resolved_output_file)
+                        self._submodule._module._analysis.makefile.addToZip(active_submodule.name + "/" + resolved_output_file)
 
             #Now resolve the command
             command_str = process["command"]["cmd"]
