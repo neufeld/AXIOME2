@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="mesas_mrpp" type="rarefied_analysis">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+			<text label="Distance Method" name="distance" default="bray" required="true"/>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="otu_table_auto.tab"/>
+			<input name="metadata_mapping.txt"/>
+			<output name="mrpp.txt" report_label="MESAS MRPP, Distance: ${v}" report_variable="${distance}"/>
+			<command label="MESaS MRPP" cmd="mesas-mrpp -i ${i} -m ${i} -o ${v} -d ${v} &amp;&amp; mv ${v}/mrpp-${v}.txt ${o}" input="otu_table_auto.tab,metadata_mapping.txt" output="mrpp.txt" variable="${PWD},${distance},${PWD},${distance}"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<help text="MRPP analysis on rarefied OTU table."/>
+			<input name="distance" text="Valid distance measures: bray, euclidean, manhattan, canberra, jaccard, gower, altGower, morisita, horn, mountford, raup, binomial, chao."/>
+		</info>
+	</plugin>
+</axiome>
