@@ -7,10 +7,14 @@
 				<text label="Sample Alias" name="sample_alias" required="true"/>
 				<file label="Forward File" name="forward_file_name" required="true"/>
 				<file label="Reverse File" name="reverse_file_name" required="true"/>
-				<text label="Barcode" name="barcode" required="true"/>
+				<text label="Barcode" name="barcode"/>
 				<float label="Quality Threshold" name="quality_threshold" default="0.6" min="0" max="1"/>
 				<text label="Forward Primer" name="fprimer"/>
 				<text label="Reverse Primer" name="rprimer"/>
+				<text label="Algorithm" name="algorithm"/>
+				<text label="Minimum sequence length" name="min_length"/>
+				<text label="Minimum overlap length" name="min_overlap"/>
+				<text label="Maximum overlap length" name="max_overlap"/>
 		</input>
 		<!-- Define what the plugin is going to do -->
 		<!-- Special variables available to "sources" types: axiome_output_file, used so that AXIOME can control output file location and names -->
@@ -21,7 +25,7 @@
 				<input name="${reverse_file_name}"/>
 				<output name="${sample_alias}.fasta.gz"/>
 				<!-- "variable" refers to the item input by the user above -->
-				<command label="PANDASeq Assembly" cmd="pandaseq -f ${i} -r ${i} -t ${v} -G ${v}/log.txt.bz2 -C validtag:${v}${v}${v} | awk -v SAMPLEID=${v} 'BEGIN{count=0}{if (/^>/){print &quot;>&quot; SAMPLEID &quot;_&quot; count; count+=1}else{print}}' > ${o} &amp;&amp; gzip -f ${o}" input="${forward_file_name},${reverse_file_name}" output="${sample_alias}.fasta,${sample_alias}.fasta" variable="${quality_threshold},${PWD},${barcode}, -p ${fprimer}, -q ${rprimer},${sample_alias}"/>
+				<command label="PANDASeq Assembly" cmd="pandaseq -f ${i} -r ${i} -t ${v} -G ${v}/log.txt.bz2 -C empty ${v}${v}${v}${v}${v}${v}${v} | awk -v SAMPLEID=${v} 'BEGIN{count=0}{if (/^>/){print &quot;>&quot; SAMPLEID &quot;_&quot; count; count+=1}else{print}}' > ${o} &amp;&amp; gzip -f ${o}" input="${forward_file_name},${reverse_file_name}" output="${sample_alias}.fasta,${sample_alias}.fasta" variable="${quality_threshold},${PWD},-C validtag:${barcode}, -A ${algorithm}, -p ${fprimer}, -q ${rprimer}, -l ${min_length}, -o ${min_overlap}, -O ${max_overlap},${sample_alias}"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
@@ -34,6 +38,10 @@
 				<input name="quality_threshold" text="Quality threshold for including sequences"/>
 				<input name="fprimer" text="Forward primer sequence"/>
 				<input name="rprimer" text="Reverse primer sequence"/>
+				<input name="algorithm" text="Algorithm choice. Leave blank for default PANDAseq. Options are: ea_util, flash, pear, rdp_mle, simple_bayesian, stitch, uparse."/>
+				<input name="min_length" text="Minimum length for a sequence to be emitted. If blank, all sequences are emitted."/>
+				<input name="min_overlap" text="Minimum overlap required in assembly."/>
+				<input name="max_overlap" text="Maximum overlap in assembly (0 to use sequence length)."/>
 		</info>
 	</plugin>
 </axiome>
