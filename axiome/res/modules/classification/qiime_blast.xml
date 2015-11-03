@@ -4,7 +4,7 @@
 		<!-- Define what the plugin needs -->
 		<!-- This is used to create the UI -->
 		<input>
-			<str label="Maximum e value" name="maxe" default="0.01"/>
+			<text label="Maximum e value" name="maxe" default="0.01"/>
 			<file label="Reference Sequences" name="ref_seqs" required="true"/>
 			<file label="Reference Taxonomy" name="ref_tax" required="true"/>
 		</input>
