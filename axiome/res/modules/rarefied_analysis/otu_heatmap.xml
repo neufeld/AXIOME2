@@ -14,7 +14,7 @@
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
-			<command label="Heatmap Version" cmd="make_otu_heatmap.R -v"/>
+			<command label="Heatmap Version" cmd="Rscript make_otu_heatmap.R -v"/>
 			<help text="Create a Heatmap PDF From An OTU Table Using Custom R Script make_otu_heatmap.R"/>
 		</info>
 	</plugin>
