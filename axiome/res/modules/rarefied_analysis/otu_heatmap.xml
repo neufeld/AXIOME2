@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<axiome>
+	<plugin name="otu_heatmap" type="misc_analysis">
+		<!-- Define what the plugin needs -->
+		<!-- This is used to create the UI -->
+		<input>
+		</input>
+		<!-- Define what the plugin is going to do -->
+		<!-- Special variables available to "source" types: previous_output_file, current_output_file -->
+		<process>
+			<input name="otu_table_auto.tab"/>
+			<output name="otu_heatmap.pdf" report_label="Heatmap for OTU Data"/>
+			<command label="Create a Heatmap PDF From An OTU Table Using Custom R Script make_otu_heatmap.R" cmd="rm -f ${o} &amp;&amp; Rscript make_otu_heatmap.R -i ${i} -o ${o}" input="otu_table_auto.tab" output="otu_heatmap.pdf,otu_heatmap.pdf"/>
+		</process>
+		<!-- Version check command for involved programs -->
+		<info>
+			<command label="Heatmap Version" cmd="make_otu_heatmap.R -v"/>
+			<help text="Create a Heatmap PDF From An OTU Table Using Custom R Script make_otu_heatmap.R"/>
+		</info>
+	</plugin>
+</axiome>

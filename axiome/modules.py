@@ -43,7 +43,7 @@ class AxiomeAnalysis(object):
         try:
             self.master_file = xml.parse(source_dir+"/res/modules/master.xml")
         except:
-            raise StandardError, "Error parsing XML file %s" % master_file
+            raise StandardError, "Error parsing XML file %s" % (source_dir+"/res/modules/master.xml")
         #File manifest
         #Contains the filenames, and the module and active submodule that owns it
         self._manifest = {}
@@ -90,10 +90,10 @@ class AxiomeAnalysis(object):
         name. Assumes that the module name exists as a folder in the res
         subfolder.
         """
-        for workflow in self.master_file.getElementsByTagName("workflow"): 
+        module_list = []
+        for workflow in self.master_file.getElementsByTagName("workflow"):
             if workflow.getAttribute("name") == workflow_name:
             #Load the correct workflow
-                module_list = []
                 for module in workflow.childNodes:
                     if module.nodeType == xml.Node.ELEMENT_NODE:
                         #Get the attributes
@@ -139,7 +139,7 @@ class AxiomeAnalysis(object):
             if (submodule._submodule.name == submodule_name) & (submodule._submodule._module.name == module_name):
                 active_submodule_list.append(submodule)
         if not active_submodule_list:
-            raise ValueError, "No activated submodules from submodule '%s' found." % name
+            raise ValueError, "No activated submodules from submodule '%s' found." % submodule_name
         return active_submodule_list
 
     def getAxFileComments(self):
