@@ -10,7 +10,7 @@
 		<process>
 			<input name="otu_table_auto.tab"/>
 			<output name="otu_heatmap.pdf" report_label="Heatmap for OTU Data"/>
-			<command label="Create a Heatmap PDF From An OTU Table Using Custom R Script make_otu_heatmap.R" cmd="rm -f ${o} &amp;&amp; Rscript make_otu_heatmap.R -i ${i} -o ${o}" input="otu_table_auto.tab" output="otu_heatmap.pdf,otu_heatmap.pdf"/>
+			<command label="Create a Heatmap PDF From An OTU Table Using Custom R Script make_otu_heatmap.R" cmd="rm -f ${o} &amp;&amp; make_otu_heatmap.R -i ${i} -o ${o}" input="otu_table_auto.tab" output="otu_heatmap.pdf,otu_heatmap.pdf"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
