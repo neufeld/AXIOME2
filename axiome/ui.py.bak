@@ -63,10 +63,10 @@ class AXIOMEUI(nps.NPSAppManaged):
         #Grab the AxInput for the submodule
         module = self.AxAnal.getModuleByName(module_name)
         if not module:
-            raise ValueError("Cannot find module: %s" % module_name)
+            raise ValueError, "Cannot find module: %s" % module_name
         submodule = module.getSubmoduleByName(submodule_name)
         if not submodule:
-            raise ValueError("Cannot find module: %s" % submodule_name)
+            raise ValueError, "Cannot find module: %s" % submodule_name
         AxInput = submodule._input
         if not AxInput._values:
             return False
@@ -99,7 +99,7 @@ class AXIOMEUI(nps.NPSAppManaged):
         AxInfo = submodule._info
         description_box = form.add_widget_intelligent(TitleExitPager, name="Submodule Description:", slow_scroll = True, max_height = 4, scroll_exit = True, autowrap = True, values = [AxInfo._values["help"]["text"]])
         help_text = list()
-        for name, text in AxInfo._values["input"].items():
+        for name, text in AxInfo._values["input"].iteritems():
             label = AxInput.getValuesForInput(name)["label"]
             help_text.append("%s: %s" % (label, text))
         if help_text:
@@ -121,14 +121,14 @@ class AXIOMEUI(nps.NPSAppManaged):
                 form = self.createSubmoduleForm(module_name, submodule_name, copy)
                 if form:
                     args = active_submodule._args
-                    for variable, value in args.items():
+                    for variable, value in args.iteritems():
                         widget = form.get_widget(variable)
                         if widget.__class__.__name__ is "TitleFloatSlider":
                             value = float(value)
                         try:
                             widget.value = value
                         except:
-                            raise ValueError(widget.__class__.__name__)
+                            raise ValueError, widget.__class__.__name__
                     copy += 1
                     submodule_form_list.append(form)
         else:
@@ -272,7 +272,7 @@ class ModuleForm(nps.FormMultiPageAction):
                         try:
                             help_text += "\n%s: %s" % (submodule.name, submodule._info._values["help"]["text"])
                         except:
-                            raise ValueError(submodule.name)
+                            raise ValueError, submodule.name
                     help_widget = self.add_widget_intelligent(HelpButton, help_msg=help_text, name="%s:" % module._value["label"])
                     self.nextrelx = 10
                     choice_widget = self.add_widget_intelligent(widget, w_id="module_"+module.name, values=values, value=value, max_height=len(values)+1, scroll_exit=True)
@@ -374,7 +374,7 @@ class ModuleForm(nps.FormMultiPageAction):
                             return False, message
                         #Special column headers:
                         #axiome_submodule: name of source submodule that controls the sample
-                        sample_dict = dict(list(zip(column_headers.strip().split("\t"), definition.strip().split("\t"))))
+                        sample_dict = dict(zip(column_headers.strip().split("\t"), definition.strip().split("\t")))
                         try:
                             submodule_name = sample_dict["axiome_submodule"]
                         except KeyError:
@@ -527,8 +527,8 @@ class SaveForm(nps.FormMultiPageAction):
                             return False
                         #Start building the line
                         source_variables = ""
-                        sample_dict = dict(list(zip(column_headers.strip().split("\t"), definition.strip().split("\t"))))
-                        for header, value in sample_dict.items():
+                        sample_dict = dict(zip(column_headers.strip().split("\t"), definition.strip().split("\t")))
+                        for header, value in sample_dict.iteritems():
                             if (value != "") & (header != 'axiome_submodule'):
                                 source_variables += ' %s="%s"' % (header, value)
                         source_line = '\t<source method="%s"%s/>\n' % (sample_dict["axiome_submodule"], source_variables)

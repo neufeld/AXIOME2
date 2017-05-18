@@ -5,8 +5,8 @@
 from .modules import AxiomeAnalysis
 from os.path import dirname, abspath
 import argparse
-from . import ui
-from . import utils as util
+import ui
+import utils as util
 
 source_dir = dirname(abspath(__file__))
 
@@ -30,16 +30,16 @@ def main():
     elif args.subparser_name == "process":
         axiome_analysis = AxiomeAnalysis(args.i)
         working_directory = axiome_analysis.working_directory
-        print("AXIOME file processed\nDirectory '%s' created\nRun command `make` in directory '%s'" % (working_directory, working_directory))
+        print "AXIOME file processed\nDirectory '%s' created\nRun command `make` in directory '%s'" % (working_directory, working_directory)
     elif args.subparser_name == "utility":
         if args.action == "sample_data":
             util.copySampleAxData()
-            print("Successfully copied sample.ax and sample_file_mapping.tsv to current directory\nRun `axiome process -i sample.ax` to process sample file")
+            print "Successfully copied sample.ax and sample_file_mapping.tsv to current directory\nRun `axiome process -i sample.ax` to process sample file"
         elif args.action == "mapping_template":
             util.generateMappingTemplate(AxiomeAnalysis(None))
         elif args.action == "metadata_file_check":
             if not args.m:
-                print("-m must be specified when using metadata_file_check")
+                print "-m must be specified when using metadata_file_check"
             else:
                 util.metadataMappingCheck(args.m)
             

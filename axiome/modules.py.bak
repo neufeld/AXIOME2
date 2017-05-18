@@ -27,7 +27,7 @@ class AxiomeAnalysis(object):
             try:
                 self.ax_file = xml.parse(ax_file)
             except:
-                raise Exception("Error parsing XML file %s" % ax_file)
+                raise StandardError, "Error parsing XML file %s" % ax_file
             #Set the working directory to the .ax file location
             #but add axiome as the extension
             self.working_directory = splitext(ax_file)[0] + ".axiome"
@@ -35,7 +35,7 @@ class AxiomeAnalysis(object):
                 if not isdir(self.working_directory):
                     mkdir(self.working_directory)
             except OSError:
-                raise OSError("Error: Could not create axiome directory")
+                raise OSError, "Error: Could not create axiome directory"
             self.makefile = AxMakefile(self.working_directory+"/Makefile")
         else:
             self.working_directory = ""
@@ -43,7 +43,7 @@ class AxiomeAnalysis(object):
         try:
             self.master_file = xml.parse(source_dir+"/res/modules/master.xml")
         except:
-            raise Exception("Error parsing XML file %s" % (source_dir+"/res/modules/master.xml"))
+            raise StandardError, "Error parsing XML file %s" % (source_dir+"/res/modules/master.xml")
         #File manifest
         #Contains the filenames, and the module and active submodule that owns it
         self._manifest = {}
@@ -72,14 +72,14 @@ class AxiomeAnalysis(object):
         for module in self._modules:
             if module.name == name:
                 return module
-        raise ValueError("Module %s not found" % name)
+        raise ValueError, "Module %s not found" % name
     
     def getWorkflow(self):
         if self.ax_file:
             workflow_list = getWorkflowList()
             workflow = self.ax_file.getElementsByTagName("axiome")[0].getAttribute("workflow")
             if workflow not in workflow_list:
-                raise ValueError("Workflow in loaded .ax file not found in master.xml")
+                raise ValueError, "Workflow in loaded .ax file not found in master.xml"
             else:
                 return workflow
         else:
@@ -130,7 +130,7 @@ class AxiomeAnalysis(object):
             if submodule._submodule._module.name == name:
                 active_submodule_list.append(submodule)
         if not active_submodule_list:
-            raise ValueError("No activated submodules from module '%s' found." % name)
+            raise ValueError, "No activated submodules from module '%s' found." % name
         return active_submodule_list
                 
     def getActiveSubmodulesBySubmoduleName(self, module_name, submodule_name):
@@ -139,7 +139,7 @@ class AxiomeAnalysis(object):
             if (submodule._submodule.name == submodule_name) & (submodule._submodule._module.name == module_name):
                 active_submodule_list.append(submodule)
         if not active_submodule_list:
-            raise ValueError("No activated submodules from submodule '%s' found." % submodule_name)
+            raise ValueError, "No activated submodules from submodule '%s' found." % submodule_name
         return active_submodule_list
 
     def getAxFileComments(self):
@@ -229,13 +229,13 @@ class AxActiveSubmodule(object):
             self._submodule.num_loaded += 1
         #Check if the requirements of the module are met
         if not self._submodule._input.requirementsMet(args):
-            raise ValueError("Requirements for submodule '%s', module '%s' not met. Exiting." % (self._submodule.name, self._submodule._module.name))
+            raise ValueError, "Requirements for submodule '%s', module '%s' not met. Exiting." % (self._submodule.name, self._submodule._module.name)
             
     def fillDefaults(self, args, submodule):
         #Go into the requirements for the submodule
         input_values = self._submodule._input._values
         for item in input_values:
-            if item["name"] not in list(args.keys()):
+            if item["name"] not in args.keys():
                 #If a default exists for it, use it
                 if "default" in input_values:
                     args[item]=input_values[item]["default"]
@@ -272,7 +272,7 @@ class AxModule(object):
         for submodule in self._submodules:
             if submodule.name == name:
                 return submodule
-        raise ValueError("Submodule %s not found in module %s" % (name, self.name))
+        raise ValueError, "Submodule %s not found in module %s" % (name, self.name)
     
     def loadSubModules(self):
         #Go into the module folder and load all of the submodules
@@ -282,7 +282,7 @@ class AxModule(object):
             try:
                 xml_obj = xml.parse(source_dir + "/res/modules/%s/%s" % (self.name, submodule))
             except:
-                raise Exception("Could not parse file '" + source_dir + "/res/modules/%s/%s'" % (self.name, submodule))
+                raise StandardError, "Could not parse file '" + source_dir + "/res/modules/%s/%s'" % (self.name, submodule)
             submodule_list.append(AxSubmodule(self, xml_obj))
         return submodule_list
     
@@ -339,7 +339,7 @@ class AxInput(object):
         #Complain if a required argument is missing
         for item in required:
             if item not in args:
-                print("Error: Required item %s not in definition" % item)
+                print "Error: Required item %s not in definition" % item
                 return False
         for item in args:
             if (item not in names) & (item != "axiome_submodule"):
@@ -355,7 +355,7 @@ class AxInput(object):
         for value_dict in self._values:
             if value_dict["name"] == name:
                 return value_dict
-        raise ValueError("Failed to find input name '%s' in submodule '%s'" % (name, self._submodule.name))
+        raise ValueError, "Failed to find input name '%s' in submodule '%s'" % (name, self._submodule.name)
     
 class AxProcess(object):
     def __init__(self, submodule, xml_obj):
@@ -401,13 +401,13 @@ class AxProcess(object):
                         #If it does not, see if it exists in the file manifest
                         if resolved_input_file not in self._submodule._module._analysis._manifest:
                             #If it does not exist in the manifest or on system, complain
-                            raise ValueError("Required input file '%s' called by submodule '%s' does not exist on system and not created by previously called module." % (resolved_input_file, active_submodule.name))
+                            raise ValueError, "Required input file '%s' called by submodule '%s' does not exist on system and not created by previously called module." % (resolved_input_file, active_submodule.name)
                         else:
                             input_file_list.append(self._submodule._module._analysis._manifest[resolved_input_file] + "/" + resolved_input_file)
                     else:
                         input_file_list.append(resolved_input_file)
             output_file_list = list()
-            for output_file, output_file_dict in process["output"].items():
+            for output_file, output_file_dict in process["output"].iteritems():
                 #Check for variables
                 resolved_output_file_list = self.resolve_variable(output_file, active_submodule)
                 for resolved_output_file in resolved_output_file_list:
@@ -441,7 +441,7 @@ class AxProcess(object):
                         #If it does not, see if it exists in the file manifest
                         if resolved_input_file not in self._submodule._module._analysis._manifest:
                             #If it does not exist in the manifest or on system, complain
-                            raise ValueError("Required input file '%s' does not exist on system and not created by previously called module." % input_file)
+                            raise ValueError, "Required input file '%s' does not exist on system and not created by previously called module." % input_file
                         else:
                             cmd_input_file_list.append(self._submodule._module._analysis._manifest[resolved_input_file] + "/" + resolved_input_file)
                     else:
@@ -488,7 +488,7 @@ class AxProcess(object):
                 elif not active_submodule._submodule._input.getValuesForInput(variable)["required"]:
                     replacement_dict[variable] = ""
                 else:
-                    raise ValueError("Cannot resolve variable %s, not found in submodule %s, module %s" % (variable, self._submodule.name, self._submodule._module.name))   
+                    raise ValueError, "Cannot resolve variable %s, not found in submodule %s, module %s" % (variable, self._submodule.name, self._submodule._module.name)   
             else:
                 #Global submodule
                 module_name = variable.split(":")[0]
@@ -501,18 +501,18 @@ class AxProcess(object):
                         resolved_variables.append(submodule._args[variable])
                 replacement_dict[module_name+":"+variable] = resolved_variables
         #Check if the replacement lists are all the same size
-        replace_max = max(list(map(len, list(replacement_dict.values()))))
+        replace_max = max(map(len, replacement_dict.values()))
         #A variable should only be found in 1 module, or all activated submodules
         #Any other combination is too difficult to deal with in an automated fashion
         if replace_max != 1:
-            for variable, replacement_list in replacement_dict.items():
+            for variable, replacement_list in replacement_dict.iteritems():
                 if len(replacement_list) == 1:
                     #This recycles values that are 
                     replacement_dict[variable] = replacement_list*replace_max
                 elif len(replacement_list) != replace_max:
-                    raise ValueError("Replacement list not 1 or equal to the replacement max")
-        replacement_list = list(zip(*list(replacement_dict.values())))
-        to_replace = list(replacement_dict.keys())
+                    raise ValueError, "Replacement list not 1 or equal to the replacement max"
+        replacement_list = apply(zip, replacement_dict.values())
+        to_replace = replacement_dict.keys()
         replaced_strings = list()
         for i in range(0, len(replacement_list)):
             for j in range(0, len(to_replace)):
