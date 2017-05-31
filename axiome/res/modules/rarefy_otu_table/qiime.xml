@@ -17,7 +17,7 @@
 			<input name="otu_table.biom"/>
 			<input name="otu_table_summary.txt"/>
 			<output name="otu_table_auto.biom" report_label="BIOM Format Rarefied (Subsampled) OTU Table"/>
-			<command label="Rarefy OTU Table to Even Depth" cmd="single_rarefaction.py -i ${i} -o ${o} -d `grep 'Min:' ${i} | awk '{print int($$2)}'`" input="otu_table.biom,otu_table_summary.txt" output="otu_table_auto.biom"/>
+			<command label="Rarefy OTU Table to Even Depth" cmd="single_rarefaction.py -i ${i} -o ${o} -d `grep 'Min:' ${i} | awk '{gsub(/,/,"",$$2); print int($$2)}'`" input="otu_table.biom,otu_table_summary.txt" output="otu_table_auto.biom"/>
 		</process>
 		<!-- Version check command for involved programs -->
 		<info>
