@@ -15,8 +15,8 @@ RUN conda install -y -n axiome2 -c bioconda qiime matplotlib=1.4.3 mock nose
 RUN conda install -y -n axiome2 -c bioconda -c anaconda pandaseq make
 RUN conda install -y -n axiome2 -c bioconda -c conda-forge -c r r r-plyr r-dplyr r-getopt r-labdsv r-vegan r-ape r-car
 
-# Install axiome2
-RUN /bin/bash -c "source activate axiome2 && pip install axiome && source deactivate"
+# Install axiome2 directly from Github
+RUN /bin/bash -c "source activate axiome2 && pip install git+https://github.com/neufeld/AXIOME2.git && source deactivate"
 
 # Add custom binaries
 RUN mkdir -p /home/support_binaries
