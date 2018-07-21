@@ -18,7 +18,7 @@ RUN conda install -y -n axiome2 -c bioconda -c conda-forge -c r r r-plyr r-dplyr
 # Install extra dependencies needed to run
 RUN apt-get update && apt-get install -y libsm6 libxrender-dev
 RUN mkdir -p /home/support_binaries
-RUN wget -O /home/axiome2/support_binaries/rdp_classifier_2.2.zip https://sourceforge.net/projects/rdp-classifier/files/rdp-classifier/rdp_classifier_2.2.zip
+RUN wget -O /home/support_binaries/rdp_classifier_2.2.zip https://sourceforge.net/projects/rdp-classifier/files/rdp-classifier/rdp_classifier_2.2.zip
 RUN unzip /home/axiome2/support_binaries/rdp_classifier_2.2.zip && rm /home/axiome2/support_binaries/rdp_classifier_2.2.zip
 ENV RDP_JAR_PATH=/home/axiome2/support_binaries/rdp_classifier_2.2/rdp_classifier-2.2.jar
 # conda install -c cyclus java-jdk
