@@ -12,7 +12,7 @@ RUN conda update -y conda
 # Create conda env
 RUN conda create -y -n axiome2 python=2.7
 RUN conda install -y -n axiome2 -c bioconda qiime matplotlib=1.4.3 mock nose
-RUN conda install -y -n axiome2 -c bioconda -c anaconda -c conda-forge pandaseq make bc unzip
+RUN conda install -y -n axiome2 -c bioconda -c anaconda -c conda-forge -c cyclus pandaseq make bc unzip java-jdk
 RUN conda install -y -n axiome2 -c bioconda -c conda-forge -c r r r-plyr r-dplyr r-getopt r-labdsv r-vegan r-ape r-car
 
 # Install extra dependencies needed to run
@@ -21,7 +21,6 @@ RUN mkdir -p /home/support_binaries
 RUN wget -O /home/support_binaries/rdp_classifier_2.2.zip https://sourceforge.net/projects/rdp-classifier/files/rdp-classifier/rdp_classifier_2.2.zip
 RUN /bin/bash -c "source activate axiome2 && unzip /home/support_binaries/rdp_classifier_2.2.zip -d /home/support_binaries && rm /home/support_binaries/rdp_classifier_2.2.zip && source deactivate"
 ENV RDP_JAR_PATH=/home/support_binaries/rdp_classifier_2.2/rdp_classifier-2.2.jar
-# conda install -c cyclus java-jdk
 RUN cd /home/support_binaries && git clone https://github.com/neufeld/MESaS.git
 RUN echo "Create the folder '/home/support_binaries/usearch' and add your own usearch and uclust binaries there." > /home/support_binaries/README.txt
 ENV PATH="/home/support_binaries/MESaS/scripts:/home/support_binaries/usearch:${PATH}"
