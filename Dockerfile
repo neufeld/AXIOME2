@@ -21,9 +21,9 @@ RUN /bin/bash -c "source activate axiome2 && pip install axiome && source deacti
 # Add custom binaries
 RUN mkdir -p /home/support_binaries
 RUN cd /home/support_binaries && git clone https://github.com/neufeld/MESaS.git
-RUN echo "PATH='/home/support_binaries/MESaS/scripts:\${PATH}'" >> /root/.bashrc
+RUN echo "export PATH='/home/support_binaries/MESaS/scripts:\${PATH}'" >> /root/.bashrc
 RUN echo "Create the folder '/home/support_binaries/usearch' and add your own usearch and uclust binaries there." > /home/support_binaries/README.txt
-RUN echo "PATH='/home/support_binaries/usearch:\${PATH}'" >> /root/.bashrc
+RUN echo "export PATH='/home/support_binaries/usearch:\${PATH}'" >> /root/.bashrc
 
 # Add code to automatically start environment when logging in
 RUN echo "source activate axiome2 > /dev/null" >> /root/.bashrc
