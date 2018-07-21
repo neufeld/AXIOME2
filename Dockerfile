@@ -19,8 +19,8 @@ RUN conda install -y -n axiome2 -c bioconda -c conda-forge -c r r r-plyr r-dplyr
 RUN apt-get update && apt-get install -y libsm6 libxrender-dev
 RUN mkdir -p /home/support_binaries
 RUN wget -O /home/support_binaries/rdp_classifier_2.2.zip https://sourceforge.net/projects/rdp-classifier/files/rdp-classifier/rdp_classifier_2.2.zip
-RUN /bin/bash -c "source activate axiome2 && unzip /home/axiome2/support_binaries/rdp_classifier_2.2.zip && rm /home/axiome2/support_binaries/rdp_classifier_2.2.zip && source deactivate"
-ENV RDP_JAR_PATH=/home/axiome2/support_binaries/rdp_classifier_2.2/rdp_classifier-2.2.jar
+RUN /bin/bash -c "source activate axiome2 && unzip /home/support_binaries/rdp_classifier_2.2.zip && rm /home/support_binaries/rdp_classifier_2.2.zip && source deactivate"
+ENV RDP_JAR_PATH=/home/support_binaries/rdp_classifier_2.2/rdp_classifier-2.2.jar
 # conda install -c cyclus java-jdk
 RUN cd /home/support_binaries && git clone https://github.com/neufeld/MESaS.git
 RUN echo "Create the folder '/home/support_binaries/usearch' and add your own usearch and uclust binaries there." > /home/support_binaries/README.txt
