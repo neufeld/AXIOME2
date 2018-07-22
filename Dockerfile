@@ -12,7 +12,7 @@ RUN conda update -y conda
 # Create conda env
 RUN conda create -y -n axiome2 python=2.7
 RUN conda install -y -n axiome2 -c bioconda qiime matplotlib=1.4.3 mock nose
-RUN conda install -y -n axiome2 -c bioconda -c anaconda -c conda-forge -c cyclus pandaseq make bc unzip java-jre
+RUN conda install -y -n axiome2 -c bioconda -c anaconda -c conda-forge -c cyclus pandaseq make bc unzip zip java-jre
 RUN conda install -y -n axiome2 -c bioconda -c conda-forge -c r r r-plyr r-dplyr r-getopt r-labdsv r-vegan r-ape r-car
 
 # Install extra dependencies needed to run
@@ -34,6 +34,6 @@ RUN echo "source activate axiome2 > /dev/null" >> /root/.bashrc
 RUN mkdir -p /home/axiome2
 
 ENTRYPOINT cd /home/axiome2 && \
-	echo "Welcome to the AXIOME2 docker container. Type 'exit' to leave the container." && \
+	echo "Welcome to the AXIOME2 docker container. Note that the pynast alignment file can be found at '/opt/conda/envs/axiome2/lib/python2.7/site-packages/qiime_test_data/align_seqs/core_set_aligned.fasta.imputed'. Type 'exit' to leave the container." && \
 	/bin/bash
 
