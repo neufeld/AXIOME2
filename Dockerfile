@@ -31,9 +31,12 @@ RUN /bin/bash -c "source activate axiome2 && pip install git+https://github.com/
 # Add code to automatically start environment when logging in
 RUN echo "source activate axiome2 > /dev/null" >> /root/.bashrc
 
+# Make core_set_aligned.fasta.imputed easy to find
+RUN ln -s /opt/conda/envs/axiome2/lib/python2.7/site-packages/qiime_test_data/align_seqs/core_set_aligned.fasta.imputed /home/axiome2/core_set_aligned.fasta.imputed
+
 RUN mkdir -p /home/axiome2
 
 ENTRYPOINT cd /home/axiome2 && \
-	echo "Welcome to the AXIOME2 docker container. Note that the pynast alignment file can be found at '/opt/conda/envs/axiome2/lib/python2.7/site-packages/qiime_test_data/align_seqs/core_set_aligned.fasta.imputed'. Type 'exit' to leave the container." && \
+	echo "Welcome to the AXIOME2 docker container. Note that the pynast alignment file can be found at '/home/axiome2/core_set_aligned.fasta.imputed'. Type 'exit' to leave the container." && \
 	/bin/bash
 
