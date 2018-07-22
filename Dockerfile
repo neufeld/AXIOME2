@@ -32,7 +32,7 @@ RUN /bin/bash -c "source activate axiome2 && pip install git+https://github.com/
 RUN echo "source activate axiome2 > /dev/null" >> /root/.bashrc
 
 # Make core_set_aligned.fasta.imputed easy to find
-RUN ln -s /opt/conda/envs/axiome2/lib/python2.7/site-packages/qiime_test_data/align_seqs/core_set_aligned.fasta.imputed /home/axiome2/core_set_aligned.fasta.imputed
+RUN ln -s /opt/conda/envs/axiome2/lib/python2.7/site-packages/qiime_test_data/align_seqs/core_set_aligned.fasta.imputed /home/axiome2
 
 RUN mkdir -p /home/axiome2
 
